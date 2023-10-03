@@ -1,5 +1,6 @@
 package com.example.demo.mentoring;
 
+import com.example.demo.account.Account;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -10,8 +11,9 @@ import org.springframework.transaction.annotation.Transactional;
 public class MentorPostService {
     private final MentorPostJPARepostiory mentorPostJPARepostiory;
 
+    //mentorPost생성
     @Transactional
-    public void createPost(MentorPostRequest.CreateDTO createDTO) {
-        mentorPostJPARepostiory.save(createDTO.toEntity());
+    public void createMentorPost(MentorPostRequest.CreateDTO createDTO, Account writer) {
+        mentorPostJPARepostiory.save(createDTO.toEntity(writer));
     }
 }
