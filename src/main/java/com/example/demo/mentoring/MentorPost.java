@@ -3,6 +3,7 @@ package com.example.demo.mentoring;
 import com.example.demo.account.Account;
 import com.example.demo.mentoring.utils.BaseTimeEntity;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -25,4 +26,12 @@ public class MentorPost extends BaseTimeEntity {
     private String title;
 
     private String context;
+
+    @Builder
+    public MentorPost(int pid, Account writer, String title, String context){
+        this.pid = pid;
+        this.writer = writer;
+        this.title = title;
+        this.context = context;
+    }
 }
