@@ -8,5 +8,10 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 @Service
 public class MentorPostService {
+    private final MentorPostJPARepostiory mentorPostJPARepostiory;
 
+    @Transactional
+    public void createPost(MentorPostRequest.CreateDTO createDTO) {
+        mentorPostJPARepostiory.save(createDTO.toEntity());
+    }
 }
