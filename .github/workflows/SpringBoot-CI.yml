@@ -15,6 +15,8 @@ jobs:
         with:
           java-version: '11'
           distribution: 'adopt'
+      - name: Gradle 명령 실행을 위한 권한을 부여합니다
+        run: chmod +x gradlew
       - name: Cache Gradle dependencies
         uses: actions/cache@v2
         with:
