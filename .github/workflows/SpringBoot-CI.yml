@@ -14,11 +14,7 @@ jobs:
         uses: actions/setup-java@v2
         with:
           java-version: '11'
-<<<<<<< HEAD
-          distribution: 'adopt'
-=======
           distribution: 'temurin'
->>>>>>> 93defeecafca0e0acc1af23a890cd2368d461ba5
       - name: Gradle 명령 실행을 위한 권한을 부여합니다
         run: chmod +x gradlew
       - name: Cache Gradle dependencies
