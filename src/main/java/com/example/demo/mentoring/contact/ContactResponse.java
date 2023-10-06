@@ -41,6 +41,7 @@ public class ContactResponse {
             private String name;
             private String country;
             private int age;
+            private Account.Role role;
             private List<String> favorites;
 
             public MentorDTO(Account account, List<UserInterest> userInterests) {
@@ -49,8 +50,9 @@ public class ContactResponse {
                 this.name = account.getFirstname() + " " + account.getLastname();
                 this.country = account.getCountry();
                 this.age = account.getAge();
+                this.role = account.getRole();
                 this.favorites = userInterests.stream()
-                        .filter(userInterest -> userInterest.getUser().getId() == this.mentorId)
+                        .filter(userInterest -> userInterest.getUser().getId() == account.getId())
                         .map(userInterest -> userInterest.getInterest().getTag())
                         .collect(Collectors.toList());
             }
@@ -62,6 +64,7 @@ public class ContactResponse {
             private String name;
             private String country;
             private int age;
+            private Account.Role role;
             private List<String> favorites; // 고민할 부분 : 유저의 favorite List 를 어떻게 가져올 것 인가?
 
             /**
@@ -77,8 +80,9 @@ public class ContactResponse {
                 this.name = notConnectedRegisterUser.getMenteeUser().getFirstname() + " " + notConnectedRegisterUser.getMenteeUser().getLastname();
                 this.country = notConnectedRegisterUser.getMenteeUser().getCountry();
                 this.age = notConnectedRegisterUser.getMenteeUser().getAge();
+                this.role = notConnectedRegisterUser.getMenteeUser().getRole();
                 this.favorites = userInterests.stream()
-                        .filter(userInterest -> userInterest.getUser().getId() == this.menteeId)
+                        .filter(userInterest -> userInterest.getUser().getId() == notConnectedRegisterUser.getMenteeUser().getId())
                         .map(userInterest -> userInterest.getInterest().getTag())
                         .collect(Collectors.toList());
             }
