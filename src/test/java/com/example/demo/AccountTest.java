@@ -21,7 +21,7 @@ public class AccountTest {
     @DisplayName("account save test")
     void test() {
         Account account = Account.builder()
-                .uid(1)
+                .id(1)
                 .email("anjdal64@gmail.com")
                 .password("asdf1234!")
                 .firstname("Jin")
@@ -35,7 +35,7 @@ public class AccountTest {
         accountJPARepository.save(account);
 
         // find
-        Account account1 = accountJPARepository.findById(account.getId()).get();
+        Account account1 = accountJPARepository.findById(account.getId());
         Assertions.assertThat(account.getId())
                 .isEqualTo(account1.getId());
     }
