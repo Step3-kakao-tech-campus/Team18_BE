@@ -26,7 +26,7 @@ public class UserInterest {
     private Interest interest;
 
     @Builder
-    public UserInterest(int id, Account account, Interest interest) {
+    public UserInterest(int id, Account user, Interest interest) {
         this.id = id;
         this.user = user;
         this.interest = interest;
