@@ -65,6 +65,7 @@ public class ContactResponse {
             private String country;
             private int age;
             private Account.Role role;
+            private NotConnectedRegisterUser.State state;
             private List<String> favorites; // 고민할 부분 : 유저의 favorite List 를 어떻게 가져올 것 인가?
 
             /**
@@ -81,6 +82,7 @@ public class ContactResponse {
                 this.country = notConnectedRegisterUser.getMenteeUser().getCountry();
                 this.age = notConnectedRegisterUser.getMenteeUser().getAge();
                 this.role = notConnectedRegisterUser.getMenteeUser().getRole();
+                this.state = notConnectedRegisterUser.getState();
                 this.favorites = userInterests.stream()
                         .filter(userInterest -> userInterest.getUser().getId() == notConnectedRegisterUser.getMenteeUser().getId())
                         .map(userInterest -> userInterest.getInterest().getTag())

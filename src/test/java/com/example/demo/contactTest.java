@@ -149,11 +149,6 @@ public class contactTest {
 
         List<ContactResponse.MentorPostDTO> responseDTOs = contactService.findAll(account1);
 
-        List<UserInterest> menteeInterests = userInterestJPARepository.findAllById(2);
-        List<UserInterest> userInterests = userInterestJPARepository.findAll();
-
-        System.out.println(menteeInterests.size());
-
         String responseBody = om.writeValueAsString(responseDTOs);
 
         System.out.println("test : " + responseBody);
