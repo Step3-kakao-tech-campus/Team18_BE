@@ -23,13 +23,13 @@ public class ContactResponse {
     public static class MentorPostDTO {
         private int postId;
         private String title;
-        private MentorDTO mentors;
+        private MentorDTO mentor;
         private List<MenteeDTO> mentees;
 
-        public MentorPostDTO(MentorPost mentorPost, MentorDTO mentors, List<MenteeDTO> mentees) {
+        public MentorPostDTO(MentorPost mentorPost, MentorDTO mentor, List<MenteeDTO> mentees) {
             this.postId = mentorPost.getId();
             this.title = mentorPost.getTitle();
-            this.mentors = mentors;
+            this.mentor = mentor;
             this.mentees = mentees;
         }
     }
