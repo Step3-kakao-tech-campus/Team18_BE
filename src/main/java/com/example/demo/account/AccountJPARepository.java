@@ -7,4 +7,6 @@ import java.util.Optional;
 
 public interface AccountJPARepository extends JpaRepository<Account, Integer> {
     Optional<Account> findByEmail(String email);
+
+    Account findById(int id);
 }
