@@ -35,8 +35,8 @@ public class AccountTest {
         accountJPARepository.save(account);
 
         // find
-        Account account1 = accountJPARepository.findById(account.getUid()).get();
-        Assertions.assertThat(account.getUid())
-                .isEqualTo(account1.getUid());
+        Account account1 = accountJPARepository.findById(account.getId()).get();
+        Assertions.assertThat(account.getId())
+                .isEqualTo(account1.getId());
     }
 }
