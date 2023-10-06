@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @Service
 public class ContactService {
-    // userId 에 해당하는 mentorPost 들을 전부 가져와야 함
+
     private final MentorPostJPARepostiory mentorPostJPARepostiory;
     private final AccountJPARepository accountJPARepository;
     private final ContactJPARepository contactJPARepository;
@@ -45,8 +45,8 @@ public class ContactService {
              * - 멘토의 정보를 만들기 위해 필요한 값 : mentor 의 account, mentor 의 interests
              * - account 는 조회하면 되니, 바로 구할 수 있다.
              * - userInterest 에서 멘토의 interest 값들을 가져올 수 있기 때문에, userInterest 와 interest 를 join 후 tag 들을 가져온다.
-             * 3. mentorPosts 를 활용하여 for문을 돌면서 mentorPost 1개 + mentor 정보 1개 + mentor 정보 여러개 의 꼴로 DTO 를 만든다.
-             * - mentor 의 정보를 만들기 위해 필요한 값 : notConnectedRegisterUser 에서 mentor 의 정보, mentor 의 interests
+             * 3. mentorPosts 를 활용하여 for문을 돌면서 mentorPost 1개 + mentor 정보 1개 + mentee 정보 여러개 의 꼴로 DTO 를 만든다.
+             * - mentee 의 정보를 만들기 위해 필요한 값 : notConnectedRegisterUser 에서 mentee 의 정보, mentee 의 interests
              * - 신청한 멘티들의 정보를 가져오기 위해 notConnectedRegisterUser 의 테이블과 , 각 멘티에 해당하는 interests 들을 묶어서 DTO 로 만들기 ( 그래서 List<MenteeDTO> 를 만듬 )
              * - 싹다 묶어서 reponseDTOs 로 전달
              * **/
