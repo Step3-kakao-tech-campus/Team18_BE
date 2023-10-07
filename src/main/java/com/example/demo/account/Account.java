@@ -14,7 +14,7 @@ import javax.persistence.*;
 public class Account {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int uid;
+    private int id;
 
     @Column(length = 50, nullable = false, unique = true)
     private String email;
@@ -49,8 +49,8 @@ public class Account {
     }
 
     @Builder
-    public Account(int uid, String email, String password, String firstname, String lastname, String country, String introduction, int age, String profileImage, Role role){
-        this.uid = uid;
+    public Account(int id, String email, String password, String firstname, String lastname, String country, String introduction, int age, String profileImage, Role role){
+        this.id = id;
         this.email = email;
         this.password = password;
         this.firstname = firstname;
