@@ -1,7 +1,7 @@
 package com.example.demo.user;
 
 import com.example.demo.config.utils.BaseTime;
-import com.example.demo.Interest.Interest;
+import com.example.demo.interest.Interest;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;

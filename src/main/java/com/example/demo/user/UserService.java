@@ -1,9 +1,8 @@
 package com.example.demo.user;
 
-import com.example.demo.Interest.Interest;
-import com.example.demo.Interest.InterestJPARepository;
+import com.example.demo.interest.Interest;
+import com.example.demo.interest.InterestJPARepository;
 import com.example.demo.config.errors.exception.Exception400;
-import com.example.demo.config.errors.exception.Exception404;
 import com.example.demo.config.jwt.JWTTokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
