@@ -13,13 +13,13 @@ public class MentorPostRequest {
         @NotNull
         private String title;
 
-        private String context;
+        private String content;
 
         public MentorPost toEntity(Account writer) {
             return MentorPost.builder()
                     .writer(writer)
                     .title(title)
-                    .context(context)
+                    .content(content)
                     .build();
         }
     }

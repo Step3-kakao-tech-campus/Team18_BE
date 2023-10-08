@@ -1,4 +1,4 @@
-package com.example.demo.mentoring.utils;
+package com.example.demo.config.utils;
 
 import lombok.Getter;
 import org.springframework.data.annotation.CreatedDate;
