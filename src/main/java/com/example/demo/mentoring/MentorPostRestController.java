@@ -15,13 +15,13 @@ import java.util.List;
 public class MentorPostRestController {
     private final MentorPostService mentorPostService;
 
-    @PostMapping(value = "/mentorings")
+    @PostMapping(value = "/mentorings/post")
     public ResponseEntity<?> createMentorPost(@RequestPart MentorPostRequest.CreateDTO requestDTO, Errors errors, @AuthenticationPrincipal CustomUserDetails userDetails) {
         mentorPostService.createMentorPost(requestDTO, userDetails.getUser());
         return ResponseEntity.ok().body(ApiUtils.success(true));
     }
 
-    @GetMapping("/mentorings")
+    @GetMapping("/mentorings/post")
     public ResponseEntity<?> getMentorPost(@RequestParam(value = "page", defaultValue = "0") Integer page) {
         List<MentorPostResponse.MentorPostAllDTO> responseDTOs = mentorPostService.findAllMentorPost(page);
         return ResponseEntity.ok(ApiUtils.success(responseDTOs));
