@@ -4,6 +4,8 @@ import com.example.demo.interest.Interest;
 import com.example.demo.interest.InterestJPARepository;
 import com.example.demo.config.errors.exception.Exception400;
 import com.example.demo.config.jwt.JWTTokenProvider;
+import com.example.demo.user.userInterest.UserInterest;
+import com.example.demo.user.userInterest.UserInterestJPARepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
