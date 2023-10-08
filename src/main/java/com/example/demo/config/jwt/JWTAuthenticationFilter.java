@@ -3,7 +3,7 @@ package com.example.demo.config.jwt;
 import com.auth0.jwt.exceptions.SignatureVerificationException;
 import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.auth0.jwt.interfaces.DecodedJWT;
-import com.example.demo.account.Account;
+import com.example.demo.user.User;
 import com.example.demo.config.auth.CustomUserDetails;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -35,9 +35,9 @@ public class JWTAuthenticationFilter extends BasicAuthenticationFilter {
 
         try {
             DecodedJWT decodedJWT = JWTTokenProvider.verify(jwt);
-            int uid = decodedJWT.getClaim("user_id").asInt();
+            int id = decodedJWT.getClaim("user_id").asInt();
             String email = decodedJWT.getClaim("user_email").asString();
-            Account user = Account.builder().uid(uid).email(email).build();
+            User user = User.builder().id(id).email(email).build();
             CustomUserDetails customUserDetails = new CustomUserDetails(user);
             Authentication authentication =
                     new UsernamePasswordAuthenticationToken(
