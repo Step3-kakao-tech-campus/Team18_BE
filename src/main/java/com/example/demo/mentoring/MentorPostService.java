@@ -27,7 +27,6 @@ public class MentorPostService {
     2. 각 List당 writer별 writerInterests를 조회
     3. MentorPostDTO 생성*/
     public List<MentorPostResponse.MentorPostDTO> findAllMentorPost() {
-        // findAll 쿼리 메소드 수정하기!
         List<MentorPost> mentorPostList = mentorPostJPARepostiory.findAll();
         List<MentorPostResponse.MentorPostDTO> mentorPostDTOList = mentorPostList.stream().map(
                 mentorPost -> {
