@@ -5,7 +5,7 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.SignatureVerificationException;
 import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.auth0.jwt.interfaces.DecodedJWT;
-import com.example.demo.account.Account;
+import com.example.demo.user.User;
 import org.springframework.stereotype.Component;
 
 import java.util.Date;
@@ -17,7 +17,7 @@ public class JWTTokenProvider {
     public static final String HEADER = "Authorization";
     public static final String TOKEN_PREFIX = "Bearer "; // 스페이스 필요함
 
-    public static String create(Account account) {
+    public static String create(User account) {
         String jwt = JWT.create()
                 .withSubject(account.getEmail())
                 .withExpiresAt(new Date(System.currentTimeMillis() + EXP))

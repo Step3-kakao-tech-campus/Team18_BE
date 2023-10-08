@@ -1,6 +1,6 @@
 package com.example.demo.config.auth;
 
-import com.example.demo.account.Account;
+import com.example.demo.user.User;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @Getter
 public class CustomUserDetails implements UserDetails {
-    private final Account account;
+    private final User account;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
