@@ -1,32 +1,35 @@
-package com.example.demo.account;
+package com.example.demo.user;
 
+import com.example.demo.config.utils.BaseTime;
+import com.fasterxml.jackson.databind.ser.Serializers;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
-@Table(name = "account")
-public class Account {
+@Table(name = "user_tb")
+public class User extends BaseTime {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int uid;
+    private int id;
 
-    @Column(length = 50, nullable = false, unique = true)
+    @Column(nullable = false)
+    private String firstName;
+
+    @Column(nullable = false)
+    private String lastName;
+
+    @Column(length = 100, nullable = false, unique = true)
     private String email;
 
     @Column(length = 256, nullable = false)
     private String password;
-
-    @Column(nullable = false)
-    private String firstname;
-
-    @Column(nullable = false)
-    private String lastname;
 
     @Column(nullable = false)
     private String country;
@@ -44,17 +47,13 @@ public class Account {
     @Enumerated(value = EnumType.STRING)
     private Role role;
 
-    public enum Role {
-        ADMIN, MENTOR, MENTEE
-    }
-
     @Builder
-    public Account(int uid, String email, String password, String firstname, String lastname, String country, String introduction, int age, String profileImage, Role role){
-        this.uid = uid;
+    public User(int id, String firstName, String lastName, String email, String password, String country, String introduction, int age, String profileImage, Role role){
+        this.id = id;
         this.email = email;
+        this.firstName = firstName;
+        this.lastName = lastName;
         this.password = password;
-        this.firstname = firstname;
-        this.lastname = lastname;
         this.country = country;
         this.introduction = introduction;
         this.age = age;
