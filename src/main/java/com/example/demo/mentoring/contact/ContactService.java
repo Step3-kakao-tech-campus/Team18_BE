@@ -1,11 +1,12 @@
 package com.example.demo.mentoring.contact;
 
-import com.example.demo.account.Account;
-import com.example.demo.account.AccountJPARepository;
-import com.example.demo.account.userInterest.UserInterest;
-import com.example.demo.account.userInterest.UserInterestJPARepository;
 import com.example.demo.mentoring.MentorPost;
 import com.example.demo.mentoring.MentorPostJPARepostiory;
+import com.example.demo.user.Role;
+import com.example.demo.user.User;
+import com.example.demo.user.UserJPARepository;
+import com.example.demo.user.userInterest.UserInterest;
+import com.example.demo.user.userInterest.UserInterestJPARepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,7 +21,7 @@ import java.util.stream.Collectors;
 public class ContactService {
 
     private final MentorPostJPARepostiory mentorPostJPARepostiory;
-    private final AccountJPARepository accountJPARepository;
+    private final UserJPARepository userJPARepository;
     private final ContactJPARepository contactJPARepository;
     private final UserInterestJPARepository userInterestJPARepository;
 
@@ -28,12 +29,12 @@ public class ContactService {
      * findAll : dashboard - contact 부분 화면에 필요한 DTO를 응답해주는 함수
      * parameter : Account ( 유저의 계정 )
      * **/
-    public List<ContactResponse.MentorPostDTO> findAll(Account account) {
-        // account 의 id 값
-        int id = account.getId();
+    public List<ContactResponse.MentorPostDTO> findAll(User user) {
+        // user 의 id 값
+        int id = user.getId();
 
         // 분기 - 유저가 멘토인지, 멘티인지
-        if ( account.getRole() == Account.Role.MENTEE ) {
+        if ( user.getRole() == Role.MENTEE ) {
             // TO-DO : Mentee 입장에서 조회하는 부분 작성하기
             return null;
         }
@@ -42,8 +43,8 @@ public class ContactService {
              * 흐름 ( 멘토 입장 )
              * 1. 내가 작성한 게시글 ( mentorPosts ) 들을 조회해서 가져온다.
              * 2. 멘토의 정보는 mentorPosts 와 별개로 한번에 조회되는 값이니, for문 밖으로 빼서 조회한다.
-             * - 멘토의 정보를 만들기 위해 필요한 값 : mentor 의 account, mentor 의 interests
-             * - account 는 조회하면 되니, 바로 구할 수 있다.
+             * - 멘토의 정보를 만들기 위해 필요한 값 : mentor 의 user, mentor 의 interests
+             * - user 는 조회하면 되니, 바로 구할 수 있다.
              * - userInterest 에서 멘토의 interest 값들을 가져올 수 있기 때문에, userInterest 와 interest 를 join 후 tag 들을 가져온다.
              * 3. mentorPosts 를 활용하여 for문을 돌면서 mentorPost 1개 + mentor 정보 1개 + mentee 정보 여러개 의 꼴로 DTO 를 만든다.
              * - mentee 의 정보를 만들기 위해 필요한 값 : notConnectedRegisterUser 에서 mentee 의 정보, mentee 의 interests
@@ -57,12 +58,12 @@ public class ContactService {
             List<MentorPost> mentorPosts = mentorPostJPARepostiory.findAllByWriter(id);
 
             // 멘토 정보 가져오기 ( 나중에 User 로 바꿔야 함 )
-            Account mentorAccount = accountJPARepository.findById(id);
+            User mentorUser = userJPARepository.findById(id);
             // List<UserInterest> 가져오기 ( 멘토꺼 tag 목록 )
-            List<UserInterest> mentorInterests = userInterestJPARepository.findAllById(mentorAccount.getId());
+            List<UserInterest> mentorInterests = userInterestJPARepository.findAllById(mentorUser.getId());
 
             // MentorDTO 담기
-            ContactResponse.MentorDTO mentorDTO = new ContactResponse.MentorDTO(mentorAccount, mentorInterests);
+            ContactResponse.MentorDTO mentorDTO = new ContactResponse.MentorDTO(mentorUser, mentorInterests);
 
             // 만약 3개의 글을 썼을 경우, 현재 mentorPosts 에는 3개의 글 목록이 존재함
             for ( MentorPost mentorPost : mentorPosts ) {

@@ -1,28 +1,26 @@
 package com.example.demo;
 
-import com.example.demo.account.Account;
-import com.example.demo.account.AccountJPARepository;
-import com.example.demo.account.interest.Interest;
-import com.example.demo.account.interest.InterestJPARepository;
-import com.example.demo.account.userInterest.UserInterest;
-import com.example.demo.account.userInterest.UserInterestJPARepository;
+import com.example.demo.interest.Interest;
+import com.example.demo.interest.InterestJPARepository;
 import com.example.demo.mentoring.MentorPost;
 import com.example.demo.mentoring.MentorPostJPARepostiory;
 import com.example.demo.mentoring.contact.ContactJPARepository;
 import com.example.demo.mentoring.contact.ContactResponse;
 import com.example.demo.mentoring.contact.ContactService;
 import com.example.demo.mentoring.contact.NotConnectedRegisterUser;
-import com.fasterxml.jackson.core.JsonProcessingException;
+import com.example.demo.user.Role;
+import com.example.demo.user.User;
+import com.example.demo.user.UserJPARepository;
+import com.example.demo.user.userInterest.UserInterest;
+import com.example.demo.user.userInterest.UserInterestJPARepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ActiveProfiles;
 
 import java.util.List;
-import java.util.Optional;
 
 @SpringBootTest
 @ActiveProfiles("test")
@@ -31,7 +29,7 @@ public class contactTest {
     @Autowired
     private MentorPostJPARepostiory mentorPostJPARepostiory;
     @Autowired
-    private AccountJPARepository accountJPARepository;
+    private UserJPARepository userJPARepository;
     @Autowired
     private ContactJPARepository contactJPARepository;
     @Autowired
@@ -45,66 +43,59 @@ public class contactTest {
     @Autowired
     private ObjectMapper om;
 
-    Account account1;
+    User user1;
 
     @BeforeEach
     void setUp() {
-        account1 = Account.builder()
-                .id(1)
-                .email("anjdal64@gmail.com")
+        user1 = User.builder()
+                .email("anjdal65@gmail.com")
                 .password("asdf1234!")
-                .firstname("aaa")
-                .lastname("Seung")
+                .firstName("aaa")
+                .lastName("Seung")
                 .country("Korea")
                 .age(21)
-                .role(Account.Role.MENTOR)
+                .role(Role.MENTOR)
                 .build();
-        Account account2 = Account.builder()
-                .id(2)
+        User user2 = User.builder()
                 .email("anjdal44@gmail.com")
                 .password("asdf1234!")
-                .firstname("bbb")
-                .lastname("Seung")
+                .firstName("bbb")
+                .lastName("Seung")
                 .country("Korea")
                 .age(21)
-                .role(Account.Role.MENTEE)
+                .role(Role.MENTEE)
                 .build();
-        Account account3 = Account.builder()
-                .id(3)
+        User user3 = User.builder()
                 .email("anjdal66@gmail.com")
                 .password("asdf1234!")
-                .firstname("ccc")
-                .lastname("Seung")
+                .firstName("ccc")
+                .lastName("Seung")
                 .country("Korea")
                 .age(21)
-                .role(Account.Role.MENTEE)
+                .role(Role.MENTEE)
                 .build();
 
-        accountJPARepository.save(account1);
-        accountJPARepository.save(account2);
-        accountJPARepository.save(account3);
+        userJPARepository.save(user1);
+        userJPARepository.save(user2);
+        userJPARepository.save(user3);
 
         Interest interest = Interest.builder()
-                .id(1)
-                .tag("K-POP")
+                .category("K-POP")
                 .build();
 
         interestJPARepository.save(interest);
 
 
         UserInterest userInterest1 = UserInterest.builder()
-                .id(1)
-                .user(account1)
+                .user(user1)
                 .interest(interest)
                 .build();
         UserInterest userInterest2 = UserInterest.builder()
-                .id(2)
-                .user(account2)
+                .user(user2)
                 .interest(interest)
                 .build();
         UserInterest userInterest3 = UserInterest.builder()
-                .id(3)
-                .user(account3)
+                .user(user3)
                 .interest(interest)
                 .build();
 
@@ -113,12 +104,12 @@ public class contactTest {
         userInterestJPARepository.save(userInterest3);
 
         MentorPost mentorPost = MentorPost.builder()
-                .writer(account1)
+                .writer(user1)
                 .title("가나다라마바사")
                 .build();
 
         MentorPost mentorPost2 = MentorPost.builder()
-                .writer(account1)
+                .writer(user1)
                 .title("아자차카타파하")
                 .build();
 
@@ -127,15 +118,13 @@ public class contactTest {
 
 
         NotConnectedRegisterUser mentee1 = NotConnectedRegisterUser.builder()
-                .id(1)
                 .mentorPost(mentorPost)
-                .menteeUser(account2)
+                .menteeUser(user2)
                 .state(NotConnectedRegisterUser.State.AWAIT)
                 .build();
         NotConnectedRegisterUser mentee2 = NotConnectedRegisterUser.builder()
-                .id(2)
                 .mentorPost(mentorPost)
-                .menteeUser(account3)
+                .menteeUser(user3)
                 .state(NotConnectedRegisterUser.State.AWAIT)
                 .build();
         // 문제점 : save 를 하기 위해 notConnected~ table 을 조회, mentorPost table 을 조회, account table 을 조회함
@@ -147,7 +136,7 @@ public class contactTest {
     @Test
     void test() throws Exception {
 
-        List<ContactResponse.MentorPostDTO> responseDTOs = contactService.findAll(account1);
+        List<ContactResponse.MentorPostDTO> responseDTOs = contactService.findAll(user1);
 
         String responseBody = om.writeValueAsString(responseDTOs);
 

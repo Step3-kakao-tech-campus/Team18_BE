@@ -17,7 +17,7 @@ public class MentorPostRestController {
 
     @PostMapping(value = "/mentorings")
     public ResponseEntity<?> createMentorPost(@RequestPart MentorPostRequest.CreateDTO requestDTO, Errors errors, @AuthenticationPrincipal CustomUserDetails userDetails) {
-        mentorPostService.createMentorPost(requestDTO, userDetails.getAccount());
+        mentorPostService.createMentorPost(requestDTO, userDetails.getUser());
         return ResponseEntity.ok().body(ApiUtils.success(true));
     }
 }

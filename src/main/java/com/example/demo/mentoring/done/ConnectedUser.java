@@ -1,6 +1,6 @@
 package com.example.demo.mentoring.done;
 
-import com.example.demo.account.Account;
+import com.example.demo.user.User;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -19,13 +19,13 @@ public class ConnectedUser {
     private int id;
 
     @ManyToOne
-    private Account mentorUser;
+    private User mentorUser;
 
     @ManyToOne
-    private Account menteeUser;
+    private User menteeUser;
 
     @Builder
-    public ConnectedUser(int id, Account mentorUser, Account menteeUser) {
+    public ConnectedUser(int id, User mentorUser, User menteeUser) {
         this.id = id;
         this.mentorUser = mentorUser;
         this.menteeUser = menteeUser;

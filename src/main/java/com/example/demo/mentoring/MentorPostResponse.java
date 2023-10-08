@@ -1,7 +1,9 @@
 package com.example.demo.mentoring;
 
-import com.example.demo.account.Account;
-import com.example.demo.account.userInterest.UserInterest;
+
+import com.example.demo.user.Role;
+import com.example.demo.user.User;
+import com.example.demo.user.userInterest.UserInterest;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -31,18 +33,18 @@ public class MentorPostResponse {
             private String profileImage;
             private String name;
             private String country;
-            private Account.Role role;
+            private Role role;
             private List<String> favorites;
 
-            public WriterDTO(Account account, List<UserInterest> userInterests) {
-                this.mentorId = account.getId();
-                this.profileImage = account.getProfileImage();
-                this.name = account.getFirstname() + " " + account.getLastname();
-                this.country = account.getCountry();
-                this.role = account.getRole();
+            public WriterDTO(User user, List<UserInterest> userInterests) {
+                this.mentorId = user.getId();
+                this.profileImage = user.getProfileImage();
+                this.name = user.getFirstName() + " " + user.getLastName();
+                this.country = user.getCountry();
+                this.role = user.getRole();
                 this.favorites = userInterests.stream()
-                        .filter(userInterest -> userInterest.getUser().getId() == account.getId())
-                        .map(userInterest -> userInterest.getInterest().getTag())
+                        .filter(userInterest -> userInterest.getUser().getId() == user.getId())
+                        .map(userInterest -> userInterest.getInterest().getCategory())
                         .collect(Collectors.toList());
             }
         }
