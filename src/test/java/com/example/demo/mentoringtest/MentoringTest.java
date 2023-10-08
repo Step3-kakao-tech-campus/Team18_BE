@@ -57,9 +57,16 @@ public class MentoringTest {
                 .content("content")
                 .build();
 
+        MentorPost mentorPost2 = MentorPost.builder()
+                .writer(writer)
+                .title("title2")
+                .content("content2")
+                .build();
+
         // then
         userJPARepository.save(writer);
         mentorPostJPARepostiory.save(mentorPost);
+        mentorPostJPARepostiory.save(mentorPost2);
 
         MentorPost mentorPostFind = mentorPostJPARepostiory.findById(mentorPost.getId());
         Assertions.assertThat(mentorPost.getId())
@@ -69,7 +76,7 @@ public class MentoringTest {
     @Test
     void test() throws Exception {
 
-        List<MentorPostResponse.MentorPostAllDTO> responseDTOs = mentorPostService.findAllMentorPost(10);
+        List<MentorPostResponse.MentorPostAllDTO> responseDTOs = mentorPostService.findAllMentorPost(0);
 
         String responseBody = om.writeValueAsString(responseDTOs);
 
