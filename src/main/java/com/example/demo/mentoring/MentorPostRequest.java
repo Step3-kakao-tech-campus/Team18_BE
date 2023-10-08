@@ -1,6 +1,6 @@
 package com.example.demo.mentoring;
 
-import com.example.demo.account.Account;
+import com.example.demo.user.User;
 import lombok.Getter;
 import lombok.Setter;
 import javax.validation.constraints.NotNull;
@@ -15,7 +15,7 @@ public class MentorPostRequest {
 
         private String content;
 
-        public MentorPost toEntity(Account writer) {
+        public MentorPost toEntity(User writer) {
             return MentorPost.builder()
                     .writer(writer)
                     .title(title)

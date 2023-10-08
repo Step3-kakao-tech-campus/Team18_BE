@@ -1,7 +1,8 @@
 package com.example.demo.mentoring.contact;
 
-import com.example.demo.account.Account;
+import com.example.demo.config.utils.BaseTime;
 import com.example.demo.mentoring.MentorPost;
+import com.example.demo.user.User;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -12,18 +13,18 @@ import javax.persistence.*;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
-@Table(name = "notConnectedRegisterUser")
-public class NotConnectedRegisterUser {
+@Table(name = "notConnectedRegisterUser_tb")
+public class NotConnectedRegisterUser extends BaseTime {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
     private MentorPost mentorPost;
 
-    @ManyToOne
-    private Account menteeUser;
+    @ManyToOne(fetch = FetchType.LAZY)
+    private User menteeUser;
 
     private State state;
 
@@ -32,7 +33,7 @@ public class NotConnectedRegisterUser {
     }
 
     @Builder
-    public NotConnectedRegisterUser(int id, MentorPost mentorPost, Account menteeUser, State state) {
+    public NotConnectedRegisterUser(int id, MentorPost mentorPost, User menteeUser, State state) {
         this.id = id;
         this.mentorPost = mentorPost;
         this.menteeUser = menteeUser;

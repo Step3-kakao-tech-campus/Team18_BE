@@ -1,25 +1,28 @@
 package com.example.demo.mentoringtest;
 
-import com.example.demo.account.Account;
-import com.example.demo.account.AccountJPARepository;
+
 import com.example.demo.mentoring.MentorPost;
 import com.example.demo.mentoring.MentorPostJPARepostiory;
 import com.example.demo.mentoring.MentorPostResponse;
 import com.example.demo.mentoring.MentorPostService;
-import com.example.demo.mentoring.contact.ContactResponse;
+import com.example.demo.user.Role;
+import com.example.demo.user.User;
+import com.example.demo.user.UserJPARepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
 
 import java.util.List;
 
 @SpringBootTest
+@ActiveProfiles("test")
 public class MentoringTest {
     @Autowired
-    private AccountJPARepository accountJPARepository;
+    private UserJPARepository userJPARepository;
     @Autowired
     private MentorPostJPARepostiory mentorPostJPARepostiory;
 
@@ -35,14 +38,14 @@ public class MentoringTest {
     void CreateMentorPostTest() {
 
         //given
-        Account writer = Account.builder()
-                .email("anjdal64@gmail.com")
+        User writer = User.builder()
+                .email("anjdal6664@gmail.com")
                 .password("asdf1234!")
-                .firstname("Jin")
-                .lastname("Seung")
+                .firstName("Jin")
+                .lastName("Seung")
                 .country("Korea")
                 .age(21)
-                .role(Account.Role.MENTOR)
+                .role(Role.MENTOR)
                 .build();
 
         //when
@@ -53,11 +56,10 @@ public class MentoringTest {
                 .build();
 
         // then
-        accountJPARepository.save(writer);
+        userJPARepository.save(writer);
         mentorPostJPARepostiory.save(mentorPost);
 
         MentorPost mentorPostFind = mentorPostJPARepostiory.findById(mentorPost.getId());
-        System.out.println("createDateTest  :  " + mentorPostFind.getCreatedDate());
         Assertions.assertThat(mentorPost.getId())
                 .isEqualTo(mentorPostFind.getId());
     }

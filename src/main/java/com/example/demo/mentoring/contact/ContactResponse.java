@@ -1,8 +1,9 @@
 package com.example.demo.mentoring.contact;
 
-import com.example.demo.account.Account;
-import com.example.demo.account.userInterest.UserInterest;
 import com.example.demo.mentoring.MentorPost;
+import com.example.demo.user.Role;
+import com.example.demo.user.User;
+import com.example.demo.user.userInterest.UserInterest;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -41,19 +42,19 @@ public class ContactResponse {
             private String name;
             private String country;
             private int age;
-            private Account.Role role;
+            private Role role;
             private List<String> favorites;
 
-            public MentorDTO(Account account, List<UserInterest> userInterests) {
-                this.mentorId = account.getId();
-                this.profileImage = account.getProfileImage();
-                this.name = account.getFirstname() + " " + account.getLastname();
-                this.country = account.getCountry();
-                this.age = account.getAge();
-                this.role = account.getRole();
+            public MentorDTO(User user, List<UserInterest> userInterests) {
+                this.mentorId = user.getId();
+                this.profileImage = user.getProfileImage();
+                this.name = user.getFirstName() + " " + user.getLastName();
+                this.country = user.getCountry();
+                this.age = user.getAge();
+                this.role = user.getRole();
                 this.favorites = userInterests.stream()
-                        .filter(userInterest -> userInterest.getUser().getId() == account.getId())
-                        .map(userInterest -> userInterest.getInterest().getTag())
+                        .filter(userInterest -> userInterest.getUser().getId() == user.getId())
+                        .map(userInterest -> userInterest.getInterest().getCategory())
                         .collect(Collectors.toList());
             }
         }
@@ -64,7 +65,7 @@ public class ContactResponse {
             private String name;
             private String country;
             private int age;
-            private Account.Role role;
+            private Role role;
             private NotConnectedRegisterUser.State state;
             private List<String> favorites; // 고민할 부분 : 유저의 favorite List 를 어떻게 가져올 것 인가?
 
@@ -78,14 +79,14 @@ public class ContactResponse {
             public MenteeDTO(NotConnectedRegisterUser notConnectedRegisterUser, List<UserInterest> userInterests) {
                 this.menteeId = notConnectedRegisterUser.getMenteeUser().getId();
                 this.profileImage = notConnectedRegisterUser.getMenteeUser().getProfileImage();
-                this.name = notConnectedRegisterUser.getMenteeUser().getFirstname() + " " + notConnectedRegisterUser.getMenteeUser().getLastname();
+                this.name = notConnectedRegisterUser.getMenteeUser().getFirstName() + " " + notConnectedRegisterUser.getMenteeUser().getLastName();
                 this.country = notConnectedRegisterUser.getMenteeUser().getCountry();
                 this.age = notConnectedRegisterUser.getMenteeUser().getAge();
                 this.role = notConnectedRegisterUser.getMenteeUser().getRole();
                 this.state = notConnectedRegisterUser.getState();
                 this.favorites = userInterests.stream()
                         .filter(userInterest -> userInterest.getUser().getId() == notConnectedRegisterUser.getMenteeUser().getId())
-                        .map(userInterest -> userInterest.getInterest().getTag())
+                        .map(userInterest -> userInterest.getInterest().getCategory())
                         .collect(Collectors.toList());
             }
         }

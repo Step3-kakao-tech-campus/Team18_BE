@@ -1,7 +1,7 @@
 package com.example.demo.mentoring;
 
-import com.example.demo.account.Account;
 import com.example.demo.config.utils.BaseTime;
+import com.example.demo.user.User;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -12,14 +12,14 @@ import javax.persistence.*;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
-@Table(name = "mentorPost")
+@Table(name = "mentorPost_tb")
 public class MentorPost extends BaseTime {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    private Account writer;
+    private User writer;
 
     @Column(nullable = false)
     private String title;
@@ -27,7 +27,7 @@ public class MentorPost extends BaseTime {
     private String content;
 
     @Builder
-    public MentorPost(Account writer, String title, String content){
+    public MentorPost(User writer, String title, String content){
         this.writer = writer;
         this.title = title;
         this.content = content;

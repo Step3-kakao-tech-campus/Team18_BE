@@ -20,7 +20,7 @@ public class ContactRestController {
     @GetMapping(value = "/contacts")
     @Operation(summary = "", description = "")
     public ResponseEntity<?> findAll(@AuthenticationPrincipal CustomUserDetails userDetails) {
-        List<ContactResponse.MentorPostDTO> responseDTO = contactService.findAll(userDetails.getAccount());
+        List<ContactResponse.MentorPostDTO> responseDTO = contactService.findAll(userDetails.getUser());
         return ResponseEntity.ok(ApiUtils.success(responseDTO));
     }
 
