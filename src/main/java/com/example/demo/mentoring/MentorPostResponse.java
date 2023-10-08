@@ -14,13 +14,13 @@ public class MentorPostResponse {
 
     @Getter
     @Setter
-    public static class MentorPostDTO {
+    public static class MentorPostAllDTO {
         private int postId;
         private String title;
         private String content;
         private WriterDTO writerDTO;
 
-        public MentorPostDTO(MentorPost mentorPost, WriterDTO writerDTO) {
+        public MentorPostAllDTO(MentorPost mentorPost, WriterDTO writerDTO) {
             this.postId = mentorPost.getId();
             this.title = mentorPost.getTitle();
             this.content = mentorPost.getContent();

@@ -1,6 +1,7 @@
 package com.example.demo.mentoringtest;
 
 
+import com.example.demo.interest.InterestJPARepository;
 import com.example.demo.mentoring.MentorPost;
 import com.example.demo.mentoring.MentorPostJPARepostiory;
 import com.example.demo.mentoring.MentorPostResponse;
@@ -25,7 +26,8 @@ public class MentoringTest {
     private UserJPARepository userJPARepository;
     @Autowired
     private MentorPostJPARepostiory mentorPostJPARepostiory;
-
+    @Autowired
+    private InterestJPARepository interestJPARepository;
     @Autowired
     private MentorPostService mentorPostService;
 
@@ -67,7 +69,7 @@ public class MentoringTest {
     @Test
     void test() throws Exception {
 
-        List<MentorPostResponse.MentorPostDTO> responseDTOs = mentorPostService.findAllMentorPost();
+        List<MentorPostResponse.MentorPostAllDTO> responseDTOs = mentorPostService.findAllMentorPost(10);
 
         String responseBody = om.writeValueAsString(responseDTOs);
 
