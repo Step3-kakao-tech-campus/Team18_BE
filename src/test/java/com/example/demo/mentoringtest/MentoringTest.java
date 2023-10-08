@@ -57,6 +57,7 @@ public class MentoringTest {
         mentorPostJPARepostiory.save(mentorPost);
 
         MentorPost mentorPostFind = mentorPostJPARepostiory.findById(mentorPost.getId());
+        System.out.println("createDateTest  :  " + mentorPostFind.getCreatedDate());
         Assertions.assertThat(mentorPost.getId())
                 .isEqualTo(mentorPostFind.getId());
     }

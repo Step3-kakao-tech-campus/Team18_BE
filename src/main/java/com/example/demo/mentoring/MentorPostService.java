@@ -23,7 +23,9 @@ public class MentorPostService {
         mentorPostJPARepostiory.save(createDTO.toEntity(writer));
     }
 
-
+   /* 1. mentorPostList를 조회
+    2. 각 List당 writer별 writerInterests를 조회
+    3. MentorPostDTO 생성*/
     public List<MentorPostResponse.MentorPostDTO> findAllMentorPost() {
         List<MentorPost> mentorPostList = mentorPostJPARepostiory.findAll();
         List<MentorPostResponse.MentorPostDTO> mentorPostDTOList = mentorPostList.stream().map(
