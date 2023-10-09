@@ -27,4 +27,10 @@ public class MentorPostRestController {
         List<MentorPostResponse.MentorPostAllDTO> responseDTOs = mentorPostService.findAllMentorPost(page);
         return ResponseEntity.ok(ApiUtils.success(responseDTOs));
     }
+
+    @GetMapping("/mentorings/post/{id}")
+    public ResponseEntity<?> getMentorPostId(@PathVariable int id, @AuthenticationPrincipal CustomUserDetails userDetails) {
+        MentorPostResponse.MentorPostDTO responseDTO = mentorPostService.findMentorPost(id);
+        return ResponseEntity.ok(ApiUtils.success(responseDTO));
+    }
 }
