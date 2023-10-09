@@ -28,11 +28,11 @@ public class MentorPostResponse {
         private String content;
         private WriterDTO writerDTO;
 
-        public MentorPostAllDTO(MentorPost mentorPost, List<UserInterest> favorites) {
+        public MentorPostAllDTO(MentorPost mentorPost, List<UserInterest> userInterests) {
             this.postId = mentorPost.getId();
             this.title = mentorPost.getTitle();
             this.content = mentorPost.getContent();
-            WriterDTO writerDTO = new MentorPostAllDTO.WriterDTO(mentorPost.getWriter(), favorites);
+            WriterDTO writerDTO = new MentorPostAllDTO.WriterDTO(mentorPost.getWriter(), userInterests);
             this.writerDTO = writerDTO;
         }
 
@@ -58,6 +58,17 @@ public class MentorPostResponse {
         }
     }
 
+    /*
+    param :
+    MentorPost mentorPost 멘토 데이터
+    List<UserInterest> mentorInterests 멘토의 Interest
+    List<NotConnectedRegisterUser> mentees 멘티들 데이터
+    List<UserInterest> menteeInterests : 멘티들 각각의 Interest 리스트 전체
+
+    dto :
+    writerDTO : 작성자인 멘토의 DTO
+    menteeDTO : 멘티들의 DTO
+     */
     @Getter
     @Setter
     public static class MentorPostDTO {
@@ -67,11 +78,22 @@ public class MentorPostResponse {
         private WriterDTO writerDTO;
         private List<MenteeDTO> menteeDTOList;
 
-        public MentorPostDTO(MentorPost mentorPost, MentorPostDTO.WriterDTO writerDTO) {
+        public MentorPostDTO(MentorPost mentorPost, List<UserInterest> mentorFavorites, List<NotConnectedRegisterUser> mentees, List<UserInterest> menteeInterest) {
             this.postId = mentorPost.getId();
             this.title = mentorPost.getTitle();
             this.content = mentorPost.getContent();
+            MentorPostDTO.WriterDTO writerDTO = new MentorPostDTO.WriterDTO(mentorPost.getWriter(), mentorFavorites);
             this.writerDTO = writerDTO;
+            List<MentorPostDTO.MenteeDTO> menteeDTOList = mentees.stream()
+                    .map(mentee -> {
+                        List<UserInterest> eachMenteeFavorite = menteeInterest.stream().filter(
+                                userInterest -> mentee.getId() == userInterest.getId()
+                        ).collect(Collectors.toList());
+                        MentorPostDTO.MenteeDTO menteeDTO = new MentorPostDTO.MenteeDTO(mentee.getMenteeUser(), eachMenteeFavorite);
+                        return menteeDTO;
+                    })
+                    .collect(Collectors.toList());
+            this.menteeDTOList = menteeDTOList;
         }
 
         @Getter @Setter

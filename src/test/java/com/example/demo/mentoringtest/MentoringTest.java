@@ -73,6 +73,7 @@ public class MentoringTest {
                 .isEqualTo(mentorPostFind.getId());
     }
 
+
     @Test
     void test() throws Exception {
 

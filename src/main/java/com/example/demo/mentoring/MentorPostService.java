@@ -46,21 +46,22 @@ public class MentorPostService {
         return mentorPostDTOList;
     }
 
-//    public MentorPostResponse.MentorPostDTO findMentorPost(int id){
-//        MentorPost mentorPost = mentorPostJPARepostiory.findById(id);
-//
-//        //writer 데이터
-//        User mentor = mentorPost.getWriter();
-//        //mentee들 데이터
-//        List<NotConnectedRegisterUser> menteeList = contactJPARepository.findAllByMentorPostId(id);
-//        //writer Interest데이터
-//        List<UserInterest> writerInterests = userInterestJPARepository.findAllById(mentor.getId());
-//
-//
-//        //mentee들 Interest데이터는 내부에서
-//
-//        MentorPostResponse.MentorPostDTO mentorPostDTO = new MentorPostResponse.MentorPostDTO(mentorPost,);
-//
-//        return mentorPostDTO;
-//    }
+    public MentorPostResponse.MentorPostDTO findMentorPost(int id){
+        MentorPost mentorPost = mentorPostJPARepostiory.findById(id);
+
+        //writer 데이터
+        User mentor = mentorPost.getWriter();
+        //mentee들 데이터
+        List<NotConnectedRegisterUser> menteeList = contactJPARepository.findAllByMentorPostId(id);
+        //writer Interest데이터
+        List<UserInterest> mentorInterests = userInterestJPARepository.findAllById(mentor.getId());
+        //mentee들 Interest데이터
+        List<UserInterest> menteeInterests = menteeList.stream()
+                .flatMap(mentee -> userInterestJPARepository.findAllById(mentee.getId()).stream())
+                .collect(Collectors.toList());
+
+        MentorPostResponse.MentorPostDTO mentorPostDTO = new MentorPostResponse.MentorPostDTO(mentorPost, mentorInterests, menteeList, menteeInterests);
+
+        return mentorPostDTO;
+    }
 }
