@@ -1,5 +1,7 @@
 package com.example.demo.mentoring;
 
+import com.example.demo.mentoring.contact.ContactJPARepository;
+import com.example.demo.mentoring.contact.NotConnectedRegisterUser;
 import com.example.demo.user.User;
 import com.example.demo.user.userInterest.UserInterest;
 import com.example.demo.user.userInterest.UserInterestJPARepository;
@@ -19,6 +21,7 @@ import java.util.stream.Collectors;
 public class MentorPostService {
     private final MentorPostJPARepostiory mentorPostJPARepostiory;
     private final UserInterestJPARepository userInterestJPARepository;
+    private final ContactJPARepository contactJPARepository;
 
     //mentorPost생성
     @Transactional
@@ -37,10 +40,27 @@ public class MentorPostService {
         List<MentorPostResponse.MentorPostAllDTO> mentorPostDTOList = pageContent.getContent().stream().map(
                 mentorPost -> {
                     List<UserInterest> writerInterests = userInterestJPARepository.findAllById(mentorPost.getWriter().getId());
-                    MentorPostResponse.MentorPostAllDTO.WriterDTO writerDTO = new MentorPostResponse.MentorPostAllDTO.WriterDTO(mentorPost.getWriter(), writerInterests);
-                    return new MentorPostResponse.MentorPostAllDTO(mentorPost,writerDTO);
+                    return new MentorPostResponse.MentorPostAllDTO(mentorPost,writerInterests);
                 }
         ).collect(Collectors.toList());
         return mentorPostDTOList;
     }
+
+//    public MentorPostResponse.MentorPostDTO findMentorPost(int id){
+//        MentorPost mentorPost = mentorPostJPARepostiory.findById(id);
+//
+//        //writer 데이터
+//        User mentor = mentorPost.getWriter();
+//        //mentee들 데이터
+//        List<NotConnectedRegisterUser> menteeList = contactJPARepository.findAllByMentorPostId(id);
+//        //writer Interest데이터
+//        List<UserInterest> writerInterests = userInterestJPARepository.findAllById(mentor.getId());
+//
+//
+//        //mentee들 Interest데이터는 내부에서
+//
+//        MentorPostResponse.MentorPostDTO mentorPostDTO = new MentorPostResponse.MentorPostDTO(mentorPost,);
+//
+//        return mentorPostDTO;
+//    }
 }

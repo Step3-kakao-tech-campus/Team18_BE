@@ -28,10 +28,11 @@ public class MentorPostResponse {
         private String content;
         private WriterDTO writerDTO;
 
-        public MentorPostAllDTO(MentorPost mentorPost, WriterDTO writerDTO) {
+        public MentorPostAllDTO(MentorPost mentorPost, List<UserInterest> favorites) {
             this.postId = mentorPost.getId();
             this.title = mentorPost.getTitle();
             this.content = mentorPost.getContent();
+            WriterDTO writerDTO = new MentorPostAllDTO.WriterDTO(mentorPost.getWriter(), favorites);
             this.writerDTO = writerDTO;
         }
 
