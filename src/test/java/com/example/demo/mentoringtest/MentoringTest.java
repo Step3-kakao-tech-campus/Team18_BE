@@ -100,20 +100,20 @@ public class MentoringTest {
                 .role(Role.MENTOR)
                 .build();
 
-        User mentee1 = User.builder()
+        User mentee_One = User.builder()
                 .email("anjda22l6664@gmail.com")
                 .password("asdf221234!")
-                .firstName("Jin11")
+                .firstName("mentee1")
                 .lastName("Seung11")
                 .country("Korea")
                 .age(21)
                 .role(Role.MENTEE)
                 .build();
 
-        User mentee2 = User.builder()
+        User mentee_Two = User.builder()
                 .email("anjdal66111164@gmail.com")
                 .password("asdf122222234!")
-                .firstName("Jin22")
+                .firstName("mentee2")
                 .lastName("Seung22")
                 .country("Korea")
                 .age(21)
@@ -138,23 +138,28 @@ public class MentoringTest {
                 .build();
 
         UserInterest userInterest2 = UserInterest.builder()
-                .user(mentee1)
+                .user(mentee_One)
                 .interest(interest2)
                 .build();
 
         UserInterest userInterest3 = UserInterest.builder()
-                .user(mentee1)
+                .user(mentee_One)
                 .interest(interest3)
                 .build();
 
         UserInterest userInterest4 = UserInterest.builder()
-                .user(mentee2)
+                .user(mentee_Two)
                 .interest(interest1)
                 .build();
 
         UserInterest userInterest5 = UserInterest.builder()
-                .user(mentee2)
+                .user(mentee_Two)
                 .interest(interest2)
+                .build();
+
+        UserInterest userInterest6 = UserInterest.builder()
+                .user(mentor)
+                .interest(interest3)
                 .build();
 
         MentorPost mentorPost3 = MentorPost.builder()
@@ -165,13 +170,13 @@ public class MentoringTest {
 
         NotConnectedRegisterUser menteeNotConnected1 = NotConnectedRegisterUser.builder()
                 .mentorPost(mentorPost3)
-                .menteeUser(mentee1)
+                .menteeUser(mentee_One)
                 .state(NotConnectedRegisterUser.State.AWAIT)
                 .build();
 
         NotConnectedRegisterUser menteeNotConnected2 = NotConnectedRegisterUser.builder()
                 .mentorPost(mentorPost3)
-                .menteeUser(mentee2)
+                .menteeUser(mentee_Two)
                 .state(NotConnectedRegisterUser.State.AWAIT)
                 .build();
 
@@ -180,14 +185,15 @@ public class MentoringTest {
         interestJPARepository.save(interest2);
         interestJPARepository.save(interest3);
         userJPARepository.save(mentor);
-        userJPARepository.save(mentee1);
-        userJPARepository.save(mentee2);
+        userJPARepository.save(mentee_One);
+        userJPARepository.save(mentee_Two);
         mentorPostJPARepostiory.save(mentorPost3);
         userInterestJPARepository.save(userInterest1);
         userInterestJPARepository.save(userInterest2);
         userInterestJPARepository.save(userInterest3);
         userInterestJPARepository.save(userInterest4);
         userInterestJPARepository.save(userInterest5);
+        userInterestJPARepository.save(userInterest6);
         contactJPARepository.save(menteeNotConnected1);
         contactJPARepository.save(menteeNotConnected2);
 

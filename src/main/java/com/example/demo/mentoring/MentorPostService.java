@@ -57,7 +57,7 @@ public class MentorPostService {
         List<UserInterest> mentorInterests = userInterestJPARepository.findAllById(mentor.getId());
         //mentee들 Interest데이터
         List<UserInterest> menteeInterests = menteeList.stream()
-                .flatMap(mentee -> userInterestJPARepository.findAllById(mentee.getId()).stream())
+                .flatMap(mentee -> userInterestJPARepository.findAllById(mentee.getMenteeUser().getId()).stream())
                 .collect(Collectors.toList());
 
         MentorPostResponse.MentorPostDTO mentorPostDTO = new MentorPostResponse.MentorPostDTO(mentorPost, mentorInterests, menteeList, menteeInterests);

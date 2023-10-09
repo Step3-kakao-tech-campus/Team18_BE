@@ -87,8 +87,9 @@ public class MentorPostResponse {
             List<MentorPostDTO.MenteeDTO> menteeDTOList = mentees.stream()
                     .map(mentee -> {
                         List<UserInterest> eachMenteeFavorite = menteeInterest.stream().filter(
-                                userInterest -> mentee.getId() == userInterest.getId()
+                                userInterest -> mentee.getMenteeUser().getId() == userInterest.getUser().getId()
                         ).collect(Collectors.toList());
+
                         MentorPostDTO.MenteeDTO menteeDTO = new MentorPostDTO.MenteeDTO(mentee.getMenteeUser(), eachMenteeFavorite);
                         return menteeDTO;
                     })
