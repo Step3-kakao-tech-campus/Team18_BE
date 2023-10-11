@@ -26,6 +26,8 @@ public class NotConnectedRegisterUser extends BaseTime {
     @ManyToOne(fetch = FetchType.LAZY)
     private User menteeUser;
 
+    @Column(nullable = false)
+    @Enumerated(value = EnumType.STRING)
     private State state;
 
     public enum State {
