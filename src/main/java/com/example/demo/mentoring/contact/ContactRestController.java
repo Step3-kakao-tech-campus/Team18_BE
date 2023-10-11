@@ -23,5 +23,14 @@ public class ContactRestController {
         List<ContactResponse.MentorPostDTO> responseDTO = contactService.findAll(userDetails.getUser());
         return ResponseEntity.ok(ApiUtils.success(responseDTO));
     }
+    
+    @GetMapping(value = "/contacts/postCounts")
+    @Operation(summary = "", description = "")
+    public ResponseEntity<?> postCounts(@AuthenticationPrincipal CustomUserDetails userDetails) {
+        // TO-DO : contact, done 옆 숫자를 띄우는 API 로직 만들기 ( 멘토, 멘티 나눠서 )
+
+
+        return null;
+    }
 
 }

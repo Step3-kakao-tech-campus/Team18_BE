@@ -11,6 +11,17 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class ContactResponse {
+
+    @Getter @Setter
+    public static class postCountDTO {
+        private int contactCount;
+        private int doneCount;
+
+        public postCountDTO(int contactCount, int doneCount) {
+            this.contactCount = contactCount;
+            this.doneCount = doneCount;
+        }
+    }
     /**
      *
      * DTO 담는 순서
