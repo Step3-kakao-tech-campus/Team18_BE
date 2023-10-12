@@ -22,6 +22,19 @@ public class ContactResponse {
             this.doneCount = doneCount;
         }
     }
+
+    @Getter @Setter
+    public static class MenteeContactDTO {
+        private int postId;
+        private String title;
+        private MentorDTO mentor;
+
+        public MenteeContactDTO(MentorPost mentorPost, MentorDTO mentor) {
+            this.postId = mentorPost.getId();
+            this.title = mentorPost.getTitle();
+            this.mentor = mentor;
+        }
+    }
     /**
      *
      * DTO 담는 순서
