@@ -2,6 +2,7 @@ package com.example.demo.mentoringtest;
 
 
 import com.example.demo.RestDoc;
+import com.example.demo.config.utils.StateEnum;
 import com.example.demo.interest.Interest;
 import com.example.demo.interest.InterestJPARepository;
 import com.example.demo.mentoring.*;
@@ -90,6 +91,7 @@ public class MentoringTest extends RestDoc {
         MentorPostRequest.CreateDTO mentorPostRequest = new MentorPostRequest.CreateDTO();
         mentorPostRequest.setTitle("title");
         mentorPostRequest.setContent("content");
+        mentorPostRequest.setState(StateEnum.ACTIVE);
         mentorPostService.createMentorPost(mentorPostRequest, writer);
 
         MentorPost mentorPostFind = mentorPostJPARepostiory.findById(1);

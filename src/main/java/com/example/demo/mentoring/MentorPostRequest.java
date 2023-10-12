@@ -1,5 +1,6 @@
 package com.example.demo.mentoring;
 
+import com.example.demo.config.utils.StateEnum;
 import com.example.demo.user.User;
 import lombok.Getter;
 import lombok.Setter;
@@ -14,5 +15,7 @@ public class MentorPostRequest {
         private String title;
 
         private String content;
+
+        private StateEnum state;
     }
 }
