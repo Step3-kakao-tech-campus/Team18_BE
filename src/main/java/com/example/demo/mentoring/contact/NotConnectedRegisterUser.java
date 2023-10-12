@@ -7,12 +7,16 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
+@Where(clause = "deleted_at IS NULL")
+@SQLDelete(sql = "UPDATE not_connected_register_user SET deleted_at = CURRENT_TIMESTAMP, isDeleted = TRUE where id = ?")
 @Table(name = "notConnectedRegisterUser_tb")
 public class NotConnectedRegisterUser extends BaseTime {
 

@@ -14,4 +14,7 @@ public interface MentorPostJPARepostiory extends JpaRepository<MentorPost, Integ
     List<MentorPost> findAllByWriter(@Param("writer") int writer);
 
     MentorPost findById(int id);
+
+    @Query("select count(*) from MentorPost m where m.writer.id = :userId")
+    int countByMentorId(int userId);
 }
