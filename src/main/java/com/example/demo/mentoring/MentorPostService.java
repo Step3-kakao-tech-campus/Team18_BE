@@ -27,7 +27,8 @@ public class MentorPostService {
     //mentorPost생성
     @Transactional
     public void createMentorPost(MentorPostRequest.CreateDTO createDTO, User writer) {
-        mentorPostJPARepository.save(createDTO.toEntity(writer));
+        MentorPost mentorPost = new MentorPost( writer, createDTO.getTitle(), createDTO.getContent());
+        mentorPostJPARepository.save(mentorPost);
     }
 
    /* 1. mentorPostList를 조회
@@ -78,7 +79,7 @@ public class MentorPostService {
         else
         {
             // 예외처리
-            
+
         }
     }
 }

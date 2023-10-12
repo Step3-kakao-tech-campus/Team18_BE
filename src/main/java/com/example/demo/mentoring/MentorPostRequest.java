@@ -14,13 +14,5 @@ public class MentorPostRequest {
         private String title;
 
         private String content;
-
-        public MentorPost toEntity(User writer) {
-            return MentorPost.builder()
-                    .writer(writer)
-                    .title(title)
-                    .content(content)
-                    .build();
-        }
     }
 }

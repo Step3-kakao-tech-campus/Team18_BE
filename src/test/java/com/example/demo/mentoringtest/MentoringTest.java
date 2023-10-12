@@ -33,7 +33,6 @@ import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuild
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
 @SpringBootTest
-@Sql(value = "classpath:db/teardown.sql")
 @AutoConfigureMockMvc
 @ActiveProfiles("test")
 public class MentoringTest extends RestDoc {
@@ -83,13 +82,23 @@ public class MentoringTest extends RestDoc {
                 .build();
 
         // then
-        userJPARepository.save(writer);
-        mentorPostJPARepostiory.save(mentorPost);
-        mentorPostJPARepostiory.save(mentorPost2);
+//        userJPARepository.save(writer);
+//        mentorPostJPARepostiory.save(mentorPost);
+//        mentorPostJPARepostiory.save(mentorPost2);
 
-        MentorPost mentorPostFind = mentorPostJPARepostiory.findById(mentorPost.getId());
-        Assertions.assertThat(mentorPost.getId())
+        userJPARepository.save(writer);
+        MentorPostRequest.CreateDTO mentorPostRequest = new MentorPostRequest.CreateDTO();
+        mentorPostRequest.setTitle("title");
+        mentorPostRequest.setContent("content");
+        mentorPostService.createMentorPost(mentorPostRequest, writer);
+
+        MentorPost mentorPostFind = mentorPostJPARepostiory.findById(1);
+        Assertions.assertThat(1)
                 .isEqualTo(mentorPostFind.getId());
+        Assertions.assertThat(mentorPostRequest.getTitle())
+                .isEqualTo(mentorPostFind.getTitle());
+        Assertions.assertThat(mentorPostRequest.getContent())
+                .isEqualTo(mentorPostFind.getContent());
     }
 
 
@@ -206,6 +215,22 @@ public class MentoringTest extends RestDoc {
         contactJPARepository.save(menteeNotConnected2);
 
     }
+
+    @Test
+    @DisplayName("updateMentorPostTest")
+    void updateMentorPostTest()
+    {
+        //when
+        MentorPost mentorPostUpdated = MentorPost.builder()
+                .title("updated!!!!")
+                .content("content!!!!")
+                .build();
+
+        MentorPostRequest.CreateDTO mentorPostRequest = new MentorPostRequest.CreateDTO();
+        //mentorPostRequest.
+        mentorPostService.updateMentorPost(mentorPostRequest,1);
+    }
+
 
     @Test
     void mentorPostServiceTest() throws Exception {
