@@ -24,7 +24,7 @@ public class NotConnectedRegisterUser extends BaseTime {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     private MentorPost mentorPost;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -39,8 +39,7 @@ public class NotConnectedRegisterUser extends BaseTime {
     }
 
     @Builder
-    public NotConnectedRegisterUser(int id, MentorPost mentorPost, User menteeUser, State state) {
-        this.id = id;
+    public NotConnectedRegisterUser(MentorPost mentorPost, User menteeUser, State state) {
         this.mentorPost = mentorPost;
         this.menteeUser = menteeUser;
         this.state = state;
