@@ -220,15 +220,35 @@ public class MentoringTest extends RestDoc {
     @DisplayName("updateMentorPostTest")
     void updateMentorPostTest()
     {
-        //when
-        MentorPost mentorPostUpdated = MentorPost.builder()
-                .title("updated!!!!")
-                .content("content!!!!")
-                .build();
+        User writer = User.builder()
+            .email("anjdal6664@gmail.com")
+            .password("asdf1234!")
+            .firstName("Jin")
+            .lastName("Seung")
+            .country("Korea")
+            .age(21)
+            .role(Role.MENTOR)
+            .build();
 
         MentorPostRequest.CreateDTO mentorPostRequest = new MentorPostRequest.CreateDTO();
-        //mentorPostRequest.
-        mentorPostService.updateMentorPost(mentorPostRequest,1);
+        mentorPostRequest.setTitle("tittttttle");
+        mentorPostRequest.setContent("content");
+
+        MentorPostRequest.CreateDTO mentorPostUpdated = new MentorPostRequest.CreateDTO();
+        mentorPostUpdated.setTitle("updated!!!!");
+        mentorPostUpdated.setContent("contenttt");
+
+        userJPARepository.save(writer);
+        mentorPostService.createMentorPost(mentorPostRequest, writer);
+        mentorPostService.updateMentorPost(mentorPostUpdated,1);
+
+        MentorPost mentorPostFind = mentorPostJPARepostiory.findById(1);
+        Assertions.assertThat(1)
+                .isEqualTo(mentorPostFind.getId());
+        Assertions.assertThat(mentorPostUpdated.getTitle())
+                .isEqualTo(mentorPostFind.getTitle());
+        Assertions.assertThat(mentorPostUpdated.getContent())
+                .isEqualTo(mentorPostFind.getContent());
     }
 
 
