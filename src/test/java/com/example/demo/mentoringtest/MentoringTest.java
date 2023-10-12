@@ -1,12 +1,10 @@
 package com.example.demo.mentoringtest;
 
 
+import com.example.demo.RestDoc;
 import com.example.demo.interest.Interest;
 import com.example.demo.interest.InterestJPARepository;
-import com.example.demo.mentoring.MentorPost;
-import com.example.demo.mentoring.MentorPostJPARepostiory;
-import com.example.demo.mentoring.MentorPostResponse;
-import com.example.demo.mentoring.MentorPostService;
+import com.example.demo.mentoring.*;
 import com.example.demo.mentoring.contact.ContactJPARepository;
 import com.example.demo.mentoring.contact.NotConnectedRegisterUser;
 import com.example.demo.user.Role;
@@ -19,15 +17,24 @@ import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.jdbc.Sql;
+import org.springframework.test.web.servlet.ResultActions;
 
-import java.util.List;
-import java.util.stream.Collectors;
+
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
 @SpringBootTest
+@Sql(value = "classpath:db/teardown.sql")
+@AutoConfigureMockMvc
 @ActiveProfiles("test")
-public class MentoringTest {
+public class MentoringTest extends RestDoc {
     @Autowired
     private UserJPARepository userJPARepository;
     @Autowired
@@ -88,7 +95,6 @@ public class MentoringTest {
     @Test
     @DisplayName("findMentorPostTest")
     void findMentorPostSaveTest() {
-
         //given
         User mentor = User.builder()
                 .email("anjdal6612312364@gmail.com")
@@ -207,4 +213,46 @@ public class MentoringTest {
 
         System.out.println("test : " + responseBody);
     }
+
+    @WithUserDetails(value = "john@example.com")
+    @Test
+    public void CreateMentorPostTestMVC() throws Exception {
+
+        MentorPostRequest.CreateDTO createDTO = new MentorPostRequest.CreateDTO();
+        createDTO.setTitle("asfd");
+        createDTO.setContent("afaffafa");
+
+        String requestBody = om.writeValueAsString(createDTO);
+
+        // when
+        ResultActions resultActions = mvc.perform(
+                post("/mentorings/post")
+                        .content(requestBody)
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+        );
+
+        String responseBody = resultActions.andReturn().getResponse().getContentAsString();
+        System.out.println("테스트 : " + responseBody);
+
+        // verify
+        //resultActions.andExpect(jsonPath("$.success").value("true"));
+        //resultActions.andDo(MockMvcResultHandlers.print()).andDo(document);
+    }
+
+    @WithUserDetails(value = "john@example.com")
+    @Test
+    public void GetMentorPostTestMVC() throws Exception {
+
+        int id = 1;
+
+        // when
+        ResultActions resultActions = mvc.perform(
+                get("/mentorings/post")
+        );
+
+        // console
+        String responseBody = resultActions.andReturn().getResponse().getContentAsString();
+        System.out.println("테스트 : "+responseBody);
+    }
+
 }
