@@ -64,4 +64,11 @@ public class MentorPostService {
 
         return mentorPostDTO;
     }
+    @Transactional
+    public void updateMentorPost(MentorPostRequest.CreateDTO createDTO, User writer, int id)
+    {
+
+    }
 }
+
+

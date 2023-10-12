@@ -7,7 +7,6 @@ import com.example.demo.user.User;
 import com.example.demo.user.userInterest.UserInterest;
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.web.bind.annotation.PostMapping;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -43,7 +42,7 @@ public class MentorPostResponse {
             private String name;
             private String country;
             private Role role;
-            private List<String> favorites;
+            private List<String> interests;
 
             public WriterDTO(User user, List<UserInterest> userInterests) {
                 this.mentorId = user.getId();
@@ -51,7 +50,7 @@ public class MentorPostResponse {
                 this.name = user.getFirstName() + " " + user.getLastName();
                 this.country = user.getCountry();
                 this.role = user.getRole();
-                this.favorites = userInterests.stream()
+                this.interests = userInterests.stream()
                         .map(userInterest -> userInterest.getInterest().getCategory())
                         .collect(Collectors.toList());
             }
@@ -104,7 +103,7 @@ public class MentorPostResponse {
             private String name;
             private String country;
             private Role role;
-            private List<String> favorites;
+            private List<String> interests;
 
             public WriterDTO(User user, List<UserInterest> userInterests) {
                 this.mentorId = user.getId();
@@ -112,7 +111,7 @@ public class MentorPostResponse {
                 this.name = user.getFirstName() + " " + user.getLastName();
                 this.country = user.getCountry();
                 this.role = user.getRole();
-                this.favorites = userInterests.stream()
+                this.interests = userInterests.stream()
                         .map(userInterest -> userInterest.getInterest().getCategory())
                         .collect(Collectors.toList());
             }
@@ -126,7 +125,7 @@ public class MentorPostResponse {
             private String country;
             private Role role;
             private int age;
-            private List<String> favorites;
+            private List<String> interests;
 
             public MenteeDTO(User user, List<UserInterest> userInterests) {
                 this.menteeId = user.getId();
@@ -135,7 +134,7 @@ public class MentorPostResponse {
                 this.country = user.getCountry();
                 this.role = user.getRole();
                 this.age = user.getAge();
-                this.favorites = userInterests.stream()
+                this.interests = userInterests.stream()
                         .map(userInterest -> userInterest.getInterest().getCategory())
                         .collect(Collectors.toList());
             }

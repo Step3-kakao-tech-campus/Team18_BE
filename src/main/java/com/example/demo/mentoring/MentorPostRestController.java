@@ -33,4 +33,10 @@ public class MentorPostRestController {
         MentorPostResponse.MentorPostDTO responseDTO = mentorPostService.findMentorPost(id);
         return ResponseEntity.ok(ApiUtils.success(responseDTO));
     }
+
+    @PutMapping(value = "/mentorings/post/{id}")
+    public ResponseEntity<?> updateMentorPost(@PathVariable int id, @RequestPart MentorPostRequest.CreateDTO requestDTO, Errors errors, @AuthenticationPrincipal CustomUserDetails userDetails) {
+        mentorPostService.updateMentorPost(requestDTO, userDetails.getUser(), id);
+        return ResponseEntity.status(HttpStatus.OK).body(ApiUtils.successWithNoContent());
+    }
 }
