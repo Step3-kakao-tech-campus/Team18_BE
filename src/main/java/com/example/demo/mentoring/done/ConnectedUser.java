@@ -27,7 +27,7 @@ public class ConnectedUser extends BaseTime {
     @ManyToOne(fetch = FetchType.LAZY)
     private MentorPost mentorPost;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     private User menteeUser;
 
     @Builder
