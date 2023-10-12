@@ -9,6 +9,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -17,7 +18,7 @@ public class MentorPostRestController {
     private final MentorPostService mentorPostService;
 
     @PostMapping(value = "/mentorings/post")
-    public ResponseEntity<?> createMentorPost(@RequestPart MentorPostRequest.CreateDTO requestDTO, Errors errors, @AuthenticationPrincipal CustomUserDetails userDetails) {
+    public ResponseEntity<?> createMentorPost(@RequestBody @Valid MentorPostRequest.CreateDTO requestDTO, Errors errors, @AuthenticationPrincipal CustomUserDetails userDetails) {
         mentorPostService.createMentorPost(requestDTO, userDetails.getUser());
         return ResponseEntity.status(HttpStatus.OK).body(ApiUtils.successWithNoContent());
     }
@@ -35,7 +36,7 @@ public class MentorPostRestController {
     }
 
     @PutMapping(value = "/mentorings/post/{id}")
-    public ResponseEntity<?> updateMentorPost(@PathVariable int id, @RequestPart MentorPostRequest.CreateDTO requestDTO, Errors errors, @AuthenticationPrincipal CustomUserDetails userDetails) {
+    public ResponseEntity<?> updateMentorPost(@PathVariable int id, @RequestBody @Valid MentorPostRequest.CreateDTO requestDTO, Errors errors, @AuthenticationPrincipal CustomUserDetails userDetails) {
         mentorPostService.updateMentorPost(requestDTO, id);
         return ResponseEntity.status(HttpStatus.OK).body(ApiUtils.successWithNoContent());
     }
