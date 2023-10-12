@@ -13,20 +13,21 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Transactional
 @RequiredArgsConstructor
 @Service
 public class MentorPostService {
-    private final MentorPostJPARepostiory mentorPostJPARepostiory;
+    private final MentorPostJPARepostiory mentorPostJPARepository;
     private final UserInterestJPARepository userInterestJPARepository;
     private final ContactJPARepository contactJPARepository;
 
     //mentorPost생성
     @Transactional
     public void createMentorPost(MentorPostRequest.CreateDTO createDTO, User writer) {
-        mentorPostJPARepostiory.save(createDTO.toEntity(writer));
+        mentorPostJPARepository.save(createDTO.toEntity(writer));
     }
 
    /* 1. mentorPostList를 조회
@@ -35,7 +36,7 @@ public class MentorPostService {
     public List<MentorPostResponse.MentorPostAllDTO> findAllMentorPost(int page) {
         Pageable pageable = PageRequest.of(page,5);
 
-        Page<MentorPost> pageContent = mentorPostJPARepostiory.findAll(pageable);
+        Page<MentorPost> pageContent = mentorPostJPARepository.findAll(pageable);
         //List<MentorPost> mentorPostList = mentorPostJPARepostiory.findAll();
         List<MentorPostResponse.MentorPostAllDTO> mentorPostDTOList = pageContent.getContent().stream().map(
                 mentorPost -> {
@@ -47,7 +48,7 @@ public class MentorPostService {
     }
 
     public MentorPostResponse.MentorPostDTO findMentorPost(int id){
-        MentorPost mentorPost = mentorPostJPARepostiory.findById(id);
+        MentorPost mentorPost = mentorPostJPARepository.findById(id);
 
         //writer 데이터
         User mentor = mentorPost.getWriter();
@@ -65,9 +66,20 @@ public class MentorPostService {
         return mentorPostDTO;
     }
     @Transactional
-    public void updateMentorPost(MentorPostRequest.CreateDTO createDTO, User writer, int id)
+    public void updateMentorPost(MentorPostRequest.CreateDTO createDTO, int id)
     {
+        Optional<MentorPost> optionalMentorPost = Optional.ofNullable(mentorPostJPARepository.findById(id));
 
+        if(optionalMentorPost.isPresent())
+        {
+            MentorPost mentorPost = optionalMentorPost.get();
+            mentorPost.update(createDTO.getTitle(), createDTO.getContent());
+        }
+        else
+        {
+            // 예외처리
+            
+        }
     }
 }
 
