@@ -15,8 +15,12 @@ import java.time.LocalTime;
 public abstract class BaseTime {
     @CreatedDate
     @Column(nullable = false)
-    private LocalTime createdAt;
+    private LocalDateTime createdAt;
 
     @LastModifiedDate
     private LocalDateTime updatedAt;
+
+    private LocalDateTime deletedAt;
+
+    private boolean isDeleted;
 }
