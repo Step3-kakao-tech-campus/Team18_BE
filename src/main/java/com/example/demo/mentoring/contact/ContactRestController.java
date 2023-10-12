@@ -21,9 +21,14 @@ public class ContactRestController {
     @GetMapping(value = "/contacts")
     @Operation(summary = "", description = "")
     public ResponseEntity<?> findAll(@AuthenticationPrincipal CustomUserDetails userDetails) {
-        List<ContactResponse.MentorPostDTO> responseDTO = contactService.findAll(userDetails.getUser().getId());
+        if ( userDetails.getUser().getRole() == Role.MENTEE ) {
+            List<ContactResponse.MenteeContactDTO> responseDTO = contactService.findAllByMentee(userDetails.getUser());
+            return ResponseEntity.ok(ApiUtils.success(responseDTO));
+        }
+        List<ContactResponse.MentorPostDTO> responseDTO = contactService.findAllByMentor(userDetails.getUser());
         return ResponseEntity.ok(ApiUtils.success(responseDTO));
     }
+}
     
     @GetMapping(value = "/contacts/postCounts")
     @Operation(summary = "", description = "")
