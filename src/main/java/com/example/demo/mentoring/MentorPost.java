@@ -50,4 +50,8 @@ public class MentorPost extends BaseTime {
         this.content = content;
     }
 
+    public void changeStatus(StateEnum stateEnum)
+    {
+        this.state = stateEnum;
+    }
 }

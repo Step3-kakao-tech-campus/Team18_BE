@@ -99,6 +99,22 @@ public class MentorPostService {
         ).collect(Collectors.toList());
         return mentorPostDTOList;
     }
+
+    public void changeMentorPostStatus(MentorPostRequest.StateDTO stateDTO, int id)
+    {
+        Optional<MentorPost> optionalMentorPost = Optional.ofNullable(mentorPostJPARepository.findById(id));
+
+        if(optionalMentorPost.isPresent())
+        {
+            MentorPost mentorPost = optionalMentorPost.get();
+            mentorPost.changeStatus(stateDTO.getStateEnum());
+        }
+        else
+        {
+            // 예외처리
+
+        }
+    }
 }
 
 

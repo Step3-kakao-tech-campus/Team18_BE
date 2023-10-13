@@ -49,7 +49,7 @@ public class MentorPostRestController {
 
     @PatchMapping(value = "/mentorings/post/{id}/done")
     public ResponseEntity<?> changeMentorPostStatus(@PathVariable int id,@RequestBody @Valid MentorPostRequest.StateDTO requestDTO, Errors errors, @AuthenticationPrincipal CustomUserDetails userDetails) {
-        mentorPostService.changeMentorPostStatus(id);
+        mentorPostService.changeMentorPostStatus(requestDTO, id);
         return ResponseEntity.status(HttpStatus.OK).body(ApiUtils.successWithNoContent());
     }
 
