@@ -35,7 +35,7 @@ public class MentorPost extends BaseTime {
 
     @Convert(converter = StateConverter.class)
     @Column(name = "state", nullable = false)
-    private StateEnum state;
+    private StateEnum state = StateEnum.ACTIVE;
 
     @Builder
     public MentorPost(User writer, String title, String content){

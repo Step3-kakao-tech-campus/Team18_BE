@@ -91,7 +91,6 @@ public class MentoringTest extends RestDoc {
         MentorPostRequest.CreateDTO mentorPostRequest = new MentorPostRequest.CreateDTO();
         mentorPostRequest.setTitle("title");
         mentorPostRequest.setContent("content");
-        mentorPostRequest.setState(StateEnum.ACTIVE);
         mentorPostService.createMentorPost(mentorPostRequest, writer);
 
         MentorPost mentorPostFind = mentorPostJPARepostiory.findById(1);

@@ -15,7 +15,5 @@ public class MentorPostRequest {
         private String title;
 
         private String content;
-
-        private StateEnum state;
     }
 }
