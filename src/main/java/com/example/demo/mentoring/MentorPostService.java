@@ -82,6 +82,23 @@ public class MentorPostService {
 
         }
     }
+
+    public void deleteMentorPost(int id) {
+        mentorPostJPARepository.deleteById(id);
+    }
+
+    //생성 시간까지 조회하는 test service 코드 입니다
+    public List<MentorPostResponse.MentorPostAllWithTimeStampDTO> findAllMentorPostWithTimeStamp() {
+        List<MentorPost> pageContent = mentorPostJPARepository.findAll();
+        //List<MentorPost> mentorPostList = mentorPostJPARepostiory.findAll();
+        List<MentorPostResponse.MentorPostAllWithTimeStampDTO> mentorPostDTOList = pageContent.stream().map(
+                mentorPost -> {
+                    List<UserInterest> writerInterests = userInterestJPARepository.findAllById(mentorPost.getWriter().getId());
+                    return new MentorPostResponse.MentorPostAllWithTimeStampDTO(mentorPost,writerInterests);
+                }
+        ).collect(Collectors.toList());
+        return mentorPostDTOList;
+    }
 }
 
 

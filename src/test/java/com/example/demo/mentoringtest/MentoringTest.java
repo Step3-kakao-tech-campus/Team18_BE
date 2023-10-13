@@ -254,16 +254,6 @@ public class MentoringTest extends RestDoc {
                 .isEqualTo(mentorPostFind.getContent());
     }
 
-
-    @Test
-    void mentorPostServiceTest() throws Exception {
-        List<MentorPostResponse.MentorPostAllDTO> mentorPostFind = mentorPostService.findAllMentorPost(0);
-
-        String responseBody = om.writeValueAsString(mentorPostFind);
-
-        System.out.println("테스트 : " + responseBody);
-    }
-
     @WithUserDetails(value = "john@example.com")
     @Test
     public void CreateMentorPostTestMVC() throws Exception {
@@ -292,7 +282,7 @@ public class MentoringTest extends RestDoc {
     @Test
     public void GetMentorPostTestMVC() throws Exception {
 
-        int id = 1;
+        int id = 2;
 
         // when
         ResultActions resultActions = mvc.perform(
@@ -304,4 +294,19 @@ public class MentoringTest extends RestDoc {
         System.out.println("테스트 : "+responseBody);
     }
 
+    @Test
+    @DisplayName("DeleteTest")
+    public void DeleteMentorPost() throws Exception{
+        int id = 2;
+        mentorPostService.deleteMentorPost(id);
+    }
+
+    @Test
+    void mentorPostServiceTest() throws Exception {
+        List<MentorPostResponse.MentorPostAllWithTimeStampDTO> mentorPostFind = mentorPostService.findAllMentorPostWithTimeStamp();
+
+        String responseBody = om.writeValueAsString(mentorPostFind);
+
+        System.out.println("전체조회테스트 : " + responseBody);
+    }
 }

@@ -9,6 +9,7 @@ import com.example.demo.user.userInterest.UserInterest;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -139,6 +140,52 @@ public class MentorPostResponse {
                 this.country = user.getCountry();
                 this.role = user.getRole();
                 this.age = user.getAge();
+                this.interests = userInterests.stream()
+                        .map(userInterest -> userInterest.getInterest().getCategory())
+                        .collect(Collectors.toList());
+            }
+        }
+    }
+
+    @Getter
+    @Setter
+    public static class MentorPostAllWithTimeStampDTO {
+        private int postId;
+        private String title;
+        private String content;
+        private StateEnum stateEnum;
+        private WriterDTO writerDTO;
+        private LocalDateTime createdAt;
+        private LocalDateTime deletedAt;
+        private boolean isDeleted;
+
+        public MentorPostAllWithTimeStampDTO(MentorPost mentorPost, List<UserInterest> userInterests) {
+            this.postId = mentorPost.getId();
+            this.title = mentorPost.getTitle();
+            this.content = mentorPost.getContent();
+            this.stateEnum = mentorPost.getState();
+            WriterDTO writerDTO = new MentorPostAllWithTimeStampDTO.WriterDTO(mentorPost.getWriter(), userInterests);
+            this.writerDTO = writerDTO;
+            this.createdAt = mentorPost.getCreatedAt();
+            this.deletedAt = mentorPost.getDeletedAt();
+            this.isDeleted = mentorPost.isDeleted();
+        }
+
+        @Getter @Setter
+        public static class WriterDTO {
+            private int mentorId;
+            private String profileImage;
+            private String name;
+            private String country;
+            private Role role;
+            private List<String> interests;
+
+            public WriterDTO(User user, List<UserInterest> userInterests) {
+                this.mentorId = user.getId();
+                this.profileImage = user.getProfileImage();
+                this.name = user.getFirstName() + " " + user.getLastName();
+                this.country = user.getCountry();
+                this.role = user.getRole();
                 this.interests = userInterests.stream()
                         .map(userInterest -> userInterest.getInterest().getCategory())
                         .collect(Collectors.toList());
