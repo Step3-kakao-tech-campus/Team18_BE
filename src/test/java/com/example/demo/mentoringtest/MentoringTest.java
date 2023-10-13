@@ -31,6 +31,7 @@ import org.springframework.test.web.servlet.ResultActions;
 
 import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -299,6 +300,19 @@ public class MentoringTest extends RestDoc {
     public void DeleteMentorPost() throws Exception{
         int id = 2;
         mentorPostService.deleteMentorPost(id);
+
+        MentorPost mentorPostFind = mentorPostJPARepostiory.findById(2);
+        assertNull(mentorPostFind, "mentorPostNotFound");
+    }
+
+    @Test
+    @DisplayName("DoneTest")
+    public void PatchDoneMentorPost() throws Exception{
+        int id = 1;
+
+        MentorPostRequest.StateDTO stateDTO = new MentorPostRequest.StateDTO();
+        stateDTO.setStateEnum(StateEnum.DONE);
+        mentorPostService.changeMentorPostStatus(stateDTO, id);
     }
 
     @Test
