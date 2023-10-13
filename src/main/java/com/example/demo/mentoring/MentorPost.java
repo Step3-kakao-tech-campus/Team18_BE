@@ -19,7 +19,7 @@ import javax.persistence.*;
 @Entity
 @Where(clause = "deleted_at IS NULL")
 @SQLDelete(sql = "UPDATE mentor_post_tb SET deleted_at = CURRENT_TIMESTAMP, is_deleted = TRUE where id = ?")
-@Table(name = "mentor_post_tb")
+@Table(name = "mentorPost_tb")
 public class MentorPost extends BaseTime {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
