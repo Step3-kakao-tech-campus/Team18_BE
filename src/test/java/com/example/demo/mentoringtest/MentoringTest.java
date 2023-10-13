@@ -29,6 +29,8 @@ import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.ResultActions;
 
 
+import java.util.List;
+
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -60,7 +62,7 @@ public class MentoringTest extends RestDoc {
 
         //given
         User writer = User.builder()
-                .email("anjdal6664@gmail.com")
+                .email("john@example.com")
                 .password("asdf1234!")
                 .firstName("Jin")
                 .lastName("Seung")
@@ -241,10 +243,10 @@ public class MentoringTest extends RestDoc {
 
         userJPARepository.save(writer);
         mentorPostService.createMentorPost(mentorPostRequest, writer);
-        mentorPostService.updateMentorPost(mentorPostUpdated,1);
+        mentorPostService.updateMentorPost(mentorPostUpdated,2);
 
-        MentorPost mentorPostFind = mentorPostJPARepostiory.findById(1);
-        Assertions.assertThat(1)
+        MentorPost mentorPostFind = mentorPostJPARepostiory.findById(2);
+        Assertions.assertThat(2)
                 .isEqualTo(mentorPostFind.getId());
         Assertions.assertThat(mentorPostUpdated.getTitle())
                 .isEqualTo(mentorPostFind.getTitle());
@@ -255,11 +257,11 @@ public class MentoringTest extends RestDoc {
 
     @Test
     void mentorPostServiceTest() throws Exception {
-        MentorPostResponse.MentorPostDTO mentorPostFind = mentorPostService.findMentorPost(1);
+        List<MentorPostResponse.MentorPostAllDTO> mentorPostFind = mentorPostService.findAllMentorPost(0);
 
         String responseBody = om.writeValueAsString(mentorPostFind);
 
-        System.out.println("test : " + responseBody);
+        System.out.println("테스트 : " + responseBody);
     }
 
     @WithUserDetails(value = "john@example.com")
@@ -287,7 +289,6 @@ public class MentoringTest extends RestDoc {
         //resultActions.andDo(MockMvcResultHandlers.print()).andDo(document);
     }
 
-    @WithUserDetails(value = "john@example.com")
     @Test
     public void GetMentorPostTestMVC() throws Exception {
 
