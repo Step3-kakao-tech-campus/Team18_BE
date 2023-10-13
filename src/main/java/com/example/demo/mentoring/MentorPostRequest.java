@@ -16,4 +16,10 @@ public class MentorPostRequest {
 
         private String content;
     }
+
+    @Getter
+    @Setter
+    public static class StateDTO {
+        private StateEnum stateEnum;
+    }
 }
