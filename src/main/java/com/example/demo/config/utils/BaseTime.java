@@ -1,5 +1,7 @@
 package com.example.demo.config.utils;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.hibernate.annotations.ColumnDefault;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -11,6 +13,8 @@ import javax.persistence.MappedSuperclass;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 
+@Getter
+@Setter
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)
 public abstract class BaseTime {
