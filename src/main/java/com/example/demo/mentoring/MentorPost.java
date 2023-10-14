@@ -18,7 +18,7 @@ import javax.persistence.*;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 @Where(clause = "deleted_at IS NULL")
-@SQLDelete(sql = "UPDATE mentorPost_tb SET deleted_at = CURRENT_TIMESTAMP, isDeleted = TRUE where id = ?")
+@SQLDelete(sql = "UPDATE mentor_post_tb SET deleted_at = CURRENT_TIMESTAMP, is_deleted = TRUE where id = ?")
 @Table(name = "mentorPost_tb")
 public class MentorPost extends BaseTime {
     @Id
@@ -35,7 +35,7 @@ public class MentorPost extends BaseTime {
 
     @Convert(converter = StateConverter.class)
     @Column(name = "state", nullable = false)
-    private StateEnum state;
+    private StateEnum state = StateEnum.ACTIVE;
 
     @Builder
     public MentorPost(User writer, String title, String content){
@@ -50,4 +50,8 @@ public class MentorPost extends BaseTime {
         this.content = content;
     }
 
+    public void changeStatus(StateEnum stateEnum)
+    {
+        this.state = stateEnum;
+    }
 }

@@ -40,4 +40,17 @@ public class MentorPostRestController {
         mentorPostService.updateMentorPost(requestDTO, id);
         return ResponseEntity.status(HttpStatus.OK).body(ApiUtils.successWithNoContent());
     }
+
+    @DeleteMapping(value = "/mentorings/post/{id}")
+    public ResponseEntity<?> deleteMentorPost(@PathVariable int id, Errors errors, @AuthenticationPrincipal CustomUserDetails userDetails) {
+        mentorPostService.deleteMentorPost(id);
+        return ResponseEntity.status(HttpStatus.OK).body(ApiUtils.successWithNoContent());
+    }
+
+    @PatchMapping(value = "/mentorings/post/{id}/done")
+    public ResponseEntity<?> changeMentorPostStatus(@PathVariable int id,@RequestBody @Valid MentorPostRequest.StateDTO requestDTO, Errors errors, @AuthenticationPrincipal CustomUserDetails userDetails) {
+        mentorPostService.changeMentorPostStatus(requestDTO, id);
+        return ResponseEntity.status(HttpStatus.OK).body(ApiUtils.successWithNoContent());
+    }
+
 }

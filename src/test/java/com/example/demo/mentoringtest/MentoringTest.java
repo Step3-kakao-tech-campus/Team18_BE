@@ -29,6 +29,9 @@ import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.ResultActions;
 
 
+import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -60,7 +63,7 @@ public class MentoringTest extends RestDoc {
 
         //given
         User writer = User.builder()
-                .email("anjdal6664@gmail.com")
+                .email("john@example.com")
                 .password("asdf1234!")
                 .firstName("Jin")
                 .lastName("Seung")
@@ -91,7 +94,6 @@ public class MentoringTest extends RestDoc {
         MentorPostRequest.CreateDTO mentorPostRequest = new MentorPostRequest.CreateDTO();
         mentorPostRequest.setTitle("title");
         mentorPostRequest.setContent("content");
-        mentorPostRequest.setState(StateEnum.ACTIVE);
         mentorPostService.createMentorPost(mentorPostRequest, writer);
 
         MentorPost mentorPostFind = mentorPostJPARepostiory.findById(1);
@@ -242,25 +244,15 @@ public class MentoringTest extends RestDoc {
 
         userJPARepository.save(writer);
         mentorPostService.createMentorPost(mentorPostRequest, writer);
-        mentorPostService.updateMentorPost(mentorPostUpdated,1);
+        mentorPostService.updateMentorPost(mentorPostUpdated,2);
 
-        MentorPost mentorPostFind = mentorPostJPARepostiory.findById(1);
-        Assertions.assertThat(1)
+        MentorPost mentorPostFind = mentorPostJPARepostiory.findById(2);
+        Assertions.assertThat(2)
                 .isEqualTo(mentorPostFind.getId());
         Assertions.assertThat(mentorPostUpdated.getTitle())
                 .isEqualTo(mentorPostFind.getTitle());
         Assertions.assertThat(mentorPostUpdated.getContent())
                 .isEqualTo(mentorPostFind.getContent());
-    }
-
-
-    @Test
-    void mentorPostServiceTest() throws Exception {
-        MentorPostResponse.MentorPostDTO mentorPostFind = mentorPostService.findMentorPost(1);
-
-        String responseBody = om.writeValueAsString(mentorPostFind);
-
-        System.out.println("test : " + responseBody);
     }
 
     @WithUserDetails(value = "john@example.com")
@@ -288,11 +280,10 @@ public class MentoringTest extends RestDoc {
         //resultActions.andDo(MockMvcResultHandlers.print()).andDo(document);
     }
 
-    @WithUserDetails(value = "john@example.com")
     @Test
     public void GetMentorPostTestMVC() throws Exception {
 
-        int id = 1;
+        int id = 2;
 
         // when
         ResultActions resultActions = mvc.perform(
@@ -304,4 +295,32 @@ public class MentoringTest extends RestDoc {
         System.out.println("테스트 : "+responseBody);
     }
 
+    @Test
+    @DisplayName("DeleteTest")
+    public void DeleteMentorPost() throws Exception{
+        int id = 2;
+        mentorPostService.deleteMentorPost(id);
+
+        MentorPost mentorPostFind = mentorPostJPARepostiory.findById(2);
+        assertNull(mentorPostFind, "mentorPostNotFound");
+    }
+
+    @Test
+    @DisplayName("DoneTest")
+    public void PatchDoneMentorPost() throws Exception{
+        int id = 1;
+
+        MentorPostRequest.StateDTO stateDTO = new MentorPostRequest.StateDTO();
+        stateDTO.setStateEnum(StateEnum.DONE);
+        mentorPostService.changeMentorPostStatus(stateDTO, id);
+    }
+
+    @Test
+    void mentorPostServiceTest() throws Exception {
+        List<MentorPostResponse.MentorPostAllWithTimeStampDTO> mentorPostFind = mentorPostService.findAllMentorPostWithTimeStamp();
+
+        String responseBody = om.writeValueAsString(mentorPostFind);
+
+        System.out.println("전체조회테스트 : " + responseBody);
+    }
 }
