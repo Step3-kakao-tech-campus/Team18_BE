@@ -1,7 +1,8 @@
 package com.example.demo;
 
-import com.example.demo.account.Account;
-import com.example.demo.account.AccountJPARepository;
+import com.example.demo.user.Role;
+import com.example.demo.user.User;
+import com.example.demo.user.UserJPARepository;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -14,29 +15,28 @@ import org.springframework.test.context.ActiveProfiles;
 public class AccountTest {
 
     @Autowired
-    private AccountJPARepository accountJPARepository;
+    private UserJPARepository userJPARepository;
 
     // saveTest
     @Test
     @DisplayName("account save test")
     void test() {
-        Account account = Account.builder()
-                .uid(1)
+        User user = User.builder()
                 .email("anjdal64@gmail.com")
                 .password("asdf1234!")
-                .firstname("Jin")
-                .lastname("Seung")
+                .firstName("Jin")
+                .lastName("Seung")
                 .country("Korea")
                 .age(21)
-                .role(Account.Role.MENTOR)
+                .role(Role.MENTOR)
                 .build();
 
-        // account save
-        accountJPARepository.save(account);
+        // user save
+        userJPARepository.save(user);
 
         // find
-        Account account1 = accountJPARepository.findById(account.getUid()).get();
-        Assertions.assertThat(account.getUid())
-                .isEqualTo(account1.getUid());
+        User user1 = userJPARepository.findById(user.getId());
+        Assertions.assertThat(user.getId())
+                .isEqualTo(user1.getId());
     }
 }

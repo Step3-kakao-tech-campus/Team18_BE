@@ -1,9 +1,12 @@
 package com.example.demo.user;
 
+import com.example.demo.config.errors.exception.Exception404;
 import com.example.demo.interest.Interest;
 import com.example.demo.interest.InterestJPARepository;
 import com.example.demo.config.errors.exception.Exception400;
 import com.example.demo.config.jwt.JWTTokenProvider;
+import com.example.demo.user.userInterest.UserInterest;
+import com.example.demo.user.userInterest.UserInterestJPARepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -64,5 +67,44 @@ public class UserService {
         }
 
         return new UserResponse.LoginDTO(user, JWTTokenProvider.create(user));
+    }
+
+    public UserResponse.ProfileDTO findProfile(int id) {
+        User user = userJPARepository.findById(id)
+                .orElseThrow(() -> new Exception404("해당 사용자가 존재하지 않습니다."));
+        return new UserResponse.ProfileDTO(user);
+    }
+
+    @Transactional
+    public UserResponse.ProfileDTO updateProfile(int id, UserRequest.ProfileUpdateDTO requestDTO) {
+        User user = userJPARepository.findById(id)
+                .orElseThrow(() -> new Exception404("해당 사용자가 존재하지 않습니다."));
+
+        User updateUser = User.builder()
+                .firstName(requestDTO.getFirstName())
+                .lastName(requestDTO.getLastName())
+                .email(requestDTO.getEmail())
+                .password(passwordEncoder.encode(requestDTO.getPassword()))
+                .country(requestDTO.getCountry())
+                .introduction(requestDTO.getIntroduction())
+                .age(requestDTO.getAge())
+                .profileImage(requestDTO.getProfileImage())
+                .role(requestDTO.getRole())
+                .build();
+        user.updateProfile(updateUser);
+
+        userInterestJPARepository.deleteAllByUserId(id);
+
+        List<UserInterest> updateUserInterestList = new ArrayList<>();
+        List<String> categoryList = requestDTO.getCategoryList();
+        for (String category : categoryList) {
+            Interest interest = interestJPARepository.findByCategory(category)
+                    .orElseThrow(() -> new Exception400("해당 관심사가 존재하지 않습니다."));
+            UserInterest updateUserInterest = UserInterest.builder().user(user).interest(interest).build();
+            updateUserInterestList.add(updateUserInterest);
+        }
+        userInterestJPARepository.saveAll(updateUserInterestList);
+
+        return new UserResponse.ProfileDTO(user);
     }
 }

@@ -1,5 +1,6 @@
 package com.example.demo.interest;
 
+import com.example.demo.config.utils.BaseTime;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -10,8 +11,8 @@ import javax.persistence.*;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
-@Table(name = "interest")
-public class Interest {
+@Table(name = "interest_tb")
+public class Interest extends BaseTime {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;

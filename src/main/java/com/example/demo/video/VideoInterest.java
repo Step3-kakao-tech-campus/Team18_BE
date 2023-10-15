@@ -1,7 +1,8 @@
-package com.example.demo.user;
+package com.example.demo.video;
 
 import com.example.demo.config.utils.BaseTime;
 import com.example.demo.interest.Interest;
+import com.example.demo.user.User;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -12,24 +13,23 @@ import javax.persistence.*;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
-@Table(name = "user_interest")
-public class UserInterest extends BaseTime {
-    @Id
+@Table(name = "videoInterest_tb")
+public class VideoInterest extends BaseTime {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
     private int id;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
-    private User user;
+    private Video video;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "interest_id")
     private Interest interest;
 
     @Builder
-    public UserInterest(int id, User user, Interest interest) {
-        this.id = id;
-        this.user = user;
+    public VideoInterest(Video video, Interest interest) {
+        this.video = video;
         this.interest = interest;
     }
 }
