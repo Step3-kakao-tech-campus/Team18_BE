@@ -1,5 +1,8 @@
 package com.example.demo.mentoring.contact;
 
+import com.example.demo.config.errors.exception.Exception400;
+import com.example.demo.config.errors.exception.Exception401;
+import com.example.demo.config.errors.exception.Exception404;
 import com.example.demo.mentoring.MentorPost;
 import com.example.demo.mentoring.MentorPostJPARepostiory;
 import com.example.demo.mentoring.done.DoneJPARepository;
@@ -37,7 +40,8 @@ public class ContactService {
 
     // contact - mentee 부분 리팩토링 ( DTO 를 만드는 부분 )
     private ContactResponse.MenteeContactDTO createMenteeContactDTO(MentorPost mentorPost) {
-        User mentorUser = userJPARepository.findById(mentorPost.getWriter().getId());
+        User mentorUser = userJPARepository.findById(mentorPost.getWriter().getId())
+                .orElseThrow(() -> new Exception400("해당 사용자가 존재하지 않습니다."));
         List<UserInterest> mentorInterests = userInterestJPARepository.findAllById(mentorUser.getId());
 
         ContactResponse.MentorDTO mentorDTO = new ContactResponse.MentorDTO(mentorUser, mentorInterests);
@@ -52,7 +56,8 @@ public class ContactService {
      * **/
     public List<ContactResponse.MentorPostDTO> findAllByMentor(int userId) {
 
-        User mentorUser = userJPARepository.findById(userId);
+        User mentorUser = userJPARepository.findById(userId)
+                .orElseThrow(() -> new Exception404("해당 사용자가 존재하지 않습니다."));
         List<UserInterest> mentorInterests = userInterestJPARepository.findAllById(mentorUser.getId());
         ContactResponse.MentorDTO mentorDTO = new ContactResponse.MentorDTO(mentorUser, mentorInterests);
 
