@@ -1,8 +1,11 @@
 package com.example.demo.mentoring.contact;
 
+import com.example.demo.config.errors.exception.Exception400;
+import com.example.demo.config.errors.exception.Exception401;
+import com.example.demo.config.errors.exception.Exception404;
 import com.example.demo.mentoring.MentorPost;
 import com.example.demo.mentoring.MentorPostJPARepostiory;
-import com.example.demo.user.Role;
+import com.example.demo.mentoring.done.DoneJPARepository;
 import com.example.demo.user.User;
 import com.example.demo.user.UserJPARepository;
 import com.example.demo.user.userInterest.UserInterest;
@@ -11,7 +14,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -20,69 +22,59 @@ import java.util.stream.Collectors;
 @Service
 public class ContactService {
 
-    private final MentorPostJPARepostiory mentorPostJPARepostiory;
+    private final MentorPostJPARepostiory mentorPostJPARepository;
     private final UserJPARepository userJPARepository;
     private final ContactJPARepository contactJPARepository;
     private final UserInterestJPARepository userInterestJPARepository;
+    private final DoneJPARepository doneJPARepository;
 
     /**
-     * findAll : dashboard - contact 부분 화면에 필요한 DTO를 응답해주는 함수
-     * parameter : Account ( 유저의 계정 )
+     * contact - mentee 화면에서 mentor 가 작성한 글에 신청을 누른 게시글들을 가져오는 함수
      * **/
-    public List<ContactResponse.MentorPostDTO> findAll(User user) {
-        // user 의 id 값
-        int id = user.getId();
+    public List<ContactResponse.MenteeContactDTO> findAllByMentee(int userId) {
 
-        // 분기 - 유저가 멘토인지, 멘티인지
-        if ( user.getRole() == Role.MENTEE ) {
-            // TO-DO : Mentee 입장에서 조회하는 부분 작성하기
-            return null;
-        }
-        else {
-            /**
-             * 흐름 ( 멘토 입장 )
-             * 1. 내가 작성한 게시글 ( mentorPosts ) 들을 조회해서 가져온다.
-             * 2. 멘토의 정보는 mentorPosts 와 별개로 한번에 조회되는 값이니, for문 밖으로 빼서 조회한다.
-             * - 멘토의 정보를 만들기 위해 필요한 값 : mentor 의 user, mentor 의 interests
-             * - user 는 조회하면 되니, 바로 구할 수 있다.
-             * - userInterest 에서 멘토의 interest 값들을 가져올 수 있기 때문에, userInterest 와 interest 를 join 후 tag 들을 가져온다.
-             * 3. mentorPosts 를 활용하여 for문을 돌면서 mentorPost 1개 + mentor 정보 1개 + mentee 정보 여러개 의 꼴로 DTO 를 만든다.
-             * - mentee 의 정보를 만들기 위해 필요한 값 : notConnectedRegisterUser 에서 mentee 의 정보, mentee 의 interests
-             * - 신청한 멘티들의 정보를 가져오기 위해 notConnectedRegisterUser 의 테이블과 , 각 멘티에 해당하는 interests 들을 묶어서 DTO 로 만들기 ( 그래서 List<MenteeDTO> 를 만듬 )
-             * - 싹다 묶어서 reponseDTOs 로 전달
-             * **/
-            // Return 할 객체
-            List<ContactResponse.MentorPostDTO> responseDTOs = new ArrayList<>();
+        return mentorPostJPARepository.findAllByMenteeUserId(userId).stream()
+                .map(this::createMenteeContactDTO)
+                .collect(Collectors.toList());
+    }
 
-            // 멘토의 id 에 해당하는 mentorPost 다 가져오기
-            List<MentorPost> mentorPosts = mentorPostJPARepostiory.findAllByWriter(id);
+    // contact - mentee 부분 리팩토링 ( DTO 를 만드는 부분 )
+    private ContactResponse.MenteeContactDTO createMenteeContactDTO(MentorPost mentorPost) {
+        User mentorUser = userJPARepository.findById(mentorPost.getWriter().getId())
+                .orElseThrow(() -> new Exception400("해당 사용자가 존재하지 않습니다."));
+        List<UserInterest> mentorInterests = userInterestJPARepository.findAllById(mentorUser.getId());
 
-            // 멘토 정보 가져오기 ( 나중에 User 로 바꿔야 함 )
-            User mentorUser = userJPARepository.findById(id);
-            // List<UserInterest> 가져오기 ( 멘토꺼 tag 목록 )
-            List<UserInterest> mentorInterests = userInterestJPARepository.findAllById(mentorUser.getId());
+        ContactResponse.MentorDTO mentorDTO = new ContactResponse.MentorDTO(mentorUser, mentorInterests);
 
-            // MentorDTO 담기
-            ContactResponse.MentorDTO mentorDTO = new ContactResponse.MentorDTO(mentorUser, mentorInterests);
+        return new ContactResponse.MenteeContactDTO(mentorPost, mentorDTO);
+    }
 
-            // 만약 3개의 글을 썼을 경우, 현재 mentorPosts 에는 3개의 글 목록이 존재함
-            for ( MentorPost mentorPost : mentorPosts ) {
-                // List<MenteeDTO> 만들기
-                // 신청한 멘티의 목록 ( postId 로 조회 )
-                List<NotConnectedRegisterUser> mentees = contactJPARepository.findAllByMentorPostId(mentorPost.getId());
+    // ---------------------------------------------------------------------------------------------
 
-                // List<MenteeDTO> 생성
-                List<ContactResponse.MenteeDTO> menteeDTOs = mentees
-                        .stream()
-                        .map(this::createMenteeDTO)
-                        .collect(Collectors.toList());
-                // responseDTO 에 담기
-                responseDTOs.add(new ContactResponse.MentorPostDTO(mentorPost, mentorDTO, menteeDTOs));
+    /**
+     * contact - mentor 화면에서 post 와 mentee 간 엮인 정보들을 조회해서 가져오는 함수
+     * **/
+    public List<ContactResponse.MentorPostDTO> findAllByMentor(int userId) {
 
-            }
-            return responseDTOs;
-        }
+        User mentorUser = userJPARepository.findById(userId)
+                .orElseThrow(() -> new Exception404("해당 사용자가 존재하지 않습니다."));
+        List<UserInterest> mentorInterests = userInterestJPARepository.findAllById(mentorUser.getId());
+        ContactResponse.MentorDTO mentorDTO = new ContactResponse.MentorDTO(mentorUser, mentorInterests);
 
+        return mentorPostJPARepository.findAllByWriter(userId).stream()
+                .map(mentorPost -> createMentorPostDTO(mentorPost, mentorDTO))
+                .collect(Collectors.toList());
+
+    }
+
+    // MentorPostDTO 생성 로직
+    private ContactResponse.MentorPostDTO createMentorPostDTO(MentorPost mentorPost, ContactResponse.MentorDTO mentorDTO) {
+        List<ContactResponse.MenteeDTO> menteeDTOs = contactJPARepository.findAllByMentorPostId(mentorPost.getId())
+                .stream()
+                .map(this::createMenteeDTO)
+                .collect(Collectors.toList());
+
+        return new ContactResponse.MentorPostDTO(mentorPost, mentorDTO, menteeDTOs);
     }
 
     // 매핑 로직 분리 ( menteeDTO 생성 로직 )
@@ -94,4 +86,13 @@ public class ContactService {
         return new ContactResponse.MenteeDTO(mentee, menteeInterests);
     }
 
+    // contact, done 화면에서 게시글을 조회해서 갯수를 전달해주는 함수
+    public ContactResponse.postCountDTO postCountsByMentor(int userId) {
+        // contact 화면에서 게시글을 조회 ( 나중에 where 조건에 state 를 달아야 함 )
+        int contactCount = mentorPostJPARepository.countContactByMentorId(userId);
+        // done 화면에서 게시글을 조회
+        int doneCount = mentorPostJPARepository.countDoneByMentorId(userId);
+
+        return new ContactResponse.postCountDTO(contactCount, doneCount);
+    }
 }

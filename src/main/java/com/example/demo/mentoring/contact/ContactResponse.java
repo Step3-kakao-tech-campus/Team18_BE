@@ -11,6 +11,30 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class ContactResponse {
+
+    @Getter @Setter
+    public static class postCountDTO {
+        private int contactCount;
+        private int doneCount;
+
+        public postCountDTO(int contactCount, int doneCount) {
+            this.contactCount = contactCount;
+            this.doneCount = doneCount;
+        }
+    }
+
+    @Getter @Setter
+    public static class MenteeContactDTO {
+        private int postId;
+        private String title;
+        private MentorDTO mentor;
+
+        public MenteeContactDTO(MentorPost mentorPost, MentorDTO mentor) {
+            this.postId = mentorPost.getId();
+            this.title = mentorPost.getTitle();
+            this.mentor = mentor;
+        }
+    }
     /**
      *
      * DTO 담는 순서
