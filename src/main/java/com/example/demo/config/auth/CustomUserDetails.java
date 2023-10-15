@@ -1,6 +1,6 @@
 package com.example.demo.config.auth;
 
-import com.example.demo.user.User;
+import com.example.demo.account.Account;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
@@ -14,21 +14,21 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @Getter
 public class CustomUserDetails implements UserDetails {
-    private final User user;
+    private final Account account;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return Arrays.stream(user.getEmail().split(",")).map(SimpleGrantedAuthority::new).collect(Collectors.toList());
+        return Arrays.stream(account.getEmail().split(",")).map(SimpleGrantedAuthority::new).collect(Collectors.toList());
     }
 
     @Override
     public String getPassword() {
-        return user.getPassword();
+        return account.getPassword();
     }
 
     @Override
     public String getUsername() {
-        return user.getEmail();
+        return account.getEmail();
     }
 
     @Override
