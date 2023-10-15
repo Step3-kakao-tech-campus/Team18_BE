@@ -1,5 +1,6 @@
 package com.example.demo.mentoring;
 
+import com.example.demo.config.utils.StateEnum;
 import com.example.demo.user.User;
 import lombok.Getter;
 import lombok.Setter;
@@ -9,18 +10,16 @@ public class MentorPostRequest {
 
     @Getter
     @Setter
-    public class CreateDTO {
+    public static class CreateDTO {
         @NotNull
         private String title;
 
         private String content;
+    }
 
-        public MentorPost toEntity(User writer) {
-            return MentorPost.builder()
-                    .writer(writer)
-                    .title(title)
-                    .content(content)
-                    .build();
-        }
+    @Getter
+    @Setter
+    public static class StateDTO {
+        private StateEnum stateEnum;
     }
 }
