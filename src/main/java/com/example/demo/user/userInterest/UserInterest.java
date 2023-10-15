@@ -9,6 +9,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -28,8 +29,7 @@ public class UserInterest extends BaseTime {
     private Interest interest;
 
     @Builder
-    public UserInterest(int id, User user, Interest interest) {
-        this.id = id;
+    public UserInterest(User user, Interest interest) {
         this.user = user;
         this.interest = interest;
     }

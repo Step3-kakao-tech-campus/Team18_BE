@@ -20,10 +20,10 @@ public class UserRequest {
     @Getter
     @Setter
     public static class SignUpDTO {
-        @NotNull
+        @NotNull(message = "이름을 입력해주세요.")
         private String firstName;
 
-        @NotNull
+        @NotNull(message = "성을 입력해주세요.")
         private String lastName;
 
         @NotNull
@@ -35,21 +35,24 @@ public class UserRequest {
         @Pattern(regexp = "^(?=.*[a-zA-Z])(?=.*\\d)(?=.*[@#$%^&+=!~`<>,./?;:'\"\\[\\]{}\\\\()|_-])\\S*$", message = "영문 대/소문자, 숫자, 특수문자를 포함해주세요.")
         private String password;
 
-        @NotNull
+        @NotNull(message = "국가를 선택해주세요.")
         private String country;
 
         private String introduction;
 
-        @NotNull
+        @NotNull(message = "나이를 입력해주세요.")
         private int age;
+
+        @NotNull(message = "연락처를 입력해주세요.")
+        private String phone;
         
         // 프로필 이미지의 경우, 추후 변경 예정
         private String profileImage;
 
-        @NotNull
+        @NotNull(message = "역할을 선택해주세요.")
         private Role role;
 
-        @NotNull
+        @NotNull(message = "관심 분야를 선택해주세요.")
         private List<String> categoryList;
 
 //        public User toEntity() {
@@ -78,5 +81,44 @@ public class UserRequest {
         @Size(min = 8, max = 16, message = "8~16자 이내로 입력해주세요.")
         @Pattern(regexp = "^(?=.*[a-zA-Z])(?=.*\\d)(?=.*[@#$%^&+=!~`<>,./?;:'\"\\[\\]{}\\\\()|_-])\\S*$", message = "영문 대/소문자, 숫자, 특수문자를 포함해주세요.")
         private String password;
+    }
+
+    @Getter
+    @Setter
+    public static class ProfileUpdateDTO {
+        @NotNull(message = "이름을 입력해주세요.")
+        private String firstName;
+
+        @NotNull(message = "성을 입력해주세요.")
+        private String lastName;
+
+        @NotNull
+        @Pattern(regexp = "^[\\w._%+-]+@[\\w.-]+\\.[a-zA-Z]{2,6}$", message = "이메일을 올바르게 입력해주세요.")
+        private String email;
+
+        @NotNull
+        @Size(min = 8, max = 16, message = "8~16자 이내로 입력해주세요.")
+        @Pattern(regexp = "^(?=.*[a-zA-Z])(?=.*\\d)(?=.*[@#$%^&+=!~`<>,./?;:'\"\\[\\]{}\\\\()|_-])\\S*$", message = "영문 대/소문자, 숫자, 특수문자를 포함해주세요.")
+        private String password;
+
+        @NotNull(message = "국가를 선택해주세요.")
+        private String country;
+
+        private String introduction;
+
+        @NotNull(message = "나이를 입력해주세요.")
+        private int age;
+
+        @NotNull(message = "연락처를 입력해주세요.")
+        private String phone;
+
+        // 프로필 이미지의 경우, 추후 변경 예정
+        private String profileImage;
+
+        @NotNull(message = "역할을 선택해주세요.")
+        private Role role;
+
+        @NotNull(message = "관심 분야를 선택해주세요.")
+        private List<String> categoryList;
     }
 }
