@@ -1,5 +1,7 @@
 package com.example.demo.mentoring;
 
+import com.example.demo.config.errors.exception.Exception400;
+import com.example.demo.config.errors.exception.Exception404;
 import com.example.demo.mentoring.contact.ContactJPARepository;
 import com.example.demo.mentoring.contact.NotConnectedRegisterUser;
 import com.example.demo.user.User;
@@ -49,7 +51,8 @@ public class MentorPostService {
     }
 
     public MentorPostResponse.MentorPostDTO findMentorPost(int id){
-        MentorPost mentorPost = mentorPostJPARepository.findById(id);
+        MentorPost mentorPost = mentorPostJPARepository.findById(id)
+                .orElseThrow(() -> new Exception404("해당 게시글이 존재하지 않습니다."));
 
         //writer 데이터
         User mentor = mentorPost.getWriter();
@@ -69,18 +72,11 @@ public class MentorPostService {
     @Transactional
     public void updateMentorPost(MentorPostRequest.CreateDTO createDTO, int id)
     {
-        Optional<MentorPost> optionalMentorPost = Optional.ofNullable(mentorPostJPARepository.findById(id));
+        MentorPost mentorPost = mentorPostJPARepository.findById(id)
+                .orElseThrow(() -> new Exception404("해당 게시글이 존재하지 않습니다."));
 
-        if(optionalMentorPost.isPresent())
-        {
-            MentorPost mentorPost = optionalMentorPost.get();
-            mentorPost.update(createDTO.getTitle(), createDTO.getContent());
-        }
-        else
-        {
-            // 예외처리
+        mentorPost.update(createDTO.getTitle(), createDTO.getContent());
 
-        }
     }
 
     public void deleteMentorPost(int id) {
@@ -102,18 +98,11 @@ public class MentorPostService {
 
     public void changeMentorPostStatus(MentorPostRequest.StateDTO stateDTO, int id)
     {
-        Optional<MentorPost> optionalMentorPost = Optional.ofNullable(mentorPostJPARepository.findById(id));
+        MentorPost mentorPost = mentorPostJPARepository.findById(id)
+                .orElseThrow(() -> new Exception404("해당 게시글이 존재하지 않습니다."));
 
-        if(optionalMentorPost.isPresent())
-        {
-            MentorPost mentorPost = optionalMentorPost.get();
-            mentorPost.changeStatus(stateDTO.getStateEnum());
-        }
-        else
-        {
-            // 예외처리
+        mentorPost.changeStatus(stateDTO.getStateEnum());
 
-        }
     }
 }
 
