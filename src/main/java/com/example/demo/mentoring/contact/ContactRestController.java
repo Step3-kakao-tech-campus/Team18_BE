@@ -5,6 +5,7 @@ import com.example.demo.config.utils.ApiUtils;
 import com.example.demo.user.Role;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -48,9 +49,10 @@ public class ContactRestController {
 
     @PostMapping(value = "/contacts/{id}/accept")
     @Operation(summary = "멘토링 신청 수락", description = "멘토링 신청을 수락한다.")
-    public ResponseEntity<?> acceptContact(@PathVariable int id, @RequestBody @Valid ContactRequest.AcceptDTO acceptDTO, Error errors, @AuthenticationPrincipal CustomUserDetails userDetails) {
+    public ResponseEntity<?> acceptContact(@PathVariable int id, @RequestBody @Valid List<ContactRequest.AcceptDTO> acceptDTO, Error errors, @AuthenticationPrincipal CustomUserDetails userDetails) {
         // TO-DO : 멘토링 신청 수락 API 로직 만들기
-        return null;
+        contactService.acceptContact(id, acceptDTO, userDetails.getUser());
+        return ResponseEntity.status(HttpStatus.OK).body(ApiUtils.successWithNoContent());
     }
 
 

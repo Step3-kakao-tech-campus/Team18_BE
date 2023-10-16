@@ -5,7 +5,9 @@ import com.example.demo.config.errors.exception.Exception401;
 import com.example.demo.config.errors.exception.Exception404;
 import com.example.demo.mentoring.MentorPost;
 import com.example.demo.mentoring.MentorPostJPARepostiory;
+import com.example.demo.mentoring.done.ConnectedUser;
 import com.example.demo.mentoring.done.DoneJPARepository;
+import com.example.demo.user.Role;
 import com.example.demo.user.User;
 import com.example.demo.user.UserJPARepository;
 import com.example.demo.user.userInterest.UserInterest;
@@ -94,5 +96,35 @@ public class ContactService {
         int doneCount = mentorPostJPARepository.countDoneByMentorId(userId);
 
         return new ContactResponse.postCountDTO(contactCount, doneCount);
+    }
+
+    public void acceptContact(int id, List<ContactRequest.AcceptDTO> acceptDTO, User user) {
+        // 예외 처리
+        if ( user.getRole() != Role.MENTOR ) {
+            throw new Exception401("해당 사용자는 멘토가 아닙니다.");
+        }
+
+        if (id != user.getId() ) {
+            throw new Exception401("올바른 사용자가 아닙니다.");
+        }
+
+        // ConnectedUser 에 추가
+        for ( ContactRequest.AcceptDTO acceptDTOs : acceptDTO ) {
+            // 멘토, 멘티 예외 처리
+            if ( acceptDTOs.getMentorId() != user.getId() || acceptDTOs.getMenteeId() != user.getId() ) {
+                throw new Exception401("올바른 사용자가 아닙니다.");
+            }
+
+            MentorPost mentorPost = mentorPostJPARepository.findById(acceptDTOs.getMentorId())
+                    .orElseThrow(() -> new Exception404("해당 게시글이 존재하지 않습니다."));
+
+            User menteeUser = userJPARepository.findById(acceptDTOs.getMenteeId())
+                    .orElseThrow(() -> new Exception404("해당 사용자가 존재하지 않습니다."));
+
+            // ConnectedUser 에 추가
+            ConnectedUser connectedUser = new ConnectedUser(mentorPost, menteeUser);
+            doneJPARepository.save(connectedUser);
+        }
+
     }
 }
