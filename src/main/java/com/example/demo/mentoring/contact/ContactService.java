@@ -98,6 +98,7 @@ public class ContactService {
         return new ContactResponse.postCountDTO(contactCount, doneCount);
     }
 
+    @Transactional
     public void acceptContact(int id, List<ContactRequest.AcceptDTO> acceptDTO, User user) {
         // 예외 처리
         if ( user.getRole() != Role.MENTOR ) {
@@ -118,12 +119,16 @@ public class ContactService {
             MentorPost mentorPost = mentorPostJPARepository.findById(acceptDTOs.getMentorId())
                     .orElseThrow(() -> new Exception404("해당 게시글이 존재하지 않습니다."));
 
-            User menteeUser = userJPARepository.findById(acceptDTOs.getMenteeId())
+            NotConnectedRegisterUser notConnectedMenteeUser = contactJPARepository.findById(acceptDTOs.getMenteeId())
                     .orElseThrow(() -> new Exception404("해당 사용자가 존재하지 않습니다."));
 
+            // 멘티의 상태를 ACCEPT 로 변경
+            notConnectedMenteeUser.updateStatus(NotConnectedRegisterUser.State.ACCEPT);
+
             // ConnectedUser 에 추가
-            ConnectedUser connectedUser = new ConnectedUser(mentorPost, menteeUser);
+            ConnectedUser connectedUser = new ConnectedUser(mentorPost, notConnectedMenteeUser.getMenteeUser());
             doneJPARepository.save(connectedUser);
+
         }
 
     }
