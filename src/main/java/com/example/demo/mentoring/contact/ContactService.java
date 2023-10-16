@@ -99,7 +99,7 @@ public class ContactService {
     }
 
     @Transactional
-    public void acceptContact(int id, List<ContactRequest.AcceptDTO> acceptDTO, User user) {
+    public void acceptContact(int id, ContactRequest.AcceptDTO acceptDTO, User user) {
         // 예외 처리
         if ( user.getRole() != Role.MENTOR ) {
             throw new Exception401("해당 사용자는 멘토가 아닙니다.");
@@ -109,26 +109,28 @@ public class ContactService {
             throw new Exception401("올바른 사용자가 아닙니다.");
         }
 
+        int mentorPostId = acceptDTO.getMentorPostId();
+
+        // 현재 멘토가 작성한 글인지 체크
+        MentorPost mentorPost = mentorPostJPARepository.findById(mentorPostId)
+                .orElseThrow(() -> new Exception404("해당 게시글을 찾을 수 없습니다."));
+
         // ConnectedUser 에 추가
-        for ( ContactRequest.AcceptDTO acceptDTOs : acceptDTO ) {
-            // 멘토, 멘티 예외 처리
-            if ( acceptDTOs.getMentorId() != user.getId() || acceptDTOs.getMenteeId() != user.getId() ) {
+        for ( ContactRequest.AcceptDTO.MentorAndMenteeDTO mentorAndMenteeDTO : acceptDTO.getMentorsAndMentees() ) {
+
+            // 멘토가 현재 유저와 같은지 확인
+            if ( mentorAndMenteeDTO.getMentorId() != user.getId() ) {
                 throw new Exception401("올바른 사용자가 아닙니다.");
             }
 
-            MentorPost mentorPost = mentorPostJPARepository.findById(acceptDTOs.getMentorId())
-                    .orElseThrow(() -> new Exception404("해당 게시글이 존재하지 않습니다."));
+            // notConnectedRegisterUser 의 state 바꾸기 -> ACCEPT
+            NotConnectedRegisterUser notConnectedRegisterUser = contactJPARepository.findByMentorPostIdAndMenteeUserId(mentorPostId, mentorAndMenteeDTO.getMenteeId())
+                    .orElseThrow(() -> new Exception404("해당 사용자를 찾을 수 없습니다."));
 
-            NotConnectedRegisterUser notConnectedMenteeUser = contactJPARepository.findById(acceptDTOs.getMenteeId())
-                    .orElseThrow(() -> new Exception404("해당 사용자가 존재하지 않습니다."));
+            notConnectedRegisterUser.updateStatus(NotConnectedRegisterUser.State.ACCEPT);
 
-            // 멘티의 상태를 ACCEPT 로 변경
-            notConnectedMenteeUser.updateStatus(NotConnectedRegisterUser.State.ACCEPT);
-
-            // ConnectedUser 에 추가
-            ConnectedUser connectedUser = new ConnectedUser(mentorPost, notConnectedMenteeUser.getMenteeUser());
-            doneJPARepository.save(connectedUser);
-
+            // ConnectedUser 에 save 하기
+            doneJPARepository.save(new ConnectedUser(mentorPost, notConnectedRegisterUser.getMenteeUser()));
         }
 
     }
