@@ -1,4 +1,4 @@
-package com.example.demo.user.userInterest;
+package com.example.demo.video;
 
 import com.example.demo.config.utils.BaseTime;
 import com.example.demo.interest.Interest;
@@ -9,28 +9,27 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.util.List;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
-@Table(name = "user_interest_tb")
-public class UserInterest extends BaseTime {
-    @Id
+@Table(name = "videoInterest_tb")
+public class VideoInterest extends BaseTime {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
     private int id;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
-    private User user;
+    private Video video;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "interest_id")
     private Interest interest;
 
     @Builder
-    public UserInterest(User user, Interest interest) {
-        this.user = user;
+    public VideoInterest(Video video, Interest interest) {
+        this.video = video;
         this.interest = interest;
     }
 }

@@ -1,8 +1,13 @@
 package com.example.demo.mentoring.contact;
 
+import com.example.demo.config.errors.exception.Exception400;
+import com.example.demo.config.errors.exception.Exception401;
+import com.example.demo.config.errors.exception.Exception404;
 import com.example.demo.mentoring.MentorPost;
 import com.example.demo.mentoring.MentorPostJPARepostiory;
+import com.example.demo.mentoring.done.ConnectedUser;
 import com.example.demo.mentoring.done.DoneJPARepository;
+import com.example.demo.user.Role;
 import com.example.demo.user.User;
 import com.example.demo.user.UserJPARepository;
 import com.example.demo.user.userInterest.UserInterest;
@@ -37,7 +42,8 @@ public class ContactService {
 
     // contact - mentee 부분 리팩토링 ( DTO 를 만드는 부분 )
     private ContactResponse.MenteeContactDTO createMenteeContactDTO(MentorPost mentorPost) {
-        User mentorUser = userJPARepository.findById(mentorPost.getWriter().getId());
+        User mentorUser = userJPARepository.findById(mentorPost.getWriter().getId())
+                .orElseThrow(() -> new Exception400("해당 사용자가 존재하지 않습니다."));
         List<UserInterest> mentorInterests = userInterestJPARepository.findAllById(mentorUser.getId());
 
         ContactResponse.MentorDTO mentorDTO = new ContactResponse.MentorDTO(mentorUser, mentorInterests);
@@ -52,7 +58,8 @@ public class ContactService {
      * **/
     public List<ContactResponse.MentorPostDTO> findAllByMentor(int userId) {
 
-        User mentorUser = userJPARepository.findById(userId);
+        User mentorUser = userJPARepository.findById(userId)
+                .orElseThrow(() -> new Exception404("해당 사용자가 존재하지 않습니다."));
         List<UserInterest> mentorInterests = userInterestJPARepository.findAllById(mentorUser.getId());
         ContactResponse.MentorDTO mentorDTO = new ContactResponse.MentorDTO(mentorUser, mentorInterests);
 
@@ -89,5 +96,42 @@ public class ContactService {
         int doneCount = mentorPostJPARepository.countDoneByMentorId(userId);
 
         return new ContactResponse.postCountDTO(contactCount, doneCount);
+    }
+
+    @Transactional
+    public void acceptContact(int id, ContactRequest.AcceptDTO acceptDTO, User user) {
+        // 예외 처리
+        if ( user.getRole() != Role.MENTOR ) {
+            throw new Exception401("해당 사용자는 멘토가 아닙니다.");
+        }
+
+        if (id != user.getId() ) {
+            throw new Exception401("올바른 사용자가 아닙니다.");
+        }
+
+        int mentorPostId = acceptDTO.getMentorPostId();
+
+        // 현재 멘토가 작성한 글인지 체크
+        MentorPost mentorPost = mentorPostJPARepository.findById(mentorPostId)
+                .orElseThrow(() -> new Exception404("해당 게시글을 찾을 수 없습니다."));
+
+        // ConnectedUser 에 추가
+        for ( ContactRequest.AcceptDTO.MentorAndMenteeDTO mentorAndMenteeDTO : acceptDTO.getMentorsAndMentees() ) {
+
+            // 멘토가 현재 유저와 같은지 확인
+            if ( mentorAndMenteeDTO.getMentorId() != user.getId() ) {
+                throw new Exception401("올바른 사용자가 아닙니다.");
+            }
+
+            // notConnectedRegisterUser 의 state 바꾸기 -> ACCEPT
+            NotConnectedRegisterUser notConnectedRegisterUser = contactJPARepository.findByMentorPostIdAndMenteeUserId(mentorPostId, mentorAndMenteeDTO.getMenteeId())
+                    .orElseThrow(() -> new Exception404("해당 사용자를 찾을 수 없습니다."));
+
+            notConnectedRegisterUser.updateStatus(NotConnectedRegisterUser.State.ACCEPT);
+
+            // ConnectedUser 에 save 하기
+            doneJPARepository.save(new ConnectedUser(mentorPost, notConnectedRegisterUser.getMenteeUser()));
+        }
+
     }
 }

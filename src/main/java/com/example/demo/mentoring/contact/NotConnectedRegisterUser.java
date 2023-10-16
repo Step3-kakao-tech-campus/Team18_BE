@@ -34,6 +34,10 @@ public class NotConnectedRegisterUser extends BaseTime {
     @Enumerated(value = EnumType.STRING)
     private State state;
 
+    public void updateStatus(State state) {
+        this.state = state;
+    }
+
     public enum State {
         ACCEPT, REFUSE, AWAIT
     }

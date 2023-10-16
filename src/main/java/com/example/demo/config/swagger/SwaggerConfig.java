@@ -13,26 +13,26 @@ import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 @Configuration
-@EnableSwagger2
 public class SwaggerConfig {
-    private String version = "V0.1";
+    private static final String SERVICE_NAME = "Garden";
+    private static final String API_VERSION = "0.0.1";
+    private static final String API_DESCRIPTION = "가드너 팀의 Garden API 명세서";
 
     @Bean
     public Docket api() {
         return new Docket(DocumentationType.SWAGGER_2)
+                .apiInfo(apiInfo())
                 .select()
                 .apis(RequestHandlerSelectors.withClassAnnotation(RestController.class))
                 .paths(PathSelectors.any())
-                .build()
-                .apiInfo(apiInfo());
+                .build();
     }
 
     private ApiInfo apiInfo() {
         return new ApiInfoBuilder()
-                .title("제목")
-                .description("설명")
-                .version(version)
-                .contact(new Contact("이름", "홈페이지 URL", "e-mail"))
+                .title(SERVICE_NAME)
+                .version(API_VERSION)
+                .description(API_DESCRIPTION)
                 .build();
     }
 }
