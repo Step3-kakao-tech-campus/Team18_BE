@@ -19,7 +19,7 @@ public class ContactRestController {
     private final ContactService contactService;
 
     @GetMapping(value = "/contacts")
-    @Operation(summary = "", description = "")
+    @Operation(summary = "contact 화면 조회", description = "멘토, 멘티 화면에 따라 적절한 화면을 보여준다.")
     public ResponseEntity<?> findAll(@AuthenticationPrincipal CustomUserDetails userDetails) {
         if ( userDetails.getUser().getRole() == Role.MENTEE ) {
             List<ContactResponse.MenteeContactDTO> responseDTO = contactService.findAllByMentee(userDetails.getUser().getId());
@@ -31,7 +31,7 @@ public class ContactRestController {
 
     
     @GetMapping(value = "/contacts/postCounts")
-    @Operation(summary = "", description = "")
+    @Operation(summary = "게시글의 갯수 조회", description = "멘토, 멘티 화면에 따라 contact, done 화면의 게시글 갯수를 보여준다.")
     public ResponseEntity<?> postCounts(@AuthenticationPrincipal CustomUserDetails userDetails) {
         // TO-DO : contact, done 옆 숫자를 띄우는 API 로직 만들기 ( 멘토, 멘티 나눠서 )
 
