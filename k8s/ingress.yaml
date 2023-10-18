@@ -6,7 +6,7 @@ metadata:
   labels:
     app.kubernetes.io/managed-by: kargocd
   name: krampoline
-  namespace: default
+  namespace: krampoline
 spec:
   rules:
     - http:
