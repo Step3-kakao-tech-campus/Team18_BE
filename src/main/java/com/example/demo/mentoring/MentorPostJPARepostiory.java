@@ -6,13 +6,14 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface MentorPostJPARepostiory extends JpaRepository<MentorPost, Integer> {
 
     @Query("select m from MentorPost m where m.writer.id = :writer and m.state = 'ACTIVE'")
     List<MentorPost> findAllByWriter(@Param("writer") int writer);
 
-    MentorPost findById(int id);
+    Optional<MentorPost> findById(int id);
 
     @Query("select count(*) from MentorPost m where m.writer.id = :userId and m.state = 'ACTIVE'")
     int countContactByMentorId(int userId);
