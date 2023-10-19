@@ -1,7 +1,7 @@
 package com.example.demo.config.auth;
 
-import com.example.demo.user.User;
-import com.example.demo.user.UserJPARepository;
+import com.example.demo.account.Account;
+import com.example.demo.account.AccountJPARepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -13,17 +13,17 @@ import java.util.Optional;
 @RequiredArgsConstructor
 @Service
 public class CustomUserDetailService implements UserDetailsService {
-    private final UserJPARepository accountJPARepository;
+    private final AccountJPARepository accountJPARepository;
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        Optional<User> optionalAccount = accountJPARepository.findByEmail(email);
+        Optional<Account> optionalAccount = accountJPARepository.findByEmail(email);
 
         if (optionalAccount.isEmpty()) {
             return null;
         }
         else {
-            User account = optionalAccount.get();
+            Account account = optionalAccount.get();
             return new CustomUserDetails(account);
         }
     }
