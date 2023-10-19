@@ -2,6 +2,8 @@ package com.example.demo.mentoringtest;
 
 
 import com.example.demo.RestDoc;
+import com.example.demo.config.errors.exception.Exception400;
+import com.example.demo.config.errors.exception.Exception404;
 import com.example.demo.config.utils.StateEnum;
 import com.example.demo.interest.Interest;
 import com.example.demo.interest.InterestJPARepository;
@@ -70,6 +72,7 @@ public class MentoringTest extends RestDoc {
                 .country("Korea")
                 .age(21)
                 .role(Role.MENTOR)
+                .phone("010-0000-0000")
                 .build();
 
         //when
@@ -96,7 +99,12 @@ public class MentoringTest extends RestDoc {
         mentorPostRequest.setContent("content");
         mentorPostService.createMentorPost(mentorPostRequest, writer);
 
+<<<<<<< HEAD
         MentorPost mentorPostFind = mentorPostJPARepostiory.findById(1).get();
+=======
+        MentorPost mentorPostFind = mentorPostJPARepostiory.findById(1)
+                .orElseThrow(() -> new Exception404("해당 게시글이 존재하지 않습니다."));
+>>>>>>> 739aaac37c018629e94c88a181edbc5c0035c5b0
         Assertions.assertThat(1)
                 .isEqualTo(mentorPostFind.getId());
         Assertions.assertThat(mentorPostRequest.getTitle())
@@ -119,6 +127,7 @@ public class MentoringTest extends RestDoc {
                 .country("Korea")
                 .age(21)
                 .role(Role.MENTOR)
+                .phone("010-0000-0000")
                 .build();
 
         User mentee_One = User.builder()
@@ -129,6 +138,7 @@ public class MentoringTest extends RestDoc {
                 .country("Korea")
                 .age(21)
                 .role(Role.MENTEE)
+                .phone("010-0000-0000")
                 .build();
 
         User mentee_Two = User.builder()
@@ -139,6 +149,7 @@ public class MentoringTest extends RestDoc {
                 .country("Korea")
                 .age(21)
                 .role(Role.MENTEE)
+                .phone("010-0000-0000")
                 .build();
 
         Interest interest1 = Interest.builder()
@@ -232,6 +243,7 @@ public class MentoringTest extends RestDoc {
             .country("Korea")
             .age(21)
             .role(Role.MENTOR)
+            .phone("010-0000-0000")
             .build();
 
         MentorPostRequest.CreateDTO mentorPostRequest = new MentorPostRequest.CreateDTO();
@@ -246,7 +258,12 @@ public class MentoringTest extends RestDoc {
         mentorPostService.createMentorPost(mentorPostRequest, writer);
         mentorPostService.updateMentorPost(mentorPostUpdated,2);
 
+<<<<<<< HEAD
         MentorPost mentorPostFind = mentorPostJPARepostiory.findById(2).get();
+=======
+        MentorPost mentorPostFind = mentorPostJPARepostiory.findById(2)
+                .orElseThrow(() -> new Exception404("해당 게시글이 존재하지 않습니다."));
+>>>>>>> 739aaac37c018629e94c88a181edbc5c0035c5b0
         Assertions.assertThat(2)
                 .isEqualTo(mentorPostFind.getId());
         Assertions.assertThat(mentorPostUpdated.getTitle())
@@ -300,8 +317,15 @@ public class MentoringTest extends RestDoc {
     public void DeleteMentorPost() throws Exception{
         int id = 2;
         mentorPostService.deleteMentorPost(id);
+<<<<<<< HEAD
         MentorPost mentorPostFind = mentorPostJPARepostiory.findById(2).get();
         assertNull(mentorPostFind, "mentorPostNotFound");
+=======
+
+        MentorPost mentorPostFind = mentorPostJPARepostiory.findById(2)
+                .orElse(null);
+        assertNull(mentorPostFind);
+>>>>>>> 739aaac37c018629e94c88a181edbc5c0035c5b0
     }
 
     @Test

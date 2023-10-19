@@ -13,8 +13,11 @@ public interface MentorPostJPARepostiory extends JpaRepository<MentorPost, Integ
     @Query("select m from MentorPost m where m.writer.id = :writer and m.state = 'ACTIVE'")
     List<MentorPost> findAllByWriter(@Param("writer") int writer);
 
+<<<<<<< HEAD
     Optional<MentorPost> findById(int id);
 
+=======
+>>>>>>> 739aaac37c018629e94c88a181edbc5c0035c5b0
     @Query("select count(*) from MentorPost m where m.writer.id = :userId and m.state = 'ACTIVE'")
     int countContactByMentorId(int userId);
 

@@ -1,6 +1,11 @@
 package com.example.demo.mentoring;
 
+<<<<<<< HEAD
 import com.example.demo.config.errors.exception.Exception500;
+=======
+import com.example.demo.config.errors.exception.Exception400;
+import com.example.demo.config.errors.exception.Exception404;
+>>>>>>> 739aaac37c018629e94c88a181edbc5c0035c5b0
 import com.example.demo.mentoring.contact.ContactJPARepository;
 import com.example.demo.mentoring.contact.NotConnectedRegisterUser;
 import com.example.demo.user.User;
@@ -66,7 +71,11 @@ public class MentorPostService {
 
     public MentorPostResponse.MentorPostDTO findMentorPost(int id){
         MentorPost mentorPost = mentorPostJPARepository.findById(id)
+<<<<<<< HEAD
                 .orElseThrow(() -> new Exception404("해당 글이 존재하지 않습니다.\n" + "id : " + id));
+=======
+                .orElseThrow(() -> new Exception404("해당 게시글이 존재하지 않습니다."));
+>>>>>>> 739aaac37c018629e94c88a181edbc5c0035c5b0
 
         //writer 데이터
         User mentor = mentorPost.getWriter();
@@ -86,6 +95,7 @@ public class MentorPostService {
     @Transactional
     public void updateMentorPost(MentorPostRequest.CreateDTO createDTO, int id)
     {
+<<<<<<< HEAD
         MentorPost mentorPost = mentorPostJPARepository.findById(id).
                 orElseThrow(() -> new Exception404("해당 글이 존재하지 않습니다."));
 
@@ -94,6 +104,13 @@ public class MentorPostService {
         } catch (Exception e) {
             throw new Exception500("unknown server error");
         }
+=======
+        MentorPost mentorPost = mentorPostJPARepository.findById(id)
+                .orElseThrow(() -> new Exception404("해당 게시글이 존재하지 않습니다."));
+
+        mentorPost.update(createDTO.getTitle(), createDTO.getContent());
+
+>>>>>>> 739aaac37c018629e94c88a181edbc5c0035c5b0
     }
 
     public void deleteMentorPost(int id) {
@@ -124,8 +141,15 @@ public class MentorPostService {
     public void changeMentorPostStatus(MentorPostRequest.StateDTO stateDTO, int id)
     {
         MentorPost mentorPost = mentorPostJPARepository.findById(id)
+<<<<<<< HEAD
                 .orElseThrow(() -> new Exception404("해당 글이 존재하지 않습니다."));;
         mentorPost.changeStatus(stateDTO.getStateEnum());
+=======
+                .orElseThrow(() -> new Exception404("해당 게시글이 존재하지 않습니다."));
+
+        mentorPost.changeStatus(stateDTO.getStateEnum());
+
+>>>>>>> 739aaac37c018629e94c88a181edbc5c0035c5b0
     }
 }
 
