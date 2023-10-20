@@ -319,7 +319,6 @@ public class MentoringTest extends RestDoc {
     @DisplayName("DoneTest")
     public void PatchDoneMentorPost() throws Exception{
         int id = 1;
-
         MentorPostRequest.StateDTO stateDTO = new MentorPostRequest.StateDTO();
         stateDTO.setStateEnum(StateEnum.DONE);
         mentorPostService.changeMentorPostStatus(stateDTO, id);
