@@ -6,10 +6,12 @@ server:
   port: 8080
 spring:
   datasource:
-    url: ${DATABASE_URL}?allowPublicKeyRetrieval=true&useSSL=false
+    url: jdbc:mariadb://localhost:3306/kakao?allowPublicKeyRetrieval=true&useSSL=false
     driver-class-name: org.mariadb.jdbc.Driver
     username: root
     password: root
+  jpa:
+    database-platform: org.hibernate.dialect.MySQLDialect
     hibernate:
       ddl-auto: none
     show-sql: true
@@ -21,7 +23,7 @@ spring:
 
 logging:
   level:
-    '[com.example.kakao]': INFO
+    '[com.example.kakao]': DEBUG
     '[org.hibernate.type]': TRACE
 
 file:
