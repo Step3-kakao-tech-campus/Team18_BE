@@ -2,9 +2,8 @@ package com.example.demo.mentoringtest;
 
 
 import com.example.demo.RestDoc;
-import com.example.demo.config.errors.exception.Exception400;
 import com.example.demo.config.errors.exception.Exception404;
-import com.example.demo.config.utils.StateEnum;
+import com.example.demo.mentoring.MentorPostStateEnum;
 import com.example.demo.interest.Interest;
 import com.example.demo.interest.InterestJPARepository;
 import com.example.demo.mentoring.*;
@@ -23,11 +22,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.ResultActions;
 
 
@@ -320,7 +316,7 @@ public class MentoringTest extends RestDoc {
     public void PatchDoneMentorPost() throws Exception{
         int id = 1;
         MentorPostRequest.StateDTO stateDTO = new MentorPostRequest.StateDTO();
-        stateDTO.setStateEnum(StateEnum.DONE);
+        stateDTO.setMentorPostStateEnum(MentorPostStateEnum.DONE);
         mentorPostService.changeMentorPostStatus(stateDTO, id);
     }
 

@@ -1,7 +1,6 @@
 package com.example.demo.mentoring;
 
 import com.example.demo.config.errors.exception.Exception500;
-import com.example.demo.config.errors.exception.Exception400;
 import com.example.demo.config.errors.exception.Exception404;
 import com.example.demo.mentoring.contact.ContactJPARepository;
 import com.example.demo.mentoring.contact.NotConnectedRegisterUser;
@@ -14,11 +13,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import com.example.demo.config.errors.exception.Exception400;
-import com.example.demo.config.errors.exception.Exception404;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Transactional
@@ -127,7 +123,7 @@ public class MentorPostService {
     {
         MentorPost mentorPost = mentorPostJPARepository.findById(id)
                 .orElseThrow(() -> new Exception404("해당 글이 존재하지 않습니다."));;
-        mentorPost.changeStatus(stateDTO.getStateEnum());
+        mentorPost.changeStatus(stateDTO.getMentorPostStateEnum());
     }
 }
 
