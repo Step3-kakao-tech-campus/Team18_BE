@@ -45,10 +45,33 @@ public class MentorPostService {
    /* 1. mentorPostList를 조회
     2. 각 List당 writer별 writerInterests를 조회
     3. MentorPostDTO 생성*/
-    public List<MentorPostResponse.MentorPostAllDTO> findAllMentorPost(int page) {
+    public List<MentorPostResponse.MentorPostAllDTO> findAllMentorPost(String serachCategory, String keyword, int page) {
         Pageable pageable = PageRequest.of(page,5);
+        Page<MentorPost> pageContent = null;
+        
+        //검색별 pageContent 검색
+        if(serachCategory == "")
+        {
+            pageContent = mentorPostJPARepository.findAll(pageable);
+        }
+        else if(serachCategory == "title")
+        {
+            pageContent = mentorPostJPARepository.findAllByTitleKeyword("%" + keyword + "%", pageable);
+        }
+        else if(serachCategory == "writer")
+        {
+            pageContent = mentorPostJPARepository.findAllByWriterKeyword("%" + keyword + "%", pageable);
+        }
+        else if(serachCategory == "interest")
+        {
+            //이거해야됨
+            //pageContent = mentorPostJPARepository.findAllByInterestKeyword("%" + keyword + "%", pageable);
+        }
+        else
+        {
+            throw new Exception404("검색 분류가 잘못되었습니다.");
+        }
 
-        Page<MentorPost> pageContent = mentorPostJPARepository.findAll(pageable);
 
         if(pageContent.getTotalPages() == 0){
             throw new Exception404("해당 글들이 존재하지 않습니다");

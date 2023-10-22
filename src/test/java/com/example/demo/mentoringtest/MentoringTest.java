@@ -188,7 +188,37 @@ public class MentoringTest extends RestDoc {
 
         MentorPost mentorPost3 = MentorPost.builder()
                 .writer(mentor)
-                .title("title")
+                .title("titleab")
+                .content("content")
+                .build();
+
+        MentorPost mentorPost4 = MentorPost.builder()
+                .writer(mentor)
+                .title("abtitle4")
+                .content("content")
+                .build();
+
+        MentorPost mentorPost5 = MentorPost.builder()
+                .writer(mentor)
+                .title("title5")
+                .content("content")
+                .build();
+
+        MentorPost mentorPost6 = MentorPost.builder()
+                .writer(mentor)
+                .title("tabitle6")
+                .content("content")
+                .build();
+
+        MentorPost mentorPost7 = MentorPost.builder()
+                .writer(mentor)
+                .title("title7")
+                .content("content")
+                .build();
+
+        MentorPost mentorPost8 = MentorPost.builder()
+                .writer(mentor)
+                .title("abtitle8")
                 .content("content")
                 .build();
 
@@ -212,6 +242,11 @@ public class MentoringTest extends RestDoc {
         userJPARepository.save(mentee_One);
         userJPARepository.save(mentee_Two);
         mentorPostJPARepostiory.save(mentorPost3);
+        mentorPostJPARepostiory.save(mentorPost4);
+        mentorPostJPARepostiory.save(mentorPost5);
+        mentorPostJPARepostiory.save(mentorPost6);
+        mentorPostJPARepostiory.save(mentorPost7);
+        mentorPostJPARepostiory.save(mentorPost8);
         userInterestJPARepository.save(userInterest1);
         userInterestJPARepository.save(userInterest2);
         userInterestJPARepository.save(userInterest3);
@@ -322,7 +357,7 @@ public class MentoringTest extends RestDoc {
 
     @Test
     void mentorPostServiceTest() throws Exception {
-        List<MentorPostResponse.MentorPostAllWithTimeStampDTO> mentorPostFind = mentorPostService.findAllMentorPostWithTimeStamp();
+        List<MentorPostResponse.MentorPostAllDTO> mentorPostFind = mentorPostService.findAllMentorPost("title","ab",0);
 
         String responseBody = om.writeValueAsString(mentorPostFind);
 
