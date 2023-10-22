@@ -16,8 +16,8 @@ import javax.persistence.*;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 @Where(clause = "deleted_at IS NULL")
-@SQLDelete(sql = "UPDATE not_connected_register_user_tb SET deleted_at = CURRENT_TIMESTAMP, isDeleted = TRUE where id = ?")
-@Table(name = "notConnectedRegisterUser_tb")
+@SQLDelete(sql = "UPDATE not_connected_register_users SET deleted_at = CURRENT_TIMESTAMP, isDeleted = TRUE where id = ?")
+@Table(name = "not_connected_register_users")
 public class NotConnectedRegisterUser extends BaseTime {
 
     @Id
