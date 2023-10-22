@@ -1,5 +1,8 @@
 package com.example.demo.mentoring;
 
+import com.example.demo.config.errors.exception.Exception500;
+import com.example.demo.config.errors.exception.Exception400;
+import com.example.demo.config.errors.exception.Exception404;
 import com.example.demo.mentoring.contact.ContactJPARepository;
 import com.example.demo.mentoring.contact.NotConnectedRegisterUser;
 import com.example.demo.user.User;
@@ -11,6 +14,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import com.example.demo.config.errors.exception.Exception400;
+import com.example.demo.config.errors.exception.Exception404;
 
 import java.util.List;
 import java.util.Optional;
@@ -28,7 +33,11 @@ public class MentorPostService {
     @Transactional
     public void createMentorPost(MentorPostRequest.CreateDTO createDTO, User writer) {
         MentorPost mentorPost = new MentorPost( writer, createDTO.getTitle(), createDTO.getContent());
-        mentorPostJPARepository.save(mentorPost);
+        try {
+            mentorPostJPARepository.save(mentorPost);
+        } catch (Exception e) {
+            throw new Exception500("unknown server error");
+        }
     }
 
    /* 1. mentorPostList를 조회
@@ -38,10 +47,19 @@ public class MentorPostService {
         Pageable pageable = PageRequest.of(page,5);
 
         Page<MentorPost> pageContent = mentorPostJPARepository.findAll(pageable);
+
+        if(pageContent.getTotalPages() == 0){
+            throw new Exception404("해당 글들이 존재하지 않습니다");
+        }
+
         //List<MentorPost> mentorPostList = mentorPostJPARepostiory.findAll();
         List<MentorPostResponse.MentorPostAllDTO> mentorPostDTOList = pageContent.getContent().stream().map(
                 mentorPost -> {
                     List<UserInterest> writerInterests = userInterestJPARepository.findAllById(mentorPost.getWriter().getId());
+                    if(writerInterests.isEmpty()){
+                        throw new Exception404("해당 카테고리는 존재하지 않습니다");
+                    }
+
                     return new MentorPostResponse.MentorPostAllDTO(mentorPost,writerInterests);
                 }
         ).collect(Collectors.toList());
@@ -49,7 +67,8 @@ public class MentorPostService {
     }
 
     public MentorPostResponse.MentorPostDTO findMentorPost(int id){
-        MentorPost mentorPost = mentorPostJPARepository.findById(id);
+        MentorPost mentorPost = mentorPostJPARepository.findById(id)
+                .orElseThrow(() -> new Exception404("해당 글이 존재하지 않습니다.\n" + "id : " + id));
 
         //writer 데이터
         User mentor = mentorPost.getWriter();
@@ -69,22 +88,22 @@ public class MentorPostService {
     @Transactional
     public void updateMentorPost(MentorPostRequest.CreateDTO createDTO, int id)
     {
-        Optional<MentorPost> optionalMentorPost = Optional.ofNullable(mentorPostJPARepository.findById(id));
+        MentorPost mentorPost = mentorPostJPARepository.findById(id).
+                orElseThrow(() -> new Exception404("해당 글이 존재하지 않습니다."));
 
-        if(optionalMentorPost.isPresent())
-        {
-            MentorPost mentorPost = optionalMentorPost.get();
+        try {
             mentorPost.update(createDTO.getTitle(), createDTO.getContent());
-        }
-        else
-        {
-            // 예외처리
-
+        } catch (Exception e) {
+            throw new Exception500("unknown server error");
         }
     }
 
     public void deleteMentorPost(int id) {
-        mentorPostJPARepository.deleteById(id);
+        try {
+            mentorPostJPARepository.deleteById(id);
+        } catch (Exception e) {
+            throw new Exception500("unknown server error");
+        }
     }
 
     //생성 시간까지 조회하는 test service 코드 입니다
@@ -94,6 +113,10 @@ public class MentorPostService {
         List<MentorPostResponse.MentorPostAllWithTimeStampDTO> mentorPostDTOList = pageContent.stream().map(
                 mentorPost -> {
                     List<UserInterest> writerInterests = userInterestJPARepository.findAllById(mentorPost.getWriter().getId());
+                    if(writerInterests.isEmpty()){
+                        throw new Exception404("해당 카테고리는 존재하지 않습니다");
+                    }
+
                     return new MentorPostResponse.MentorPostAllWithTimeStampDTO(mentorPost,writerInterests);
                 }
         ).collect(Collectors.toList());
@@ -102,18 +125,9 @@ public class MentorPostService {
 
     public void changeMentorPostStatus(MentorPostRequest.StateDTO stateDTO, int id)
     {
-        Optional<MentorPost> optionalMentorPost = Optional.ofNullable(mentorPostJPARepository.findById(id));
-
-        if(optionalMentorPost.isPresent())
-        {
-            MentorPost mentorPost = optionalMentorPost.get();
-            mentorPost.changeStatus(stateDTO.getStateEnum());
-        }
-        else
-        {
-            // 예외처리
-
-        }
+        MentorPost mentorPost = mentorPostJPARepository.findById(id)
+                .orElseThrow(() -> new Exception404("해당 글이 존재하지 않습니다."));;
+        mentorPost.changeStatus(stateDTO.getStateEnum());
     }
 }
 

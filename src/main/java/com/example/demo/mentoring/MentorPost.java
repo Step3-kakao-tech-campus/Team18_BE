@@ -18,8 +18,8 @@ import javax.persistence.*;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 @Where(clause = "deleted_at IS NULL")
-@SQLDelete(sql = "UPDATE mentor_post_tb SET deleted_at = CURRENT_TIMESTAMP, is_deleted = TRUE where id = ?")
-@Table(name = "mentorPost_tb")
+@SQLDelete(sql = "UPDATE mentor_posts SET deleted_at = CURRENT_TIMESTAMP, is_deleted = TRUE where id = ?")
+@Table(name = "mentor_posts")
 public class MentorPost extends BaseTime {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -31,6 +31,7 @@ public class MentorPost extends BaseTime {
     @Column(nullable = false)
     private String title;
 
+    @Column(length = 300)
     private String content;
 
     @Convert(converter = StateConverter.class)
