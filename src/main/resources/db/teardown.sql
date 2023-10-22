@@ -8,13 +8,13 @@ TRUNCATE TABLE connected_user_tb;
 SET REFERENTIAL_INTEGRITY TRUE;
 
 -- user Table
-INSERT INTO user_tb (created_at, first_name, last_name, email, password, country, introduction, age, profile_image, role) VALUES
-   (NOW(), 'John', 'Doe', 'john@example.com', '{bcrypt}$2a$10$8H0OT8wgtALJkig6fmypi.Y7jzI5Y7W9PGgRKqnVeS2cLWGifwHF2', 'USA', 'Hello, I am John.', 25, 'profile.jpg', 'MENTOR'),
-   (NOW(), 'Alice', 'Smith', 'alice.smith@example.com', '{bcrypt}$2a$10$8H0OT8wgtALJkig6fmypi.Y7jzI5Y7W9PGgRKqnVeS2cLWGifwHF2', 'Canada', 'I love painting.', 25, 'image2.jpg', 'MENTOR'),
-   (NOW(), 'Admin', 'Admin', 'admin@example.com', '{bcrypt}$2a$10$8H0OT8wgtALJkig6fmypi.Y7jzI5Y7W9PGgRKqnVeS2cLWGifwHF2', 'USA', 'I am an admin user.', 35, 'admin.jpg', 'MENTEE'),
-   (NOW(), 'Jane', 'Smith', 'jane@example.com', '{bcrypt}$2a$10$8H0OT8wgtALJkig6fmypi.Y7jzI5Y7W9PGgRKqnVeS2cLWGifwHF2', 'Canada', 'I love coding.', 30, 'profile.jpg', 'MENTEE'),
-   (NOW(), 'Admin', 'Adminson', 'admin22222@example.com', '{bcrypt}$2a$10$8H0OT8wgtALJkig6fmypi.Y7jzI5Y7W9PGgRKqnVeS2cLWGifwHF2', 'USA', 'I am the admin.', 35, 'admin.jpg', 'MENTEE'),
-   (NOW(), 'Adminnnn', 'Adminsonnnnn', 'admin33333@example.com', '{bcrypt}$2a$10$8H0OT8wgtALJkig6fmypi.Y7jzI5Y7W9PGgRKqnVeS2cLWGifwHF2', 'USA', 'I am the admin.', 35, 'admin.jpg', 'MENTEE');
+INSERT INTO user_tb (created_at, first_name, last_name, email, password, country, introduction, age, profile_image, role, phone) VALUES
+   (NOW(), 'John', 'Doe', 'john@example.com', '{bcrypt}$2a$10$8H0OT8wgtALJkig6fmypi.Y7jzI5Y7W9PGgRKqnVeS2cLWGifwHF2', 'USA', 'Hello, I am John.', 25, 'profile.jpg', 'MENTOR', '010-0000-0000'),
+   (NOW(), 'Alice', 'Smith', 'alice.smith@example.com', '{bcrypt}$2a$10$8H0OT8wgtALJkig6fmypi.Y7jzI5Y7W9PGgRKqnVeS2cLWGifwHF2', 'Canada', 'I love painting.', 25, 'image2.jpg', 'MENTOR', '010-0000-0000'),
+   (NOW(), 'Admin', 'Admin', 'admin@example.com', '{bcrypt}$2a$10$8H0OT8wgtALJkig6fmypi.Y7jzI5Y7W9PGgRKqnVeS2cLWGifwHF2', 'USA', 'I am an admin user.', 35, 'admin.jpg', 'MENTEE', '010-0000-0000'),
+   (NOW(), 'Jane', 'Smith', 'jane@example.com', '{bcrypt}$2a$10$8H0OT8wgtALJkig6fmypi.Y7jzI5Y7W9PGgRKqnVeS2cLWGifwHF2', 'Canada', 'I love coding.', 30, 'profile.jpg', 'MENTEE', '010-0000-0000'),
+   (NOW(), 'Admin', 'Adminson', 'admin22222@example.com', '{bcrypt}$2a$10$8H0OT8wgtALJkig6fmypi.Y7jzI5Y7W9PGgRKqnVeS2cLWGifwHF2', 'USA', 'I am the admin.', 35, 'admin.jpg', 'MENTEE', '010-0000-0000'),
+   (NOW(), 'Adminnnn', 'Adminsonnnnn', 'admin33333@example.com', '{bcrypt}$2a$10$8H0OT8wgtALJkig6fmypi.Y7jzI5Y7W9PGgRKqnVeS2cLWGifwHF2', 'USA', 'I am the admin.', 35, 'admin.jpg', 'MENTEE', '010-0000-0000');
 
 -- interst Table
 INSERT INTO interest_tb (created_at, category) VALUES
