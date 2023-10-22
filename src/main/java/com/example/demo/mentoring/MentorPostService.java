@@ -1,9 +1,11 @@
 package com.example.demo.mentoring;
 
+import com.example.demo.config.errors.exception.Exception401;
 import com.example.demo.config.errors.exception.Exception500;
 import com.example.demo.config.errors.exception.Exception404;
 import com.example.demo.mentoring.contact.ContactJPARepository;
 import com.example.demo.mentoring.contact.NotConnectedRegisterUser;
+import com.example.demo.user.Role;
 import com.example.demo.user.User;
 import com.example.demo.user.userInterest.UserInterest;
 import com.example.demo.user.userInterest.UserInterestJPARepository;
@@ -28,6 +30,10 @@ public class MentorPostService {
     //mentorPost생성
     @Transactional
     public void createMentorPost(MentorPostRequest.CreateDTO createDTO, User writer) {
+        if ( writer.getRole() == Role.MENTEE ) {
+            throw new Exception401("해당 사용자는 멘티입니다.");
+        }
+
         MentorPost mentorPost = new MentorPost( writer, createDTO.getTitle(), createDTO.getContent());
         try {
             mentorPostJPARepository.save(mentorPost);
@@ -52,10 +58,6 @@ public class MentorPostService {
         List<MentorPostResponse.MentorPostAllDTO> mentorPostDTOList = pageContent.getContent().stream().map(
                 mentorPost -> {
                     List<UserInterest> writerInterests = userInterestJPARepository.findAllById(mentorPost.getWriter().getId());
-                    if(writerInterests.isEmpty()){
-                        throw new Exception404("해당 카테고리는 존재하지 않습니다");
-                    }
-
                     return new MentorPostResponse.MentorPostAllDTO(mentorPost,writerInterests);
                 }
         ).collect(Collectors.toList());
@@ -67,6 +69,7 @@ public class MentorPostService {
                 .orElseThrow(() -> new Exception404("해당 글이 존재하지 않습니다.\n" + "id : " + id));
 
         //writer 데이터
+        //writer를 제외하고는 다 null 가능
         User mentor = mentorPost.getWriter();
         //mentee들 데이터
         List<NotConnectedRegisterUser> menteeList = contactJPARepository.findAllByMentorPostId(id);
@@ -123,7 +126,12 @@ public class MentorPostService {
     {
         MentorPost mentorPost = mentorPostJPARepository.findById(id)
                 .orElseThrow(() -> new Exception404("해당 글이 존재하지 않습니다."));;
-        mentorPost.changeStatus(stateDTO.getMentorPostStateEnum());
+
+        try {
+            mentorPost.changeStatus(stateDTO.getMentorPostStateEnum());
+        } catch (Exception e) {
+            throw new Exception500("unknown server error");
+        }
     }
 }
 
