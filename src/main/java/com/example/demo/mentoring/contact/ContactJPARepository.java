@@ -5,10 +5,13 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface ContactJPARepository extends JpaRepository<NotConnectedRegisterUser, Integer> {
 
     @Query("SELECT ncru FROM NotConnectedRegisterUser ncru WHERE ncru.mentorPost.id = :mentorPostId")
     List<NotConnectedRegisterUser> findAllByMentorPostId(@Param("mentorPostId") int mentorPostId);
 
+    @Query("SELECT ncru FROM NotConnectedRegisterUser ncru WHERE ncru.mentorPost.id = :mentorPostId AND ncru.menteeUser.id = :menteeId")
+    Optional<NotConnectedRegisterUser> findByMentorPostIdAndMenteeUserId(int mentorPostId, int menteeId);
 }

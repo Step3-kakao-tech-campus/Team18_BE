@@ -1,5 +1,6 @@
 package com.example.demo;
 
+import com.example.demo.config.errors.exception.Exception404;
 import com.example.demo.user.Role;
 import com.example.demo.user.User;
 import com.example.demo.user.UserJPARepository;
@@ -29,13 +30,15 @@ public class AccountTest {
                 .country("Korea")
                 .age(21)
                 .role(Role.MENTOR)
+                .phone("010-0000-0000")
                 .build();
 
         // user save
         userJPARepository.save(user);
 
         // find
-        User user1 = userJPARepository.findById(user.getId());
+        User user1 = userJPARepository.findById(user.getId())
+                .orElseThrow(() -> new Exception404("해당 사용자가 존재하지 않습니다."));
         Assertions.assertThat(user.getId())
                 .isEqualTo(user1.getId());
     }
