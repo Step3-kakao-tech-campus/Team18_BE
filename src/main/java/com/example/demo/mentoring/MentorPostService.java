@@ -118,6 +118,11 @@ public class MentorPostService {
         MentorPost mentorPost = mentorPostJPARepository.findById(id).
                 orElseThrow(() -> new Exception404("해당 글이 존재하지 않습니다."));
 
+        //글자수 확인
+        if(createDTO.getContent().length() > 300){
+            throw new Exception404("글자수가 300자를 넘어갑니다.");
+        }
+
         try {
             mentorPost.update(createDTO.getTitle(), createDTO.getContent());
         } catch (Exception e) {
