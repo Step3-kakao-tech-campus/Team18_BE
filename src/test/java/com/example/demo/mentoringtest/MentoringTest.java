@@ -122,6 +122,17 @@ public class MentoringTest extends RestDoc {
                 .phone("010-0000-0000")
                 .build();
 
+        User mentor2 = User.builder()
+                .email("anj2312364@gmail.com")
+                .password("adf1234!")
+                .firstName("Jin123")
+                .lastName("Seun123g")
+                .country("Korea")
+                .age(23)
+                .role(Role.MENTOR)
+                .phone("010-0000-0000")
+                .build();
+
         User mentee_One = User.builder()
                 .email("anjda22l6664@gmail.com")
                 .password("asdf221234!")
@@ -186,9 +197,14 @@ public class MentoringTest extends RestDoc {
                 .interest(interest3)
                 .build();
 
+        UserInterest userInterest7 = UserInterest.builder()
+                .user(mentor2)
+                .interest(interest1)
+                .build();
+
         MentorPost mentorPost3 = MentorPost.builder()
                 .writer(mentor)
-                .title("titleab")
+                .title("title")
                 .content("content")
                 .build();
 
@@ -222,6 +238,18 @@ public class MentoringTest extends RestDoc {
                 .content("content")
                 .build();
 
+        MentorPost mentorPost9 = MentorPost.builder()
+                .writer(mentor2)
+                .title("abtitle8")
+                .content("content")
+                .build();
+
+        MentorPost mentorPost10 = MentorPost.builder()
+                .writer(mentor2)
+                .title("abtitle83")
+                .content("content")
+                .build();
+
         NotConnectedRegisterUser menteeNotConnected1 = NotConnectedRegisterUser.builder()
                 .mentorPost(mentorPost3)
                 .menteeUser(mentee_One)
@@ -239,6 +267,7 @@ public class MentoringTest extends RestDoc {
         interestJPARepository.save(interest2);
         interestJPARepository.save(interest3);
         userJPARepository.save(mentor);
+        userJPARepository.save(mentor2);
         userJPARepository.save(mentee_One);
         userJPARepository.save(mentee_Two);
         mentorPostJPARepostiory.save(mentorPost3);
@@ -247,12 +276,15 @@ public class MentoringTest extends RestDoc {
         mentorPostJPARepostiory.save(mentorPost6);
         mentorPostJPARepostiory.save(mentorPost7);
         mentorPostJPARepostiory.save(mentorPost8);
+        mentorPostJPARepostiory.save(mentorPost9);
+        mentorPostJPARepostiory.save(mentorPost10);
         userInterestJPARepository.save(userInterest1);
         userInterestJPARepository.save(userInterest2);
         userInterestJPARepository.save(userInterest3);
         userInterestJPARepository.save(userInterest4);
         userInterestJPARepository.save(userInterest5);
         userInterestJPARepository.save(userInterest6);
+        userInterestJPARepository.save(userInterest7);
         contactJPARepository.save(menteeNotConnected1);
         contactJPARepository.save(menteeNotConnected2);
 
@@ -357,7 +389,7 @@ public class MentoringTest extends RestDoc {
 
     @Test
     void mentorPostServiceTest() throws Exception {
-        List<MentorPostResponse.MentorPostAllDTO> mentorPostFind = mentorPostService.findAllMentorPost("title","ab",0);
+        List<MentorPostResponse.MentorPostAllDTO> mentorPostFind = mentorPostService.findAllMentorPost("interest","test1",0);
 
         String responseBody = om.writeValueAsString(mentorPostFind);
 

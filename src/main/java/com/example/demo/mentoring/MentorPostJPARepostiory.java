@@ -21,8 +21,8 @@ public interface MentorPostJPARepostiory extends JpaRepository<MentorPost, Integ
     @Query("select m from MentorPost m where m.writer.firstName like :keyword or m.writer.firstName like :keyword")
     Page<MentorPost> findAllByWriterKeyword(@Param("keyword") String keyword, Pageable pageable);
 
-//    @Query("select m from MentorPost m where m.title like :keyword")
-//    Page<MentorPost> findAllByInterestKeyword(@Param("keyword") String keyword, Pageable pageable);
+    @Query("select m from MentorPost m inner join UserInterest ui ON m.writer.id = ui.user.id where ui.interest.category like :keyword")
+    Page<MentorPost> findAllByInterestKeyword(@Param("keyword") String keyword, Pageable pageable);
 
     Optional<MentorPost> findById(int id);
 

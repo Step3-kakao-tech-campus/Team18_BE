@@ -69,8 +69,7 @@ public class MentorPostService {
         }
         else if(serachCategory == "interest")
         {
-            //이거해야됨
-            //pageContent = mentorPostJPARepository.findAllByInterestKeyword("%" + keyword + "%", pageable);
+            pageContent = mentorPostJPARepository.findAllByInterestKeyword("%" + keyword + "%", pageable);
         }
         else
         {
