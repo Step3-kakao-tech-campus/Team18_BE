@@ -389,7 +389,7 @@ public class MentoringTest extends RestDoc {
 
     @Test
     void mentorPostServiceTest() throws Exception {
-        List<MentorPostResponse.MentorPostAllDTO> mentorPostFind = mentorPostService.findAllMentorPost("interest","test1",0);
+        List<MentorPostResponse.MentorPostAllDTO> mentorPostFind = mentorPostService.findAllMentorPost(MentorPostCategoryEnum.NULL,"",2);
 
         String responseBody = om.writeValueAsString(mentorPostFind);
 

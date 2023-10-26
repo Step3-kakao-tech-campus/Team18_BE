@@ -50,24 +50,24 @@ public class MentorPostService {
    /* 1. mentorPostList를 조회
     2. 각 List당 writer별 writerInterests를 조회
     3. MentorPostDTO 생성*/
-    public List<MentorPostResponse.MentorPostAllDTO> findAllMentorPost(String serachCategory, String keyword, int page) {
+    public List<MentorPostResponse.MentorPostAllDTO> findAllMentorPost(MentorPostCategoryEnum searchCategory, String keyword, int page) {
         Pageable pageable = PageRequest.of(page,5);
         Page<MentorPost> pageContent = null;
         
         //검색별 pageContent 검색
-        if(serachCategory == "")
+        if(searchCategory == MentorPostCategoryEnum.NULL)
         {
             pageContent = mentorPostJPARepository.findAll(pageable);
         }
-        else if(serachCategory == "title")
+        else if(searchCategory == MentorPostCategoryEnum.TITLE)
         {
             pageContent = mentorPostJPARepository.findAllByTitleKeyword("%" + keyword + "%", pageable);
         }
-        else if(serachCategory == "writer")
+        else if(searchCategory == MentorPostCategoryEnum.WRITER)
         {
             pageContent = mentorPostJPARepository.findAllByWriterKeyword("%" + keyword + "%", pageable);
         }
-        else if(serachCategory == "interest")
+        else if(searchCategory == MentorPostCategoryEnum.INTEREST)
         {
             pageContent = mentorPostJPARepository.findAllByInterestKeyword("%" + keyword + "%", pageable);
         }
