@@ -22,7 +22,10 @@ public class Video extends BaseTime {
     private String videoUrl;
 
     @Column
-    private String videoInfo;
+    private String videoInfoKorean;
+
+    @Column
+    private String videoInfoEng;
 
     @Column
     private String videoStartTime;
@@ -31,9 +34,10 @@ public class Video extends BaseTime {
     private String videoEndTime;
 
     @Builder
-    public Video(String videoUrl, String videoInfo, String videoStartTime, String videoEndTime) {
+    public Video(String videoUrl, String videoInfoKorean, String videoInfoEng, String videoStartTime, String videoEndTime) {
         this.videoUrl = videoUrl;
-        this.videoInfo = videoInfo;
+        this.videoInfoKorean = videoInfoKorean;
+        this.videoInfoEng = videoInfoEng;
         this.videoStartTime = videoStartTime;
         this.videoEndTime = videoEndTime;
     }
