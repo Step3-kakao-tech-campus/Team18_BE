@@ -1,7 +1,5 @@
 package com.example.demo.mentoring;
 
-import com.example.demo.config.utils.StateEnum;
-import com.example.demo.user.User;
 import lombok.Getter;
 import lombok.Setter;
 import javax.validation.constraints.NotNull;
@@ -20,6 +18,6 @@ public class MentorPostRequest {
     @Getter
     @Setter
     public static class StateDTO {
-        private StateEnum stateEnum;
+        private MentorPostStateEnum mentorPostStateEnum;
     }
 }
