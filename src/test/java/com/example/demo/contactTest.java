@@ -99,6 +99,45 @@ public class contactTest extends RestDoc {
 
     @Test
     @WithUserDetails("john@example.com")
+    @DisplayName("contact - Refuse - Test")
+    void contactRefuseTest() throws Exception {
+        // given
+        ContactRequest.RefuseDTO requestDTOs = new ContactRequest.RefuseDTO();
+        requestDTOs.setMentorPostId(1);
+        requestDTOs.setMentorId(1);
+
+        List<ContactRequest.RefuseDTO.MenteeDTO> menteeDTOs = new ArrayList<>();
+        menteeDTOs.add(new ContactRequest.RefuseDTO.MenteeDTO(3));
+
+        requestDTOs.setMentees(menteeDTOs);
+
+        String requestBody = om.writeValueAsString(requestDTOs);
+
+        System.out.println("테스트 : "+requestBody);
+
+        // when
+        ResultActions result = mvc.perform(
+                MockMvcRequestBuilders.post("/contacts/1/refuse")
+                        .content(requestBody)
+                        .contentType(MediaType.APPLICATION_JSON)
+        );
+        String responseBody = result.andReturn().getResponse().getContentAsString();
+        System.out.println("테스트 : "+responseBody);
+
+        // 테스트가 잘 됐는지 ( 값이 잘 바뀌는지 확인 )
+        NotConnectedRegisterUser notConnectedRegisterUser = contactJPARepository.findByMentorPostIdAndMenteeUserId(1, 3)
+                .orElseThrow(() -> new Exception404("해당 사용자를 찾을 수 없습니다."));
+
+        System.out.println("state 확인 : " + notConnectedRegisterUser.getState());
+        // then
+        // verify
+        result.andExpect(jsonPath("$.status").value("success")); // 성공 테스트 확인
+        // 값이 잘 들어가는지 확인
+        Assertions.assertThat(notConnectedRegisterUser.getState()).isEqualTo(NotConnectedRegisterUser.State.REFUSE);
+    }
+
+    @Test
+    @WithUserDetails("john@example.com")
     @DisplayName("contact - Accept - Test")
     void contactAccpetTest() throws Exception {
         // given
