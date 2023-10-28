@@ -62,8 +62,27 @@ public class contactTest extends RestDoc {
 
     @Test
     @WithUserDetails("john@example.com")
-    @DisplayName("contact, done - count")
+    @DisplayName("contact, done count : mentor")
     void countTest() throws Exception {
+
+        // when
+        ResultActions resultActions = mvc.perform(
+                get("/contacts/postCounts")
+        );
+
+        // console
+        String responseBody = resultActions.andReturn().getResponse().getContentAsString();
+        System.out.println("테스트 : "+responseBody);
+
+        // verify
+        resultActions.andExpect(jsonPath("$.status").value("success"));
+    }
+
+    @Test
+    @WithUserDetails("admin@example.com")
+    @DisplayName("contact, done count : mentee")
+    void countByMenteeTest() throws Exception {
+        // given
 
         // when
         ResultActions resultActions = mvc.perform(
