@@ -97,6 +97,15 @@ public class ContactService {
 
         return new ContactResponse.postCountDTO(contactCount, doneCount);
     }
+    // contact, done 화면에서 게시글을 조회해서 갯수를 전달해주는 함수 ( 멘티 )
+    public ContactResponse.postCountDTO postCountsMyMentee(int userId) {
+        // contact 화면에서 게시글을 조회
+        int contactCount = contactJPARepository.countContactByMenteeId(userId);
+        // done 화면에서 게시글을 조회
+        int doneCount = doneJPARepository.countDoneByMenteeId(userId);
+
+        return new ContactResponse.postCountDTO(contactCount, doneCount);
+    }
 
     @Transactional
     public void acceptContact(int id, ContactRequest.AcceptDTO acceptDTO, User user) {
@@ -134,4 +143,5 @@ public class ContactService {
         }
 
     }
+
 }

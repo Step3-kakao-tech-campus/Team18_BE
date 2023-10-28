@@ -40,7 +40,8 @@ public class ContactRestController {
         Role role = userDetails.getUser().getRole();
 
         if ( role == Role.MENTEE ) {
-            return null;
+            ContactResponse.postCountDTO responseDTO = contactService.postCountsMyMentee(userDetails.getUser().getId());
+            return ResponseEntity.ok(ApiUtils.success(responseDTO));
         }
 
         ContactResponse.postCountDTO responseDTO = contactService.postCountsByMentor(userDetails.getUser().getId());
