@@ -1,7 +1,6 @@
 package com.example.demo.mentoring;
 
 
-import com.example.demo.config.utils.StateEnum;
 import com.example.demo.mentoring.contact.NotConnectedRegisterUser;
 import com.example.demo.user.Role;
 import com.example.demo.user.User;
@@ -27,14 +26,14 @@ public class MentorPostResponse {
         private int postId;
         private String title;
         private String content;
-        private StateEnum stateEnum;
+        private MentorPostStateEnum mentorPostStateEnum;
         private WriterDTO writerDTO;
 
         public MentorPostAllDTO(MentorPost mentorPost, List<UserInterest> userInterests) {
             this.postId = mentorPost.getId();
             this.title = mentorPost.getTitle();
             this.content = mentorPost.getContent();
-            this.stateEnum = mentorPost.getState();
+            this.mentorPostStateEnum = mentorPost.getState();
             WriterDTO writerDTO = new MentorPostAllDTO.WriterDTO(mentorPost.getWriter(), userInterests);
             this.writerDTO = writerDTO;
         }
@@ -79,14 +78,14 @@ public class MentorPostResponse {
         private String title;
         private String content;
         private WriterDTO writerDTO;
-        private StateEnum stateEnum;
+        private MentorPostStateEnum mentorPostStateEnum;
         private List<MenteeDTO> menteeDTOList;
 
         public MentorPostDTO(MentorPost mentorPost, List<UserInterest> mentorFavorites, List<NotConnectedRegisterUser> mentees, List<UserInterest> menteeInterest) {
             this.postId = mentorPost.getId();
             this.title = mentorPost.getTitle();
             this.content = mentorPost.getContent();
-            this.stateEnum = mentorPost.getState();
+            this.mentorPostStateEnum = mentorPost.getState();
             MentorPostDTO.WriterDTO writerDTO = new MentorPostDTO.WriterDTO(mentorPost.getWriter(), mentorFavorites);
             this.writerDTO = writerDTO;
             List<MentorPostDTO.MenteeDTO> menteeDTOList = mentees.stream()
@@ -153,7 +152,7 @@ public class MentorPostResponse {
         private int postId;
         private String title;
         private String content;
-        private StateEnum stateEnum;
+        private MentorPostStateEnum mentorPostStateEnum;
         private WriterDTO writerDTO;
         private LocalDateTime createdAt;
         private LocalDateTime deletedAt;
@@ -163,7 +162,7 @@ public class MentorPostResponse {
             this.postId = mentorPost.getId();
             this.title = mentorPost.getTitle();
             this.content = mentorPost.getContent();
-            this.stateEnum = mentorPost.getState();
+            this.mentorPostStateEnum = mentorPost.getState();
             WriterDTO writerDTO = new MentorPostAllWithTimeStampDTO.WriterDTO(mentorPost.getWriter(), userInterests);
             this.writerDTO = writerDTO;
             this.createdAt = mentorPost.getCreatedAt();

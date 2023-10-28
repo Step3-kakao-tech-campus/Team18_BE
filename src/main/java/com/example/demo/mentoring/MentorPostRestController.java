@@ -24,8 +24,16 @@ public class MentorPostRestController {
     }
 
     @GetMapping("/mentorings/post")
-    public ResponseEntity<?> getMentorPost(@RequestParam(value = "page", defaultValue = "0") Integer page, @AuthenticationPrincipal CustomUserDetails userDetails) {
-        List<MentorPostResponse.MentorPostAllDTO> responseDTOs = mentorPostService.findAllMentorPost(page);
+    public ResponseEntity<?> getMentorPost(
+            @RequestParam(value = "category", required = false) MentorPostCategoryEnum category,
+            @RequestParam(value = "search", defaultValue = "") String keyword,
+            @RequestParam(value = "page", defaultValue = "0") Integer page,
+            @AuthenticationPrincipal CustomUserDetails userDetails) {
+
+        if(category == null)
+            category = MentorPostCategoryEnum.NULL;
+
+        List<MentorPostResponse.MentorPostAllDTO> responseDTOs = mentorPostService.findAllMentorPost(category, keyword, page);
         return ResponseEntity.ok(ApiUtils.success(responseDTOs));
     }
 

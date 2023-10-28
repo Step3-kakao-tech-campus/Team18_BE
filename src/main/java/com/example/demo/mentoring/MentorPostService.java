@@ -1,10 +1,11 @@
 package com.example.demo.mentoring;
 
+import com.example.demo.config.errors.exception.Exception401;
 import com.example.demo.config.errors.exception.Exception500;
-import com.example.demo.config.errors.exception.Exception400;
 import com.example.demo.config.errors.exception.Exception404;
 import com.example.demo.mentoring.contact.ContactJPARepository;
 import com.example.demo.mentoring.contact.NotConnectedRegisterUser;
+import com.example.demo.user.Role;
 import com.example.demo.user.User;
 import com.example.demo.user.userInterest.UserInterest;
 import com.example.demo.user.userInterest.UserInterestJPARepository;
@@ -14,11 +15,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import com.example.demo.config.errors.exception.Exception400;
-import com.example.demo.config.errors.exception.Exception404;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Transactional
@@ -32,6 +30,15 @@ public class MentorPostService {
     //mentorPost생성
     @Transactional
     public void createMentorPost(MentorPostRequest.CreateDTO createDTO, User writer) {
+        if ( writer.getRole() == Role.MENTEE ) {
+            throw new Exception401("해당 사용자는 멘티입니다.");
+        }
+
+        //글자수 확인
+        if(createDTO.getContent().length() > 300){
+            throw new Exception404("글자수가 300자를 넘어갑니다.");
+        }
+
         MentorPost mentorPost = new MentorPost( writer, createDTO.getTitle(), createDTO.getContent());
         try {
             mentorPostJPARepository.save(mentorPost);
@@ -43,10 +50,32 @@ public class MentorPostService {
    /* 1. mentorPostList를 조회
     2. 각 List당 writer별 writerInterests를 조회
     3. MentorPostDTO 생성*/
-    public List<MentorPostResponse.MentorPostAllDTO> findAllMentorPost(int page) {
+    public List<MentorPostResponse.MentorPostAllDTO> findAllMentorPost(MentorPostCategoryEnum searchCategory, String keyword, int page) {
         Pageable pageable = PageRequest.of(page,5);
+        Page<MentorPost> pageContent = null;
+        
+        //검색별 pageContent 검색
+        if(searchCategory == MentorPostCategoryEnum.NULL)
+        {
+            pageContent = mentorPostJPARepository.findAll(pageable);
+        }
+        else if(searchCategory == MentorPostCategoryEnum.TITLE)
+        {
+            pageContent = mentorPostJPARepository.findAllByTitleKeyword("%" + keyword + "%", pageable);
+        }
+        else if(searchCategory == MentorPostCategoryEnum.WRITER)
+        {
+            pageContent = mentorPostJPARepository.findAllByWriterKeyword("%" + keyword + "%", pageable);
+        }
+        else if(searchCategory == MentorPostCategoryEnum.INTEREST)
+        {
+            pageContent = mentorPostJPARepository.findAllByInterestKeyword("%" + keyword + "%", pageable);
+        }
+        else
+        {
+            throw new Exception404("검색 분류가 잘못되었습니다.");
+        }
 
-        Page<MentorPost> pageContent = mentorPostJPARepository.findAll(pageable);
 
         if(pageContent.getTotalPages() == 0){
             throw new Exception404("해당 글들이 존재하지 않습니다");
@@ -56,10 +85,6 @@ public class MentorPostService {
         List<MentorPostResponse.MentorPostAllDTO> mentorPostDTOList = pageContent.getContent().stream().map(
                 mentorPost -> {
                     List<UserInterest> writerInterests = userInterestJPARepository.findAllById(mentorPost.getWriter().getId());
-                    if(writerInterests.isEmpty()){
-                        throw new Exception404("해당 카테고리는 존재하지 않습니다");
-                    }
-
                     return new MentorPostResponse.MentorPostAllDTO(mentorPost,writerInterests);
                 }
         ).collect(Collectors.toList());
@@ -71,6 +96,7 @@ public class MentorPostService {
                 .orElseThrow(() -> new Exception404("해당 글이 존재하지 않습니다.\n" + "id : " + id));
 
         //writer 데이터
+        //writer를 제외하고는 다 null 가능
         User mentor = mentorPost.getWriter();
         //mentee들 데이터
         List<NotConnectedRegisterUser> menteeList = contactJPARepository.findAllByMentorPostId(id);
@@ -90,6 +116,11 @@ public class MentorPostService {
     {
         MentorPost mentorPost = mentorPostJPARepository.findById(id).
                 orElseThrow(() -> new Exception404("해당 글이 존재하지 않습니다."));
+
+        //글자수 확인
+        if(createDTO.getContent().length() > 300){
+            throw new Exception404("글자수가 300자를 넘어갑니다.");
+        }
 
         try {
             mentorPost.update(createDTO.getTitle(), createDTO.getContent());
@@ -127,7 +158,12 @@ public class MentorPostService {
     {
         MentorPost mentorPost = mentorPostJPARepository.findById(id)
                 .orElseThrow(() -> new Exception404("해당 글이 존재하지 않습니다."));;
-        mentorPost.changeStatus(stateDTO.getStateEnum());
+
+        try {
+            mentorPost.changeStatus(stateDTO.getMentorPostStateEnum());
+        } catch (Exception e) {
+            throw new Exception500("unknown server error");
+        }
     }
 }
 
