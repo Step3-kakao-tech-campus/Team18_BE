@@ -144,4 +144,31 @@ public class ContactService {
 
     }
 
+    @Transactional
+    public void refuseContact(int id, ContactRequest.RefuseDTO refuseDTO, User user) {
+        // 예외 처리
+        if ( user.getRole() != Role.MENTOR ) {
+            throw new Exception401("해당 사용자는 멘토가 아닙니다.");
+        }
+
+        if (id != user.getId() ) {
+            throw new Exception401("올바른 사용자가 아닙니다.");
+        }
+
+        int mentorPostId = refuseDTO.getMentorPostId();
+
+        // 멘토와 현재 유저가 같은지 확인
+        if ( refuseDTO.getMentorId() != user.getId() ) {
+            throw new Exception401("올바른 사용자가 아닙니다.");
+        }
+
+        // notConnectedRegisterUser 의 state 바꾸기 -> REFUSE
+        for ( ContactRequest.RefuseDTO.MenteeDTO menteeDTO : refuseDTO.getMentees() ) {
+
+            NotConnectedRegisterUser notConnectedRegisterUser = contactJPARepository.findByMentorPostIdAndMenteeUserId(mentorPostId, menteeDTO.getMenteeId())
+                    .orElseThrow(() -> new Exception404("해당 사용자를 찾을 수 없습니다."));
+
+            notConnectedRegisterUser.updateStatus(NotConnectedRegisterUser.State.REFUSE);
+       }
+    }
 }
