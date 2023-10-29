@@ -56,7 +56,7 @@ public class ContactRestController {
         return ResponseEntity.status(HttpStatus.OK).body(ApiUtils.successWithNoContent());
     }
 
-    @PostMapping(value = "/contacts/{id}/refuse")
+    @PatchMapping(value = "/contacts/{id}/refuse")
     @Operation(summary = "멘토링 신청 거절", description = "멘토링 신청을 거절한다.")
     public ResponseEntity<?> refuseContact(@PathVariable int id, @RequestBody @Valid ContactRequest.RefuseDTO refuseDTO, Error errors, @AuthenticationPrincipal CustomUserDetails userDetails) {
         // TO-DO : 멘토링 신청 거절 API 로직 만들기
