@@ -10,6 +10,13 @@ import java.util.List;
 public class ContactRequest {
 
     @Getter @Setter
+    public static class CreateDTO {
+        private int mentorPostId;
+        private int mentorId;
+        private int menteeId;
+    }
+
+    @Getter @Setter
     public static class RefuseDTO {
         private int mentorPostId;
         private int mentorId;

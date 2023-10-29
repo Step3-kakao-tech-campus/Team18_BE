@@ -108,13 +108,13 @@ public class ContactService {
     }
 
     @Transactional
-    public void acceptContact(int id, ContactRequest.AcceptDTO acceptDTO, User user) {
+    public void acceptContact(int userId, ContactRequest.AcceptDTO acceptDTO, User user) {
         // 예외 처리
         if ( user.getRole() != Role.MENTOR ) {
             throw new Exception401("해당 사용자는 멘토가 아닙니다.");
         }
         // user 체크
-        if (id != user.getId() || acceptDTO.getMentorId() != user.getId() ) {
+        if (userId != user.getId() || acceptDTO.getMentorId() != user.getId() ) {
             throw new Exception401("올바른 사용자가 아닙니다.");
         }
 
@@ -140,13 +140,13 @@ public class ContactService {
     }
 
     @Transactional
-    public void refuseContact(int id, ContactRequest.RefuseDTO refuseDTO, User user) {
+    public void refuseContact(int userId, ContactRequest.RefuseDTO refuseDTO, User user) {
         // 예외 처리
         if ( user.getRole() != Role.MENTOR ) {
             throw new Exception401("해당 사용자는 멘토가 아닙니다.");
         }
 
-        if (id != user.getId() ) {
+        if (userId != user.getId() ) {
             throw new Exception401("올바른 사용자가 아닙니다.");
         }
 
@@ -165,5 +165,32 @@ public class ContactService {
 
             notConnectedRegisterUser.updateStatus(NotConnectedRegisterUser.State.REFUSE);
        }
+    }
+
+    @Transactional
+    public void createContact(int userId, ContactRequest.CreateDTO createDTO, User user) {
+        // 예외 처리
+        if ( user.getRole() != Role.MENTEE ) {
+            throw new Exception401("해당 사용자는 멘티가 아닙니다.");
+        }
+
+        if (userId != user.getId() ) {
+            throw new Exception401("올바른 사용자가 아닙니다.");
+        }
+
+        int mentorPostId = createDTO.getMentorPostId();
+
+        // 현재 멘토가 작성한 글인지 체크
+        MentorPost mentorPost = mentorPostJPARepository.findById(mentorPostId)
+                .orElseThrow(() -> new Exception404("해당 게시글을 찾을 수 없습니다."));
+
+        // 이미 신청한 글인지 체크하기
+        if ( contactJPARepository.findByMentorPostIdAndMenteeUserId(mentorPostId, userId).isPresent() ) {
+            throw new Exception401("이미 신청한 글입니다.");
+        }
+
+        // notConnectedRegisterUser 에 save 하기
+        contactJPARepository.save(new NotConnectedRegisterUser(mentorPost, user, NotConnectedRegisterUser.State.AWAIT));
+
     }
 }

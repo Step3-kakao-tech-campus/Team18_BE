@@ -64,6 +64,12 @@ public class ContactRestController {
         return ResponseEntity.status(HttpStatus.OK).body(ApiUtils.successWithNoContent());
     }
 
-
+    @PostMapping(value = "/contacts/{id}")
+    @Operation(summary = "멘티의 멘토링 신청", description = "멘토가 작성한 글을 보고, 멘티는 멘토링 신청을 할 수 있다.")
+    public ResponseEntity<?> createContact(@PathVariable int id, @RequestBody @Valid ContactRequest.CreateDTO createDTO, Error errors, @AuthenticationPrincipal CustomUserDetails userDetails) {
+        // TO-DO : 멘토링 신청 API 로직 만들기
+        contactService.createContact(id, createDTO, userDetails.getUser());
+        return ResponseEntity.status(HttpStatus.OK).body(ApiUtils.successWithNoContent());
+    }
 
 }
