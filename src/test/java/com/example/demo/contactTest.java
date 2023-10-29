@@ -40,9 +40,28 @@ public class contactTest extends RestDoc {
     private DoneJPARepository doneJPARepository;
 
     @Test
+    @WithUserDetails("admin@example.com")
+    @DisplayName("멘티 기준 화면 조회 테스트 코드")
+    void contactMenteeTest() throws Exception {
+        // given
+
+        // when
+        ResultActions resultActions = mvc.perform(
+                get("/contacts")
+        );
+
+        // console
+        String responseBody = resultActions.andReturn().getResponse().getContentAsString();
+        System.out.println("테스트 : "+responseBody);
+
+        // verify
+        resultActions.andExpect(jsonPath("$.status").value("success"));
+    }
+
+    @Test
     @WithUserDetails("john@example.com")
-    @DisplayName("contact - mentor")
-    void contactTest() throws Exception {
+    @DisplayName("멘토 기준 화면 조회 테스트 코드")
+    void contactMentorTest() throws Exception {
 
         // given
 
@@ -59,10 +78,10 @@ public class contactTest extends RestDoc {
         resultActions.andExpect(jsonPath("$.status").value("success"));
 
     }
-
+    
     @Test
     @WithUserDetails("john@example.com")
-    @DisplayName("contact, done count : mentor")
+    @DisplayName("멘토 기준 게시글 갯수 조회 테스트 코드")
     void countTest() throws Exception {
 
         // when
@@ -80,7 +99,7 @@ public class contactTest extends RestDoc {
 
     @Test
     @WithUserDetails("admin@example.com")
-    @DisplayName("contact, done count : mentee")
+    @DisplayName("멘티 기준 게시글 조회 테스트 코드")
     void countByMenteeTest() throws Exception {
         // given
 
@@ -99,7 +118,7 @@ public class contactTest extends RestDoc {
 
     @Test
     @WithUserDetails("john@example.com")
-    @DisplayName("contact - Refuse - Test")
+    @DisplayName("멘토 : 신청 거부 기능 테스트 코드")
     void contactRefuseTest() throws Exception {
         // given
         ContactRequest.RefuseDTO requestDTOs = new ContactRequest.RefuseDTO();
@@ -138,7 +157,7 @@ public class contactTest extends RestDoc {
 
     @Test
     @WithUserDetails("john@example.com")
-    @DisplayName("contact - Accept - Test")
+    @DisplayName("멘토 : 신청 수락 테스트 코드")
     void contactAccpetTest() throws Exception {
         // given
         ContactRequest.AcceptDTO requestDTOs = new ContactRequest.AcceptDTO();
@@ -181,5 +200,41 @@ public class contactTest extends RestDoc {
         // 값이 잘 들어가는지 확인
         Assertions.assertThat(notConnectedRegisterUser.getState()).isEqualTo(NotConnectedRegisterUser.State.ACCEPT);
         Assertions.assertThat(connectedUser.getId()).isEqualTo(4);
+    }
+
+    @Test
+    @WithUserDetails("jane@example.com")
+    @DisplayName("멘티 : 신청 생성 테스트 코드")
+    void createTest() throws Exception {
+        // given
+        ContactRequest.CreateDTO createDTO = new ContactRequest.CreateDTO();
+        // mentor, mentorPost, mentee id 지정
+        createDTO.setMentorPostId(3);
+        createDTO.setMentorId(2);
+        createDTO.setMenteeId(4);
+
+        String requestBody = om.writeValueAsString(createDTO);
+
+        System.out.println("테스트 requestBody : "+requestBody);
+
+        // when
+        ResultActions result = mvc.perform(
+                MockMvcRequestBuilders.post("/contacts/4")
+                        .content(requestBody)
+                        .contentType(MediaType.APPLICATION_JSON)
+        );
+        String responseBody = result.andReturn().getResponse().getContentAsString();
+        System.out.println("테스트 responseBody : "+responseBody);
+
+        // 테스트가 잘 됐는지 ( 값이 잘 바뀌는지 확인 )
+        NotConnectedRegisterUser notConnectedRegisterUser = contactJPARepository.findById(5)
+                .orElseThrow(() -> new Exception404("해당 사용자를 찾을 수 없습니다."));
+
+        // then
+        // verify
+        result.andExpect(jsonPath("$.status").value("success")); // 성공 테스트 확인
+        // 값이 잘 들어가는지 확인
+        Assertions.assertThat(notConnectedRegisterUser.getState()).isEqualTo(NotConnectedRegisterUser.State.AWAIT);
+
     }
 }
