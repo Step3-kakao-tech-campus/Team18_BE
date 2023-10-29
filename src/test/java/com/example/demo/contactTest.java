@@ -136,7 +136,7 @@ public class contactTest extends RestDoc {
 
         // when
         ResultActions result = mvc.perform(
-                MockMvcRequestBuilders.post("/contacts/1/refuse")
+                MockMvcRequestBuilders.patch("/contacts/1/refuse")
                         .content(requestBody)
                         .contentType(MediaType.APPLICATION_JSON)
         );
