@@ -33,7 +33,7 @@ public class ContactService {
     /**
      * contact - mentee 화면에서 mentor 가 작성한 글에 신청을 누른 게시글들을 가져오는 함수
      * **/
-    public List<ContactResponse.ContactMenteeDTO> findAllByMentee(int userId) {
+    public List<ContactResponse.ContactDashBoardMenteeDTO> findAllByMentee(int userId) {
 
         return mentorPostJPARepository.findAllByMenteeUserId(userId).stream()
                 .map(this::createMenteeContactDTO)
@@ -41,14 +41,14 @@ public class ContactService {
     }
 
     // contact - mentee 부분 리팩토링 ( DTO 를 만드는 부분 )
-    private ContactResponse.ContactMenteeDTO createMenteeContactDTO(MentorPost mentorPost) {
+    private ContactResponse.ContactDashBoardMenteeDTO createMenteeContactDTO(MentorPost mentorPost) {
         User mentorUser = userJPARepository.findById(mentorPost.getWriter().getId())
                 .orElseThrow(() -> new Exception400("해당 사용자가 존재하지 않습니다."));
         List<UserInterest> mentorInterests = userInterestJPARepository.findAllById(mentorUser.getId());
 
-        ContactResponse.MentorDTO mentorDTO = new ContactResponse.MentorDTO(mentorUser, mentorInterests);
+        ContactResponse.ContactMentorDTO contactMentorDTO = new ContactResponse.ContactMentorDTO(mentorUser, mentorInterests);
 
-        return new ContactResponse.ContactMenteeDTO(mentorPost, mentorDTO);
+        return new ContactResponse.ContactDashBoardMenteeDTO(mentorPost, contactMentorDTO);
     }
 
     // ---------------------------------------------------------------------------------------------
@@ -56,36 +56,36 @@ public class ContactService {
     /**
      * contact - mentor 화면에서 post 와 mentee 간 엮인 정보들을 조회해서 가져오는 함수
      * **/
-    public List<ContactResponse.MentorPostDTO> findAllByMentor(int userId) {
+    public List<ContactResponse.ContactMentorPostDTO> findAllByMentor(int userId) {
 
         User mentorUser = userJPARepository.findById(userId)
                 .orElseThrow(() -> new Exception404("해당 사용자가 존재하지 않습니다."));
         List<UserInterest> mentorInterests = userInterestJPARepository.findAllById(mentorUser.getId());
-        ContactResponse.MentorDTO mentorDTO = new ContactResponse.MentorDTO(mentorUser, mentorInterests);
+        ContactResponse.ContactMentorDTO contactMentorDTO = new ContactResponse.ContactMentorDTO(mentorUser, mentorInterests);
 
         return mentorPostJPARepository.findAllByWriter(userId).stream()
-                .map(mentorPost -> createMentorPostDTO(mentorPost, mentorDTO))
+                .map(mentorPost -> createMentorPostDTO(mentorPost, contactMentorDTO))
                 .collect(Collectors.toList());
 
     }
 
     // MentorPostDTO 생성 로직
-    private ContactResponse.MentorPostDTO createMentorPostDTO(MentorPost mentorPost, ContactResponse.MentorDTO mentorDTO) {
-        List<ContactResponse.MenteeDTO> menteeDTOs = contactJPARepository.findAllByMentorPostId(mentorPost.getId())
+    private ContactResponse.ContactMentorPostDTO createMentorPostDTO(MentorPost mentorPost, ContactResponse.ContactMentorDTO contactMentorDTO) {
+        List<ContactResponse.ContactMenteeDTO> contactMenteeDTOS = contactJPARepository.findAllByMentorPostId(mentorPost.getId())
                 .stream()
                 .map(this::createMenteeDTO)
                 .collect(Collectors.toList());
 
-        return new ContactResponse.MentorPostDTO(mentorPost, mentorDTO, menteeDTOs);
+        return new ContactResponse.ContactMentorPostDTO(mentorPost, contactMentorDTO, contactMenteeDTOS);
     }
 
     // 매핑 로직 분리 ( menteeDTO 생성 로직 )
-    private ContactResponse.MenteeDTO createMenteeDTO(NotConnectedRegisterUser mentee) {
+    private ContactResponse.ContactMenteeDTO createMenteeDTO(NotConnectedRegisterUser mentee) {
 
         List<UserInterest> menteeInterests = userInterestJPARepository
                 .findAllById(mentee.getMenteeUser().getId());
 
-        return new ContactResponse.MenteeDTO(mentee, menteeInterests);
+        return new ContactResponse.ContactMenteeDTO(mentee, menteeInterests);
     }
 
     // contact, done 화면에서 게시글을 조회해서 갯수를 전달해주는 함수
@@ -125,10 +125,10 @@ public class ContactService {
                 .orElseThrow(() -> new Exception404("해당 게시글을 찾을 수 없습니다."));
 
         // ConnectedUser 에 추가
-        for ( ContactRequest.ContactAcceptDTO.MenteeDTO menteeDTO : contactAcceptDTO.getMentees() ) {
+        for ( ContactRequest.ContactAcceptDTO.AcceptMenteeDTO acceptMenteeDTO : contactAcceptDTO.getMentees() ) {
 
             // notConnectedRegisterUser 의 state 바꾸기 -> ACCEPT
-            NotConnectedRegisterUser notConnectedRegisterUser = contactJPARepository.findByMentorPostIdAndMenteeUserId(mentorPostId, menteeDTO.getMenteeId())
+            NotConnectedRegisterUser notConnectedRegisterUser = contactJPARepository.findByMentorPostIdAndMenteeUserId(mentorPostId, acceptMenteeDTO.getMenteeId())
                     .orElseThrow(() -> new Exception404("해당 사용자를 찾을 수 없습니다."));
 
             notConnectedRegisterUser.updateStatus(NotConnectedRegisterUser.State.ACCEPT);
@@ -158,9 +158,9 @@ public class ContactService {
         }
 
         // notConnectedRegisterUser 의 state 바꾸기 -> REFUSE
-        for ( ContactRequest.ContactRefuseDTO.MenteeDTO menteeDTO : contactRefuseDTO.getMentees() ) {
+        for ( ContactRequest.ContactRefuseDTO.RefuseMenteeDTO refuseMenteeDTO : contactRefuseDTO.getMentees() ) {
 
-            NotConnectedRegisterUser notConnectedRegisterUser = contactJPARepository.findByMentorPostIdAndMenteeUserId(mentorPostId, menteeDTO.getMenteeId())
+            NotConnectedRegisterUser notConnectedRegisterUser = contactJPARepository.findByMentorPostIdAndMenteeUserId(mentorPostId, refuseMenteeDTO.getMenteeId())
                     .orElseThrow(() -> new Exception404("해당 사용자를 찾을 수 없습니다."));
 
             notConnectedRegisterUser.updateStatus(NotConnectedRegisterUser.State.REFUSE);

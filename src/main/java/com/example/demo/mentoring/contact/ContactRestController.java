@@ -23,10 +23,10 @@ public class ContactRestController {
     @Operation(summary = "contact 화면 조회", description = "멘토, 멘티 화면에 따라 적절한 화면을 보여준다.")
     public ResponseEntity<?> findAll(@AuthenticationPrincipal CustomUserDetails userDetails) {
         if ( userDetails.getUser().getRole() == Role.MENTEE ) {
-            List<ContactResponse.ContactMenteeDTO> responseDTO = contactService.findAllByMentee(userDetails.getUser().getId());
+            List<ContactResponse.ContactDashBoardMenteeDTO> responseDTO = contactService.findAllByMentee(userDetails.getUser().getId());
             return ResponseEntity.ok(ApiUtils.success(responseDTO));
         }
-        List<ContactResponse.MentorPostDTO> responseDTO = contactService.findAllByMentor(userDetails.getUser().getId());
+        List<ContactResponse.ContactMentorPostDTO> responseDTO = contactService.findAllByMentor(userDetails.getUser().getId());
         return ResponseEntity.ok(ApiUtils.success(responseDTO));
     }
 

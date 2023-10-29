@@ -124,10 +124,10 @@ public class contactTest extends RestDoc {
         requestDTOs.setMentorPostId(1);
         requestDTOs.setMentorId(1);
 
-        List<ContactRequest.ContactRefuseDTO.MenteeDTO> menteeDTOs = new ArrayList<>();
-        menteeDTOs.add(new ContactRequest.ContactRefuseDTO.MenteeDTO(3));
+        List<ContactRequest.ContactRefuseDTO.RefuseMenteeDTO> refuseMenteeDTOS = new ArrayList<>();
+        refuseMenteeDTOS.add(new ContactRequest.ContactRefuseDTO.RefuseMenteeDTO(3));
 
-        requestDTOs.setMentees(menteeDTOs);
+        requestDTOs.setMentees(refuseMenteeDTOS);
 
         String requestBody = om.writeValueAsString(requestDTOs);
 
@@ -164,10 +164,10 @@ public class contactTest extends RestDoc {
         requestDTOs.setMentorPostId(1);
         requestDTOs.setMentorId(1);
 
-        List<ContactRequest.ContactAcceptDTO.MenteeDTO> menteeDTOs = new ArrayList<>();
-        menteeDTOs.add(new ContactRequest.ContactAcceptDTO.MenteeDTO(3));
+        List<ContactRequest.ContactAcceptDTO.AcceptMenteeDTO> acceptMenteeDTOS = new ArrayList<>();
+        acceptMenteeDTOS.add(new ContactRequest.ContactAcceptDTO.AcceptMenteeDTO(3));
 
-        requestDTOs.setMentees(menteeDTOs);
+        requestDTOs.setMentees(acceptMenteeDTOS);
 
         String requestBody = om.writeValueAsString(requestDTOs);
 
