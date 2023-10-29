@@ -26,7 +26,7 @@ public class ContactRestController {
             List<ContactResponse.ContactDashBoardMenteeDTO> responseDTO = contactService.findAllByMentee(userDetails.getUser().getId());
             return ResponseEntity.ok(ApiUtils.success(responseDTO));
         }
-        List<ContactResponse.ContactMentorPostDTO> responseDTO = contactService.findAllByMentor(userDetails.getUser().getId());
+        List<ContactResponse.ContactDashboardMentorDTO> responseDTO = contactService.findAllByMentor(userDetails.getUser().getId());
         return ResponseEntity.ok(ApiUtils.success(responseDTO));
     }
 
