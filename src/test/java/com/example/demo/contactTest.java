@@ -10,7 +10,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.context.ActiveProfiles;
@@ -121,12 +120,12 @@ public class contactTest extends RestDoc {
     @DisplayName("멘토 : 신청 거부 기능 테스트 코드")
     void contactRefuseTest() throws Exception {
         // given
-        ContactRequest.RefuseDTO requestDTOs = new ContactRequest.RefuseDTO();
+        ContactRequest.ContactRefuseDTO requestDTOs = new ContactRequest.ContactRefuseDTO();
         requestDTOs.setMentorPostId(1);
         requestDTOs.setMentorId(1);
 
-        List<ContactRequest.RefuseDTO.MenteeDTO> menteeDTOs = new ArrayList<>();
-        menteeDTOs.add(new ContactRequest.RefuseDTO.MenteeDTO(3));
+        List<ContactRequest.ContactRefuseDTO.MenteeDTO> menteeDTOs = new ArrayList<>();
+        menteeDTOs.add(new ContactRequest.ContactRefuseDTO.MenteeDTO(3));
 
         requestDTOs.setMentees(menteeDTOs);
 
@@ -160,13 +159,13 @@ public class contactTest extends RestDoc {
     @DisplayName("멘토 : 신청 수락 테스트 코드")
     void contactAccpetTest() throws Exception {
         // given
-        ContactRequest.AcceptDTO requestDTOs = new ContactRequest.AcceptDTO();
+        ContactRequest.ContactAcceptDTO requestDTOs = new ContactRequest.ContactAcceptDTO();
 
         requestDTOs.setMentorPostId(1);
         requestDTOs.setMentorId(1);
 
-        List<ContactRequest.AcceptDTO.MenteeDTO> menteeDTOs = new ArrayList<>();
-        menteeDTOs.add(new ContactRequest.AcceptDTO.MenteeDTO(3));
+        List<ContactRequest.ContactAcceptDTO.MenteeDTO> menteeDTOs = new ArrayList<>();
+        menteeDTOs.add(new ContactRequest.ContactAcceptDTO.MenteeDTO(3));
 
         requestDTOs.setMentees(menteeDTOs);
 
@@ -207,13 +206,13 @@ public class contactTest extends RestDoc {
     @DisplayName("멘티 : 신청 생성 테스트 코드")
     void createTest() throws Exception {
         // given
-        ContactRequest.CreateDTO createDTO = new ContactRequest.CreateDTO();
+        ContactRequest.ContactCreateDTO contactCreateDTO = new ContactRequest.ContactCreateDTO();
         // mentor, mentorPost, mentee id 지정
-        createDTO.setMentorPostId(3);
-        createDTO.setMentorId(2);
-        createDTO.setMenteeId(4);
+        contactCreateDTO.setMentorPostId(3);
+        contactCreateDTO.setMentorId(2);
+        contactCreateDTO.setMenteeId(4);
 
-        String requestBody = om.writeValueAsString(createDTO);
+        String requestBody = om.writeValueAsString(contactCreateDTO);
 
         System.out.println("테스트 requestBody : "+requestBody);
 

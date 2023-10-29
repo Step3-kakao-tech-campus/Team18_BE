@@ -23,7 +23,7 @@ public class ContactRestController {
     @Operation(summary = "contact 화면 조회", description = "멘토, 멘티 화면에 따라 적절한 화면을 보여준다.")
     public ResponseEntity<?> findAll(@AuthenticationPrincipal CustomUserDetails userDetails) {
         if ( userDetails.getUser().getRole() == Role.MENTEE ) {
-            List<ContactResponse.MenteeContactDTO> responseDTO = contactService.findAllByMentee(userDetails.getUser().getId());
+            List<ContactResponse.ContactMenteeDTO> responseDTO = contactService.findAllByMentee(userDetails.getUser().getId());
             return ResponseEntity.ok(ApiUtils.success(responseDTO));
         }
         List<ContactResponse.MentorPostDTO> responseDTO = contactService.findAllByMentor(userDetails.getUser().getId());
@@ -40,35 +40,35 @@ public class ContactRestController {
         Role role = userDetails.getUser().getRole();
 
         if ( role == Role.MENTEE ) {
-            ContactResponse.postCountDTO responseDTO = contactService.postCountsMyMentee(userDetails.getUser().getId());
+            ContactResponse.PostCountDTO responseDTO = contactService.postCountsMyMentee(userDetails.getUser().getId());
             return ResponseEntity.ok(ApiUtils.success(responseDTO));
         }
 
-        ContactResponse.postCountDTO responseDTO = contactService.postCountsByMentor(userDetails.getUser().getId());
+        ContactResponse.PostCountDTO responseDTO = contactService.postCountsByMentor(userDetails.getUser().getId());
         return ResponseEntity.ok(ApiUtils.success(responseDTO));
     }
 
     @PostMapping(value = "/contacts/{id}/accept")
     @Operation(summary = "멘토링 신청 수락", description = "멘토링 신청을 수락한다.")
-    public ResponseEntity<?> acceptContact(@PathVariable int id, @RequestBody @Valid ContactRequest.AcceptDTO acceptDTO, Error errors, @AuthenticationPrincipal CustomUserDetails userDetails) {
+    public ResponseEntity<?> acceptContact(@PathVariable int id, @RequestBody @Valid ContactRequest.ContactAcceptDTO contactAcceptDTO, Error errors, @AuthenticationPrincipal CustomUserDetails userDetails) {
         // TO-DO : 멘토링 신청 수락 API 로직 만들기
-        contactService.acceptContact(id, acceptDTO, userDetails.getUser());
+        contactService.acceptContact(id, contactAcceptDTO, userDetails.getUser());
         return ResponseEntity.status(HttpStatus.OK).body(ApiUtils.successWithNoContent());
     }
 
     @PatchMapping(value = "/contacts/{id}/refuse")
     @Operation(summary = "멘토링 신청 거절", description = "멘토링 신청을 거절한다.")
-    public ResponseEntity<?> refuseContact(@PathVariable int id, @RequestBody @Valid ContactRequest.RefuseDTO refuseDTO, Error errors, @AuthenticationPrincipal CustomUserDetails userDetails) {
+    public ResponseEntity<?> refuseContact(@PathVariable int id, @RequestBody @Valid ContactRequest.ContactRefuseDTO contactRefuseDTO, Error errors, @AuthenticationPrincipal CustomUserDetails userDetails) {
         // TO-DO : 멘토링 신청 거절 API 로직 만들기
-        contactService.refuseContact(id, refuseDTO, userDetails.getUser());
+        contactService.refuseContact(id, contactRefuseDTO, userDetails.getUser());
         return ResponseEntity.status(HttpStatus.OK).body(ApiUtils.successWithNoContent());
     }
 
     @PostMapping(value = "/contacts/{id}")
     @Operation(summary = "멘티의 멘토링 신청", description = "멘토가 작성한 글을 보고, 멘티는 멘토링 신청을 할 수 있다.")
-    public ResponseEntity<?> createContact(@PathVariable int id, @RequestBody @Valid ContactRequest.CreateDTO createDTO, Error errors, @AuthenticationPrincipal CustomUserDetails userDetails) {
+    public ResponseEntity<?> createContact(@PathVariable int id, @RequestBody @Valid ContactRequest.ContactCreateDTO contactCreateDTO, Error errors, @AuthenticationPrincipal CustomUserDetails userDetails) {
         // TO-DO : 멘토링 신청 API 로직 만들기
-        contactService.createContact(id, createDTO, userDetails.getUser());
+        contactService.createContact(id, contactCreateDTO, userDetails.getUser());
         return ResponseEntity.status(HttpStatus.OK).body(ApiUtils.successWithNoContent());
     }
 
