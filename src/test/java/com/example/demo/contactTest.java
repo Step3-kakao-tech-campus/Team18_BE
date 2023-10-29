@@ -237,4 +237,25 @@ public class contactTest extends RestDoc {
         Assertions.assertThat(notConnectedRegisterUser.getState()).isEqualTo(NotConnectedRegisterUser.State.AWAIT);
 
     }
+
+    @Test
+    @WithUserDetails("admin@example.com")
+    @DisplayName("멘티 : 신청 취소 테스트 코드")
+    void deleteTest() throws Exception {
+        // given
+        int id = 3;
+        int mentorPostId = 1;
+
+        // when
+        ResultActions result = mvc.perform(
+                MockMvcRequestBuilders.delete("/contacts/" + id)
+                        .param("mentorPostId", String.valueOf(mentorPostId))
+                        .contentType(MediaType.APPLICATION_JSON)
+        );
+        String responseBody = result.andReturn().getResponse().getContentAsString();
+        System.out.println("테스트 responseBody : "+responseBody);
+
+        // then
+        result.andExpect(jsonPath("$.status").value("success")); // 성공 테스트 확인
+    }
 }
