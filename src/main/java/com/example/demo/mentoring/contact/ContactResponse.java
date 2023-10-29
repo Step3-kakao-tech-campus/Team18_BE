@@ -45,13 +45,13 @@ public class ContactResponse {
      *
      * **/
     @Getter @Setter
-    public static class ContactMentorPostDTO {
+    public static class ContactDashboardMentorDTO {
         private int postId;
         private String title;
         private ContactMentorDTO mentor;
         private List<ContactMenteeDTO> mentees;
 
-        public ContactMentorPostDTO(MentorPost mentorPost, ContactMentorDTO mentor, List<ContactMenteeDTO> mentees) {
+        public ContactDashboardMentorDTO(MentorPost mentorPost, ContactMentorDTO mentor, List<ContactMenteeDTO> mentees) {
             this.postId = mentorPost.getId();
             this.title = mentorPost.getTitle();
             this.mentor = mentor;

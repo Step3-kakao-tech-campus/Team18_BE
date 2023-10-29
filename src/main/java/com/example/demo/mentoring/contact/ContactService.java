@@ -56,7 +56,7 @@ public class ContactService {
     /**
      * contact - mentor 화면에서 post 와 mentee 간 엮인 정보들을 조회해서 가져오는 함수
      * **/
-    public List<ContactResponse.ContactMentorPostDTO> findAllByMentor(int userId) {
+    public List<ContactResponse.ContactDashboardMentorDTO> findAllByMentor(int userId) {
 
         User mentorUser = userJPARepository.findById(userId)
                 .orElseThrow(() -> new Exception404("해당 사용자가 존재하지 않습니다."));
@@ -70,13 +70,13 @@ public class ContactService {
     }
 
     // MentorPostDTO 생성 로직
-    private ContactResponse.ContactMentorPostDTO createMentorPostDTO(MentorPost mentorPost, ContactResponse.ContactMentorDTO contactMentorDTO) {
+    private ContactResponse.ContactDashboardMentorDTO createMentorPostDTO(MentorPost mentorPost, ContactResponse.ContactMentorDTO contactMentorDTO) {
         List<ContactResponse.ContactMenteeDTO> contactMenteeDTOS = contactJPARepository.findAllByMentorPostId(mentorPost.getId())
                 .stream()
                 .map(this::createMenteeDTO)
                 .collect(Collectors.toList());
 
-        return new ContactResponse.ContactMentorPostDTO(mentorPost, contactMentorDTO, contactMenteeDTOS);
+        return new ContactResponse.ContactDashboardMentorDTO(mentorPost, contactMentorDTO, contactMenteeDTOS);
     }
 
     // 매핑 로직 분리 ( menteeDTO 생성 로직 )
