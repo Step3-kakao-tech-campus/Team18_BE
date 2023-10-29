@@ -20,12 +20,12 @@ public class ContactRequest {
     public static class ContactRefuseDTO {
         private int mentorPostId;
         private int mentorId;
-        private List<MenteeDTO> mentees;
+        private List<RefuseMenteeDTO> mentees;
         @Getter @Setter @NoArgsConstructor
-        public static class MenteeDTO {
+        public static class RefuseMenteeDTO {
             @NotNull
             private int menteeId;
-            public MenteeDTO(int menteeId) {
+            public RefuseMenteeDTO(int menteeId) {
                 this.menteeId = menteeId;
             }
         }
@@ -35,12 +35,12 @@ public class ContactRequest {
     public static class ContactAcceptDTO {
         private int mentorPostId;
         private int mentorId;
-        private List<MenteeDTO> mentees;
+        private List<AcceptMenteeDTO> mentees;
         @Getter @Setter @NoArgsConstructor
-        public static class MenteeDTO {
+        public static class AcceptMenteeDTO {
             @NotNull
             private int menteeId;
-            public MenteeDTO(int menteeId) {
+            public AcceptMenteeDTO(int menteeId) {
                 this.menteeId = menteeId;
             }
         }

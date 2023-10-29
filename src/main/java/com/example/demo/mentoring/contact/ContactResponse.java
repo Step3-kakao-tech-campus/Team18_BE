@@ -24,12 +24,12 @@ public class ContactResponse {
     }
 
     @Getter @Setter
-    public static class ContactMenteeDTO {
+    public static class ContactDashBoardMenteeDTO {
         private int postId;
         private String title;
-        private MentorDTO mentor;
+        private ContactMentorDTO mentor;
 
-        public ContactMenteeDTO(MentorPost mentorPost, MentorDTO mentor) {
+        public ContactDashBoardMenteeDTO(MentorPost mentorPost, ContactMentorDTO mentor) {
             this.postId = mentorPost.getId();
             this.title = mentorPost.getTitle();
             this.mentor = mentor;
@@ -45,13 +45,13 @@ public class ContactResponse {
      *
      * **/
     @Getter @Setter
-    public static class MentorPostDTO {
+    public static class ContactMentorPostDTO {
         private int postId;
         private String title;
-        private MentorDTO mentor;
-        private List<MenteeDTO> mentees;
+        private ContactMentorDTO mentor;
+        private List<ContactMenteeDTO> mentees;
 
-        public MentorPostDTO(MentorPost mentorPost, MentorDTO mentor, List<MenteeDTO> mentees) {
+        public ContactMentorPostDTO(MentorPost mentorPost, ContactMentorDTO mentor, List<ContactMenteeDTO> mentees) {
             this.postId = mentorPost.getId();
             this.title = mentorPost.getTitle();
             this.mentor = mentor;
@@ -60,7 +60,7 @@ public class ContactResponse {
     }
 
         @Getter @Setter
-        public static class MentorDTO {
+        public static class ContactMentorDTO {
             private int mentorId;
             private String profileImage;
             private String name;
@@ -69,7 +69,7 @@ public class ContactResponse {
             private Role role;
             private List<String> favorites;
 
-            public MentorDTO(User user, List<UserInterest> userInterests) {
+            public ContactMentorDTO(User user, List<UserInterest> userInterests) {
                 this.mentorId = user.getId();
                 this.profileImage = user.getProfileImage();
                 this.name = user.getFirstName() + " " + user.getLastName();
@@ -83,7 +83,7 @@ public class ContactResponse {
             }
         }
         @Getter @Setter
-        public static class MenteeDTO {
+        public static class ContactMenteeDTO {
             private int menteeId;
             private String profileImage;
             private String name;
@@ -100,7 +100,7 @@ public class ContactResponse {
              * 그럴 경우에만 tag 값들을 가져오기
              * **/
 
-            public MenteeDTO(NotConnectedRegisterUser notConnectedRegisterUser, List<UserInterest> userInterests) {
+            public ContactMenteeDTO(NotConnectedRegisterUser notConnectedRegisterUser, List<UserInterest> userInterests) {
                 this.menteeId = notConnectedRegisterUser.getMenteeUser().getId();
                 this.profileImage = notConnectedRegisterUser.getMenteeUser().getProfileImage();
                 this.name = notConnectedRegisterUser.getMenteeUser().getFirstName() + " " + notConnectedRegisterUser.getMenteeUser().getLastName();
