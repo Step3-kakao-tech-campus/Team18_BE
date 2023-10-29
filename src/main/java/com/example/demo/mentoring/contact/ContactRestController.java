@@ -72,4 +72,12 @@ public class ContactRestController {
         return ResponseEntity.status(HttpStatus.OK).body(ApiUtils.successWithNoContent());
     }
 
+    @DeleteMapping(value = "/contacts/{id}")
+    @Operation(summary = "멘티의 멘토링 신청 취소", description = "멘티는 신청한 멘토링을 취소할 수 있다.")
+    public ResponseEntity<?> deleteContact(@PathVariable int id, @RequestParam("mentorPostId") int mentorPostId, Error errors, @AuthenticationPrincipal CustomUserDetails userDetails) {
+        // TO-DO : 멘토링 신청 취소 API 로직 만들기
+        contactService.deleteContact(id, mentorPostId, userDetails.getUser());
+        return ResponseEntity.status(HttpStatus.OK).body(ApiUtils.successWithNoContent());
+    }
+
 }

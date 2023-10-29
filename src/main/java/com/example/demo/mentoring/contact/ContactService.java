@@ -193,4 +193,23 @@ public class ContactService {
         contactJPARepository.save(new NotConnectedRegisterUser(mentorPost, user, NotConnectedRegisterUser.State.AWAIT));
 
     }
+
+    @Transactional
+    public void deleteContact(int userId, int mentorPostId, User user) {
+        // 예외 처리
+        if ( user.getRole() != Role.MENTEE ) {
+            throw new Exception401("해당 사용자는 멘티가 아닙니다.");
+        }
+
+        // 현재 유저와 userId 값이 일치하는지 확인
+        if ( user.getId() != userId ) {
+            throw new Exception401("올바른 사용자가 아닙니다.");
+        }
+        // 해당하는 NotConnectedRegisterUser 가져오기
+        NotConnectedRegisterUser notConnectedRegisterUser = contactJPARepository.findByMentorPostIdAndMenteeUserId(mentorPostId, userId)
+                .orElseThrow(() -> new Exception404("해당 사용자를 찾을 수 없습니다." ));
+
+        // notConnectedRegisterUser delete 요청 보내기
+        contactJPARepository.deleteById(notConnectedRegisterUser.getId());
+    }
 }
