@@ -144,11 +144,12 @@ public class contactTest extends RestDoc {
         ContactRequest.AcceptDTO requestDTOs = new ContactRequest.AcceptDTO();
 
         requestDTOs.setMentorPostId(1);
+        requestDTOs.setMentorId(1);
 
-        List<ContactRequest.AcceptDTO.MentorAndMenteeDTO> mentorAndMenteeDTOs = new ArrayList<>();
-        mentorAndMenteeDTOs.add(new ContactRequest.AcceptDTO.MentorAndMenteeDTO(1, 3));
+        List<ContactRequest.AcceptDTO.MenteeDTO> menteeDTOs = new ArrayList<>();
+        menteeDTOs.add(new ContactRequest.AcceptDTO.MenteeDTO(3));
 
-        requestDTOs.setMentorsAndMentees(mentorAndMenteeDTOs);
+        requestDTOs.setMentees(menteeDTOs);
 
         String requestBody = om.writeValueAsString(requestDTOs);
 
