@@ -10,14 +10,14 @@ import java.util.List;
 public class ContactRequest {
 
     @Getter @Setter
-    public static class CreateDTO {
+    public static class ContactCreateDTO {
         private int mentorPostId;
         private int mentorId;
         private int menteeId;
     }
 
     @Getter @Setter
-    public static class RefuseDTO {
+    public static class ContactRefuseDTO {
         private int mentorPostId;
         private int mentorId;
         private List<MenteeDTO> mentees;
@@ -32,7 +32,7 @@ public class ContactRequest {
     }
 
     @Getter @Setter
-    public static class AcceptDTO {
+    public static class ContactAcceptDTO {
         private int mentorPostId;
         private int mentorId;
         private List<MenteeDTO> mentees;

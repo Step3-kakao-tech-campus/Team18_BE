@@ -13,23 +13,23 @@ import java.util.stream.Collectors;
 public class ContactResponse {
 
     @Getter @Setter
-    public static class postCountDTO {
+    public static class PostCountDTO {
         private int contactCount;
         private int doneCount;
 
-        public postCountDTO(int contactCount, int doneCount) {
+        public PostCountDTO(int contactCount, int doneCount) {
             this.contactCount = contactCount;
             this.doneCount = doneCount;
         }
     }
 
     @Getter @Setter
-    public static class MenteeContactDTO {
+    public static class ContactMenteeDTO {
         private int postId;
         private String title;
         private MentorDTO mentor;
 
-        public MenteeContactDTO(MentorPost mentorPost, MentorDTO mentor) {
+        public ContactMenteeDTO(MentorPost mentorPost, MentorDTO mentor) {
             this.postId = mentorPost.getId();
             this.title = mentorPost.getTitle();
             this.mentor = mentor;

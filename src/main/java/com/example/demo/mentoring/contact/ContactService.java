@@ -33,7 +33,7 @@ public class ContactService {
     /**
      * contact - mentee 화면에서 mentor 가 작성한 글에 신청을 누른 게시글들을 가져오는 함수
      * **/
-    public List<ContactResponse.MenteeContactDTO> findAllByMentee(int userId) {
+    public List<ContactResponse.ContactMenteeDTO> findAllByMentee(int userId) {
 
         return mentorPostJPARepository.findAllByMenteeUserId(userId).stream()
                 .map(this::createMenteeContactDTO)
@@ -41,14 +41,14 @@ public class ContactService {
     }
 
     // contact - mentee 부분 리팩토링 ( DTO 를 만드는 부분 )
-    private ContactResponse.MenteeContactDTO createMenteeContactDTO(MentorPost mentorPost) {
+    private ContactResponse.ContactMenteeDTO createMenteeContactDTO(MentorPost mentorPost) {
         User mentorUser = userJPARepository.findById(mentorPost.getWriter().getId())
                 .orElseThrow(() -> new Exception400("해당 사용자가 존재하지 않습니다."));
         List<UserInterest> mentorInterests = userInterestJPARepository.findAllById(mentorUser.getId());
 
         ContactResponse.MentorDTO mentorDTO = new ContactResponse.MentorDTO(mentorUser, mentorInterests);
 
-        return new ContactResponse.MenteeContactDTO(mentorPost, mentorDTO);
+        return new ContactResponse.ContactMenteeDTO(mentorPost, mentorDTO);
     }
 
     // ---------------------------------------------------------------------------------------------
@@ -89,43 +89,43 @@ public class ContactService {
     }
 
     // contact, done 화면에서 게시글을 조회해서 갯수를 전달해주는 함수
-    public ContactResponse.postCountDTO postCountsByMentor(int userId) {
+    public ContactResponse.PostCountDTO postCountsByMentor(int userId) {
         // contact 화면에서 게시글을 조회 ( 나중에 where 조건에 state 를 달아야 함 )
         int contactCount = mentorPostJPARepository.countContactByMentorId(userId);
         // done 화면에서 게시글을 조회
         int doneCount = mentorPostJPARepository.countDoneByMentorId(userId);
 
-        return new ContactResponse.postCountDTO(contactCount, doneCount);
+        return new ContactResponse.PostCountDTO(contactCount, doneCount);
     }
     // contact, done 화면에서 게시글을 조회해서 갯수를 전달해주는 함수 ( 멘티 )
-    public ContactResponse.postCountDTO postCountsMyMentee(int userId) {
+    public ContactResponse.PostCountDTO postCountsMyMentee(int userId) {
         // contact 화면에서 게시글을 조회
         int contactCount = contactJPARepository.countContactByMenteeId(userId);
         // done 화면에서 게시글을 조회
         int doneCount = doneJPARepository.countDoneByMenteeId(userId);
 
-        return new ContactResponse.postCountDTO(contactCount, doneCount);
+        return new ContactResponse.PostCountDTO(contactCount, doneCount);
     }
 
     @Transactional
-    public void acceptContact(int userId, ContactRequest.AcceptDTO acceptDTO, User user) {
+    public void acceptContact(int userId, ContactRequest.ContactAcceptDTO contactAcceptDTO, User user) {
         // 예외 처리
         if ( user.getRole() != Role.MENTOR ) {
             throw new Exception401("해당 사용자는 멘토가 아닙니다.");
         }
         // user 체크
-        if (userId != user.getId() || acceptDTO.getMentorId() != user.getId() ) {
+        if (userId != user.getId() || contactAcceptDTO.getMentorId() != user.getId() ) {
             throw new Exception401("올바른 사용자가 아닙니다.");
         }
 
-        int mentorPostId = acceptDTO.getMentorPostId();
+        int mentorPostId = contactAcceptDTO.getMentorPostId();
 
         // 현재 멘토가 작성한 글인지 체크
         MentorPost mentorPost = mentorPostJPARepository.findById(mentorPostId)
                 .orElseThrow(() -> new Exception404("해당 게시글을 찾을 수 없습니다."));
 
         // ConnectedUser 에 추가
-        for ( ContactRequest.AcceptDTO.MenteeDTO menteeDTO : acceptDTO.getMentees() ) {
+        for ( ContactRequest.ContactAcceptDTO.MenteeDTO menteeDTO : contactAcceptDTO.getMentees() ) {
 
             // notConnectedRegisterUser 의 state 바꾸기 -> ACCEPT
             NotConnectedRegisterUser notConnectedRegisterUser = contactJPARepository.findByMentorPostIdAndMenteeUserId(mentorPostId, menteeDTO.getMenteeId())
@@ -140,7 +140,7 @@ public class ContactService {
     }
 
     @Transactional
-    public void refuseContact(int userId, ContactRequest.RefuseDTO refuseDTO, User user) {
+    public void refuseContact(int userId, ContactRequest.ContactRefuseDTO contactRefuseDTO, User user) {
         // 예외 처리
         if ( user.getRole() != Role.MENTOR ) {
             throw new Exception401("해당 사용자는 멘토가 아닙니다.");
@@ -150,15 +150,15 @@ public class ContactService {
             throw new Exception401("올바른 사용자가 아닙니다.");
         }
 
-        int mentorPostId = refuseDTO.getMentorPostId();
+        int mentorPostId = contactRefuseDTO.getMentorPostId();
 
         // 멘토와 현재 유저가 같은지 확인
-        if ( refuseDTO.getMentorId() != user.getId() ) {
+        if ( contactRefuseDTO.getMentorId() != user.getId() ) {
             throw new Exception401("올바른 사용자가 아닙니다.");
         }
 
         // notConnectedRegisterUser 의 state 바꾸기 -> REFUSE
-        for ( ContactRequest.RefuseDTO.MenteeDTO menteeDTO : refuseDTO.getMentees() ) {
+        for ( ContactRequest.ContactRefuseDTO.MenteeDTO menteeDTO : contactRefuseDTO.getMentees() ) {
 
             NotConnectedRegisterUser notConnectedRegisterUser = contactJPARepository.findByMentorPostIdAndMenteeUserId(mentorPostId, menteeDTO.getMenteeId())
                     .orElseThrow(() -> new Exception404("해당 사용자를 찾을 수 없습니다."));
@@ -168,7 +168,7 @@ public class ContactService {
     }
 
     @Transactional
-    public void createContact(int userId, ContactRequest.CreateDTO createDTO, User user) {
+    public void createContact(int userId, ContactRequest.ContactCreateDTO contactCreateDTO, User user) {
         // 예외 처리
         if ( user.getRole() != Role.MENTEE ) {
             throw new Exception401("해당 사용자는 멘티가 아닙니다.");
@@ -178,7 +178,7 @@ public class ContactService {
             throw new Exception401("올바른 사용자가 아닙니다.");
         }
 
-        int mentorPostId = createDTO.getMentorPostId();
+        int mentorPostId = contactCreateDTO.getMentorPostId();
 
         // 현재 멘토가 작성한 글인지 체크
         MentorPost mentorPost = mentorPostJPARepository.findById(mentorPostId)
