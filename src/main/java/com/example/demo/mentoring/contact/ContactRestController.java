@@ -40,7 +40,8 @@ public class ContactRestController {
         Role role = userDetails.getUser().getRole();
 
         if ( role == Role.MENTEE ) {
-            return null;
+            ContactResponse.postCountDTO responseDTO = contactService.postCountsMyMentee(userDetails.getUser().getId());
+            return ResponseEntity.ok(ApiUtils.success(responseDTO));
         }
 
         ContactResponse.postCountDTO responseDTO = contactService.postCountsByMentor(userDetails.getUser().getId());
@@ -55,6 +56,28 @@ public class ContactRestController {
         return ResponseEntity.status(HttpStatus.OK).body(ApiUtils.successWithNoContent());
     }
 
+    @PatchMapping(value = "/contacts/{id}/refuse")
+    @Operation(summary = "멘토링 신청 거절", description = "멘토링 신청을 거절한다.")
+    public ResponseEntity<?> refuseContact(@PathVariable int id, @RequestBody @Valid ContactRequest.RefuseDTO refuseDTO, Error errors, @AuthenticationPrincipal CustomUserDetails userDetails) {
+        // TO-DO : 멘토링 신청 거절 API 로직 만들기
+        contactService.refuseContact(id, refuseDTO, userDetails.getUser());
+        return ResponseEntity.status(HttpStatus.OK).body(ApiUtils.successWithNoContent());
+    }
 
+    @PostMapping(value = "/contacts/{id}")
+    @Operation(summary = "멘티의 멘토링 신청", description = "멘토가 작성한 글을 보고, 멘티는 멘토링 신청을 할 수 있다.")
+    public ResponseEntity<?> createContact(@PathVariable int id, @RequestBody @Valid ContactRequest.CreateDTO createDTO, Error errors, @AuthenticationPrincipal CustomUserDetails userDetails) {
+        // TO-DO : 멘토링 신청 API 로직 만들기
+        contactService.createContact(id, createDTO, userDetails.getUser());
+        return ResponseEntity.status(HttpStatus.OK).body(ApiUtils.successWithNoContent());
+    }
+
+    @DeleteMapping(value = "/contacts/{id}")
+    @Operation(summary = "멘티의 멘토링 신청 취소", description = "멘티는 신청한 멘토링을 취소할 수 있다.")
+    public ResponseEntity<?> deleteContact(@PathVariable int id, @RequestParam("mentorPostId") int mentorPostId, Error errors, @AuthenticationPrincipal CustomUserDetails userDetails) {
+        // TO-DO : 멘토링 신청 취소 API 로직 만들기
+        contactService.deleteContact(id, mentorPostId, userDetails.getUser());
+        return ResponseEntity.status(HttpStatus.OK).body(ApiUtils.successWithNoContent());
+    }
 
 }
