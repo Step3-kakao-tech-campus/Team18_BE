@@ -113,8 +113,8 @@ public class ContactService {
         if ( user.getRole() != Role.MENTOR ) {
             throw new Exception401("해당 사용자는 멘토가 아닙니다.");
         }
-
-        if (id != user.getId() ) {
+        // user 체크
+        if (id != user.getId() || acceptDTO.getMentorId() != user.getId() ) {
             throw new Exception401("올바른 사용자가 아닙니다.");
         }
 
@@ -125,15 +125,10 @@ public class ContactService {
                 .orElseThrow(() -> new Exception404("해당 게시글을 찾을 수 없습니다."));
 
         // ConnectedUser 에 추가
-        for ( ContactRequest.AcceptDTO.MentorAndMenteeDTO mentorAndMenteeDTO : acceptDTO.getMentorsAndMentees() ) {
-
-            // 멘토가 현재 유저와 같은지 확인
-            if ( mentorAndMenteeDTO.getMentorId() != user.getId() ) {
-                throw new Exception401("올바른 사용자가 아닙니다.");
-            }
+        for ( ContactRequest.AcceptDTO.MenteeDTO menteeDTO : acceptDTO.getMentees() ) {
 
             // notConnectedRegisterUser 의 state 바꾸기 -> ACCEPT
-            NotConnectedRegisterUser notConnectedRegisterUser = contactJPARepository.findByMentorPostIdAndMenteeUserId(mentorPostId, mentorAndMenteeDTO.getMenteeId())
+            NotConnectedRegisterUser notConnectedRegisterUser = contactJPARepository.findByMentorPostIdAndMenteeUserId(mentorPostId, menteeDTO.getMenteeId())
                     .orElseThrow(() -> new Exception404("해당 사용자를 찾을 수 없습니다."));
 
             notConnectedRegisterUser.updateStatus(NotConnectedRegisterUser.State.ACCEPT);

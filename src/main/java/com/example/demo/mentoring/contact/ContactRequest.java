@@ -27,16 +27,13 @@ public class ContactRequest {
     @Getter @Setter
     public static class AcceptDTO {
         private int mentorPostId;
-        private List<MentorAndMenteeDTO> mentorsAndMentees;
-        @Getter @Setter
-        public static class MentorAndMenteeDTO {
-            @NotNull
-            private int mentorId;
+        private int mentorId;
+        private List<MenteeDTO> mentees;
+        @Getter @Setter @NoArgsConstructor
+        public static class MenteeDTO {
             @NotNull
             private int menteeId;
-
-            public MentorAndMenteeDTO(int mentorId, int menteeId) {
-                this.mentorId = mentorId;
+            public MenteeDTO(int menteeId) {
                 this.menteeId = menteeId;
             }
         }
