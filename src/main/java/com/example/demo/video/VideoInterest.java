@@ -13,14 +13,14 @@ import javax.persistence.*;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
-@Table(name = "videoInterest_tb")
+@Table(name = "videoInterests")
 public class VideoInterest extends BaseTime {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     private int id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "video_id")
     private Video video;
 
     @ManyToOne(fetch = FetchType.LAZY)

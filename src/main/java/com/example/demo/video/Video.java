@@ -12,7 +12,7 @@ import javax.persistence.*;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
-@Table(name = "video_tb")
+@Table(name = "videos")
 public class Video extends BaseTime {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
