@@ -25,7 +25,6 @@ import java.util.stream.Collectors;
 public class ContactService {
 
     private final MentorPostJPARepostiory mentorPostJPARepository;
-    private final UserJPARepository userJPARepository;
     private final ContactJPARepository contactJPARepository;
     private final UserInterestJPARepository userInterestJPARepository;
     private final DoneJPARepository doneJPARepository;
@@ -105,12 +104,10 @@ public class ContactService {
 
     @Transactional
     public void acceptContact(int userId, ContactRequest.ContactAcceptDTO contactAcceptDTO, User user) {
-        // 예외 처리
-        if ( user.getRole() != Role.MENTOR ) {
-            throw new Exception401("해당 사용자는 멘토가 아닙니다.");
-        }
-        // user 체크
-        if (userId != user.getId() || contactAcceptDTO.getMentorId() != user.getId() ) {
+        isMentor(userId, user);
+
+        // dto 예외 처리
+        if ( contactAcceptDTO.getMentorId() != userId ) {
             throw new Exception401("올바른 사용자가 아닙니다.");
         }
 
@@ -138,14 +135,10 @@ public class ContactService {
     @Transactional
     public void refuseContact(int userId, ContactRequest.ContactRefuseDTO contactRefuseDTO, User user) {
         // 예외 처리
-        if ( user.getRole() != Role.MENTOR ) {
-            throw new Exception401("해당 사용자는 멘토가 아닙니다.");
-        }
-        if (userId != user.getId() ) {
-            throw new Exception401("올바른 사용자가 아닙니다.");
-        }
-        // 멘토와 현재 유저가 같은지 확인
-        if ( contactRefuseDTO.getMentorId() != user.getId() ) {
+        isMentor(userId, user);
+
+        // dto 예외 처리
+        if ( contactRefuseDTO.getMentorId() != userId ) {
             throw new Exception401("올바른 사용자가 아닙니다.");
         }
 
@@ -162,9 +155,7 @@ public class ContactService {
     @Transactional
     public void createContact(int userId, ContactRequest.ContactCreateDTO contactCreateDTO, User mentee) {
         // 예외 처리
-        if ( mentee.getRole() != Role.MENTEE ) {
-            throw new Exception401("해당 사용자는 멘티가 아닙니다.");
-        }
+        isMentee(mentee);
 
         if (userId != mentee.getId() ) {
             throw new Exception401("올바른 사용자가 아닙니다.");
@@ -183,14 +174,36 @@ public class ContactService {
 
     @Transactional
     public void deleteContact(int contactId, User mentee) {
+
         // 해당하는 NotConnectedRegisterUser 가져오기
         NotConnectedRegisterUser notConnectedRegisterUser = contactJPARepository.findById(contactId)
                 .orElseThrow(() -> new Exception404("해당 사용자를 찾을 수 없습니다." ));
         // 예외 처리
-        if ( mentee.getRole() != Role.MENTEE || notConnectedRegisterUser.getMenteeUser().getId() != mentee.getId() ) {
-            throw new Exception401("해당 사용자는 멘티가 아닙니다.");
+        isMentee(mentee);
+
+        if ( notConnectedRegisterUser.getMenteeUser().getId() != mentee.getId() ) {
+            throw new Exception401("올바른 사용자가 아닙니다.");
         }
         // notConnectedRegisterUser delete 요청 보내기
         contactJPARepository.deleteById(notConnectedRegisterUser.getId());
+    }
+
+    // 멘토 인증을 위한 메소드
+    private void isMentor(int userId, User user) {
+        // 예외 처리
+        if ( user.getRole() != Role.MENTOR ) {
+            throw new Exception401("해당 사용자는 멘토가 아닙니다.");
+        }
+        // user 체크
+        if (userId != user.getId() ) {
+            throw new Exception401("올바른 사용자가 아닙니다.");
+        }
+    }
+
+    // 멘티 인증을 위한 메소드
+    private void isMentee(User mentee) {
+        if ( mentee.getRole() != Role.MENTEE ) {
+            throw new Exception401("해당 사용자는 멘티가 아닙니다.");
+        }
     }
 }
