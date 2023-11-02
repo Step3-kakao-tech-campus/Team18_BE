@@ -125,7 +125,7 @@ public class contactTest extends RestDoc {
         requestDTOs.setMentorId(1);
 
         List<ContactRequest.ContactRefuseDTO.RefuseMenteeDTO> refuseMenteeDTOS = new ArrayList<>();
-        refuseMenteeDTOS.add(new ContactRequest.ContactRefuseDTO.RefuseMenteeDTO(3));
+        refuseMenteeDTOS.add(new ContactRequest.ContactRefuseDTO.RefuseMenteeDTO(1));
 
         requestDTOs.setMentees(refuseMenteeDTOS);
 
@@ -165,7 +165,7 @@ public class contactTest extends RestDoc {
         requestDTOs.setMentorId(1);
 
         List<ContactRequest.ContactAcceptDTO.AcceptMenteeDTO> acceptMenteeDTOS = new ArrayList<>();
-        acceptMenteeDTOS.add(new ContactRequest.ContactAcceptDTO.AcceptMenteeDTO(3));
+        acceptMenteeDTOS.add(new ContactRequest.ContactAcceptDTO.AcceptMenteeDTO(1));
 
         requestDTOs.setMentees(acceptMenteeDTOS);
 
@@ -242,13 +242,11 @@ public class contactTest extends RestDoc {
     @DisplayName("멘티 : 신청 취소 테스트 코드")
     void deleteTest() throws Exception {
         // given
-        int id = 3;
-        int mentorPostId = 1;
+        int id = 1;
 
         // when
         ResultActions result = mvc.perform(
                 MockMvcRequestBuilders.delete("/contacts/" + id)
-                        .param("mentorPostId", String.valueOf(mentorPostId))
                         .contentType(MediaType.APPLICATION_JSON)
         );
         String responseBody = result.andReturn().getResponse().getContentAsString();
