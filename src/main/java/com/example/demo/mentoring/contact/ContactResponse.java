@@ -92,7 +92,7 @@ public class ContactResponse {
             private String country;
             private int age;
             private Role role;
-            private NotConnectedRegisterUser.State state;
+            private ContactStateEnum state;
             private List<String> favorites; // 고민할 부분 : 유저의 favorite List 를 어떻게 가져올 것 인가?
 
             /**

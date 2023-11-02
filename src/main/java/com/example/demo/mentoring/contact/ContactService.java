@@ -124,7 +124,7 @@ public class ContactService {
             NotConnectedRegisterUser notConnectedRegisterUser = contactJPARepository.findById(acceptMenteeDTO.getMenteeId())
                     .orElseThrow(() -> new Exception404("해당 사용자를 찾을 수 없습니다."));
 
-            notConnectedRegisterUser.updateStatus(NotConnectedRegisterUser.State.ACCEPT);
+            notConnectedRegisterUser.updateStatus(ContactStateEnum.ACCEPT);
 
             // ConnectedUser 에 save 하기
             doneJPARepository.save(new ConnectedUser(mentorPost, notConnectedRegisterUser.getMenteeUser()));
@@ -148,7 +148,7 @@ public class ContactService {
             NotConnectedRegisterUser notConnectedRegisterUser = contactJPARepository.findById(refuseMenteeDTO.getMenteeId())
                     .orElseThrow(() -> new Exception404("해당 사용자를 찾을 수 없습니다."));
 
-            notConnectedRegisterUser.updateStatus(NotConnectedRegisterUser.State.REFUSE);
+            notConnectedRegisterUser.updateStatus(ContactStateEnum.REFUSE);
        }
     }
 
@@ -168,7 +168,7 @@ public class ContactService {
                 .orElseThrow(() -> new Exception404("해당 게시글을 찾을 수 없습니다."));
 
         // notConnectedRegisterUser 에 save 하기
-        contactJPARepository.save(new NotConnectedRegisterUser(mentorPost, mentee, NotConnectedRegisterUser.State.AWAIT));
+        contactJPARepository.save(new NotConnectedRegisterUser(mentorPost, mentee, ContactStateEnum.AWAIT));
 
     }
 
