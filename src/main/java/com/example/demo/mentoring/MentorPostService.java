@@ -38,8 +38,11 @@ public class MentorPostService {
         if(createDTO.getContent().length() > 300){
             throw new Exception404("글자수가 300자를 넘어갑니다.");
         }
+        System.out.println("writer id" + writer.getId());
+        System.out.println("writer email" + writer.getEmail());
 
         MentorPost mentorPost = new MentorPost( writer, createDTO.getTitle(), createDTO.getContent());
+
         try {
             mentorPostJPARepository.save(mentorPost);
         } catch (Exception e) {
