@@ -151,7 +151,7 @@ public class contactTest extends RestDoc {
         // verify
         result.andExpect(jsonPath("$.status").value("success")); // 성공 테스트 확인
         // 값이 잘 들어가는지 확인
-        Assertions.assertThat(notConnectedRegisterUser.getState()).isEqualTo(NotConnectedRegisterUser.State.REFUSE);
+        Assertions.assertThat(notConnectedRegisterUser.getState()).isEqualTo(ContactStateEnum.REFUSE);
     }
 
     @Test
@@ -197,7 +197,7 @@ public class contactTest extends RestDoc {
         // verify
         result.andExpect(jsonPath("$.status").value("success")); // 성공 테스트 확인
         // 값이 잘 들어가는지 확인
-        Assertions.assertThat(notConnectedRegisterUser.getState()).isEqualTo(NotConnectedRegisterUser.State.ACCEPT);
+        Assertions.assertThat(notConnectedRegisterUser.getState()).isEqualTo(ContactStateEnum.ACCEPT);
         Assertions.assertThat(connectedUser.getId()).isEqualTo(4);
     }
 
@@ -233,7 +233,7 @@ public class contactTest extends RestDoc {
         // verify
         result.andExpect(jsonPath("$.status").value("success")); // 성공 테스트 확인
         // 값이 잘 들어가는지 확인
-        Assertions.assertThat(notConnectedRegisterUser.getState()).isEqualTo(NotConnectedRegisterUser.State.AWAIT);
+        Assertions.assertThat(notConnectedRegisterUser.getState()).isEqualTo(ContactStateEnum.AWAIT);
 
     }
 
