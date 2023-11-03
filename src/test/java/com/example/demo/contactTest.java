@@ -143,7 +143,7 @@ public class contactTest extends RestDoc {
         System.out.println("테스트 : "+responseBody);
 
         // 테스트가 잘 됐는지 ( 값이 잘 바뀌는지 확인 )
-        NotConnectedRegisterUser notConnectedRegisterUser = contactJPARepository.findByMentorPostIdAndMenteeUserId(1, 3)
+        NotConnectedRegisterUser notConnectedRegisterUser = contactJPARepository.findById(1)
                 .orElseThrow(() -> new Exception404("해당 사용자를 찾을 수 없습니다."));
 
         System.out.println("state 확인 : " + notConnectedRegisterUser.getState());
@@ -183,7 +183,7 @@ public class contactTest extends RestDoc {
         System.out.println("테스트 : "+responseBody);
 
         // 테스트가 잘 됐는지 ( 값이 잘 바뀌는지 확인 )
-        NotConnectedRegisterUser notConnectedRegisterUser = contactJPARepository.findByMentorPostIdAndMenteeUserId(1, 3)
+        NotConnectedRegisterUser notConnectedRegisterUser = contactJPARepository.findById(1)
                 .orElseThrow(() -> new Exception404("해당 사용자를 찾을 수 없습니다."));
 
         System.out.println("state 확인 : " + notConnectedRegisterUser.getState());
