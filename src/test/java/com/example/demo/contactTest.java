@@ -135,7 +135,7 @@ public class contactTest extends RestDoc {
 
         // when
         ResultActions result = mvc.perform(
-                MockMvcRequestBuilders.patch("/contacts/1/refuse")
+                MockMvcRequestBuilders.patch("/contacts/refuse")
                         .content(requestBody)
                         .contentType(MediaType.APPLICATION_JSON)
         );
@@ -175,7 +175,7 @@ public class contactTest extends RestDoc {
 
         // when
         ResultActions result = mvc.perform(
-                MockMvcRequestBuilders.post("/contacts/1/accept")
+                MockMvcRequestBuilders.post("/contacts/accept")
                         .content(requestBody)
                         .contentType(MediaType.APPLICATION_JSON)
         );
@@ -218,7 +218,7 @@ public class contactTest extends RestDoc {
 
         // when
         ResultActions result = mvc.perform(
-                MockMvcRequestBuilders.post("/contacts/4")
+                MockMvcRequestBuilders.post("/contacts")
                         .content(requestBody)
                         .contentType(MediaType.APPLICATION_JSON)
         );
@@ -242,11 +242,11 @@ public class contactTest extends RestDoc {
     @DisplayName("멘티 : 신청 취소 테스트 코드")
     void deleteTest() throws Exception {
         // given
-        int id = 1;
 
         // when
         ResultActions result = mvc.perform(
-                MockMvcRequestBuilders.delete("/contacts/" + id)
+                MockMvcRequestBuilders.delete("/contacts")
+                        .header("contactId", 1,2)
                         .contentType(MediaType.APPLICATION_JSON)
         );
         String responseBody = result.andReturn().getResponse().getContentAsString();
