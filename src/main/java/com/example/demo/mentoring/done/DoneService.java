@@ -28,9 +28,7 @@ public class DoneService {
      * 멘티 : done 화면 조회 기능
      * **/
     public List<DoneResponse.DoneDashBoardDTO> findByMentee(User mentee) {
-        List<ConnectedUser> connectedUsers = doneJPARepository.findAllByMenteeId(mentee.getId());
-
-        return connectedUsers.stream()
+        return doneJPARepository.findAllByMenteeId(mentee.getId()).stream()
                 .map(this::createDoneDashBoardDTO)
                 .collect(Collectors.toList());
     }
@@ -55,6 +53,29 @@ public class DoneService {
     }
 
     public List<DoneResponse.DoneDashBoardDTO> findByMentor(User mentor) {
-        return null;
+        List<UserInterest> mentorInterests = userInterestJPARepository.findAllById(mentor.getId());
+        DoneResponse.DoneMentorDTO doneMentorDTO = new DoneResponse.DoneMentorDTO(mentor, mentorInterests);
+
+        return mentorPostJPARepository.findAllByWriterDone(mentor.getId()).stream()
+                .map(mentorPost -> createMentorPostDTO(mentorPost, doneMentorDTO))
+                .collect(Collectors.toList());
+    }
+
+    private DoneResponse.DoneDashBoardDTO createMentorPostDTO(MentorPost mentorPost, DoneResponse.DoneMentorDTO doneMentorDTO) {
+        List<DoneResponse.DoneMenteeDTO> doneMenteeDTOS = doneJPARepository.findAllByMentorPostId(mentorPost.getId())
+                .stream()
+                .map(this::createMenteeDTO)
+                .collect(Collectors.toList());
+
+        return new DoneResponse.DoneDashBoardDTO(mentorPost, doneMentorDTO, doneMenteeDTOS);
+    }
+
+    // 매핑 로직 분리 ( menteeDTO 생성 로직 )
+    private DoneResponse.DoneMenteeDTO createMenteeDTO(ConnectedUser connectedUser) {
+
+        List<UserInterest> menteeInterests = userInterestJPARepository
+                .findAllById(connectedUser.getMenteeUser().getId());
+
+        return new DoneResponse.DoneMenteeDTO(connectedUser, menteeInterests);
     }
 }

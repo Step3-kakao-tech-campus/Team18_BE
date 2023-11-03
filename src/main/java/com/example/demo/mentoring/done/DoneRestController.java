@@ -21,10 +21,11 @@ public class DoneRestController {
     @GetMapping(value = "/contacts/done")
     @Operation(summary = "contact 화면 조회", description = "멘토, 멘티 화면에 따라 적절한 화면을 보여준다.")
     public ResponseEntity<?> findAllContacts(@AuthenticationPrincipal CustomUserDetails userDetails) {
-        if ( userDetails.getUser().getRole().equals(Role.MENTEE) ) {
+        if (userDetails.getUser().getRole().equals(Role.MENTEE)) {
             List<DoneResponse.DoneDashBoardDTO> responseDTO = doneService.findByMentee(userDetails.getUser());
             return ResponseEntity.ok(ApiUtils.success(responseDTO));
         }
         List<DoneResponse.DoneDashBoardDTO> responseDTO = doneService.findByMentor(userDetails.getUser());
         return ResponseEntity.ok(ApiUtils.success(responseDTO));
+    }
 }
