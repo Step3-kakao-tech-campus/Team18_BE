@@ -9,28 +9,60 @@ import java.util.stream.Collectors;
 public class VideoResponse {
     @Getter
     @Setter
-    public static class VideoResponseDTO {
+    public static class VideoAllResponseDTO {
         private int videoID;
         private String videoUrl;
-        private String videoInfoKorean;
-        private String videoInfoEng;
+        private String videoTitleKorean;
+        private String videoTitleEng;
         private List<String> interests;
-        private List<Subtitle> subtitle;
         private long views;
         private String videoThumbnailUrl;
+        private String videoStartTime;
+        private String videoEndTime;
 
-        public VideoResponseDTO(Video video, List<VideoInterest> videoInterests, List<Subtitle> subtitle)
+        public VideoAllResponseDTO(Video video, List<VideoInterest> videoInterests)
         {
             this.videoID = video.getId();
             this.videoUrl = video.getVideoUrl();
-            this.videoInfoKorean = video.getVideoTitleKorean();
-            this.videoInfoEng = video.getVideoTitleEng();
+            this.videoTitleKorean = video.getVideoTitleKorean();
+            this.videoTitleEng = video.getVideoTitleEng();
             this.interests = videoInterests.stream()
                 .map(videoInterest -> videoInterest.getInterest().getCategory())
                 .collect(Collectors.toList());
-            this.subtitle = subtitle;
             this.views = video.getViews();
             this.videoThumbnailUrl = video.getVideoThumbnailUrl();
+            this.videoStartTime = video.getVideoStartTime();
+            this.videoEndTime = video.getVideoEndTime();
+        }
+    }
+
+    @Getter
+    @Setter
+    public static class VideoResponseDTO {
+        private int videoID;
+        private String videoUrl;
+        private String videoTitleKorean;
+        private String videoTitleEng;
+        private List<String> interests;
+        private long views;
+        private String videoThumbnailUrl;
+        private String videoStartTime;
+        private String videoEndTime;
+        private Subtitle subtitle;
+
+        public VideoResponseDTO(Video video, List<VideoInterest> videoInterests, Subtitle subtitle)
+        {
+            this.videoID = video.getId();
+            this.videoUrl = video.getVideoUrl();
+            this.videoTitleKorean = video.getVideoTitleKorean();
+            this.videoTitleEng = video.getVideoTitleEng();
+            this.interests = videoInterests.stream()
+                    .map(videoInterest -> videoInterest.getInterest().getCategory())
+                    .collect(Collectors.toList());
+            this.views = video.getViews();
+            this.videoThumbnailUrl = video.getVideoThumbnailUrl();
+            this.videoStartTime = video.getVideoStartTime();
+            this.videoEndTime = video.getVideoEndTime();
         }
     }
 }

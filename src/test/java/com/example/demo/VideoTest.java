@@ -4,7 +4,6 @@ import com.example.demo.interest.Interest;
 import com.example.demo.interest.InterestJPARepository;
 import com.example.demo.video.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -183,7 +182,7 @@ public class VideoTest extends RestDoc{
     @Test
     @Order(2)
     void findAllServiceTest() throws Exception {
-        List<VideoResponse.VideoResponseDTO> videoFind = videoService.findAllVideo(0);
+        List<VideoResponse.VideoAllResponseDTO> videoFind = videoService.findAllVideo(0);
 
         String responseBody = om.writeValueAsString(videoFind);
 

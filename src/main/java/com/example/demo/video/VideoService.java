@@ -19,7 +19,7 @@ public class VideoService {
     private final VideoInterestJPARepository videoInterestJPARepository;
     private final SubtitleJPARepository subtitleJPARepository;
 
-    public List<VideoResponse.VideoResponseDTO> findAllVideo(Integer page) {
+    public List<VideoResponse.VideoAllResponseDTO> findAllVideo(Integer page) {
         Pageable pageable = PageRequest.of(page,4);
 
         Page<Video> pageContent = videoJPARepository.findAll(pageable);
@@ -29,17 +29,18 @@ public class VideoService {
         }
 
         // 각 Video에대해서 Interest, Subtitle 끌어오기
-        List<VideoResponse.VideoResponseDTO> videoDTOList = pageContent.getContent().stream().map(
+        List<VideoResponse.VideoAllResponseDTO> videoDTOList = pageContent.getContent().stream().map(
                 video -> {
                     List<VideoInterest> videoInterests = videoInterestJPARepository.findVideoInterestByVideoId(video.getId());
-                    List<Subtitle> subtitle = subtitleJPARepository.findSubtitleByVideoId(video.getId());
 
-                    return new VideoResponse.VideoResponseDTO(video, videoInterests, subtitle);
+                    return new VideoResponse.VideoAllResponseDTO(video, videoInterests);
                 }
         ).collect(Collectors.toList());
         return videoDTOList;
     }
 
-    public VideoResponse.VideoResponseDTO findVideo(int id) {
-    }
+//    public VideoResponse.VideoResponseDTO findVideo(int id) {
+//
+//    }
+
 }
