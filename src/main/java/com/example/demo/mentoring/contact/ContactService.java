@@ -38,13 +38,13 @@ public class ContactService {
     }
 
     // contact - mentee 부분 리팩토링 ( DTO 를 만드는 부분 )
-    private ContactResponse.ContactDashBoardMenteeDTO createMenteeContactDTO(MentorPost mentorPost, NotConnectedRegisterUser mentee) {
+    private ContactResponse.ContactDashBoardMenteeDTO createMenteeContactDTO(MentorPost mentorPost, NotConnectedRegisterUser contactUser) {
 
-        List<UserInterest> mentorInterests = userInterestJPARepository.findAllById(mentee.getMenteeUser().getId());
+        List<UserInterest> mentorInterests = userInterestJPARepository.findAllById(contactUser.getMenteeUser().getId());
 
-        ContactResponse.ContactMentorDTO contactMentorDTO = new ContactResponse.ContactMentorDTO(mentee.getMenteeUser(), mentorInterests);
+        ContactResponse.ContactMentorDTO contactMentorDTO = new ContactResponse.ContactMentorDTO(contactUser.getMenteeUser(), mentorInterests);
 
-        return new ContactResponse.ContactDashBoardMenteeDTO(mentorPost, contactMentorDTO, mentee);
+        return new ContactResponse.ContactDashBoardMenteeDTO(mentorPost, contactMentorDTO, contactUser);
     }
 
     // ---------------------------------------------------------------------------------------------
@@ -73,12 +73,12 @@ public class ContactService {
     }
 
     // 매핑 로직 분리 ( menteeDTO 생성 로직 )
-    private ContactResponse.ContactMenteeDTO createMenteeDTO(NotConnectedRegisterUser mentee) {
+    private ContactResponse.ContactMenteeDTO createMenteeDTO(NotConnectedRegisterUser contactUser) {
 
         List<UserInterest> menteeInterests = userInterestJPARepository
-                .findAllById(mentee.getMenteeUser().getId());
+                .findAllById(contactUser.getMenteeUser().getId());
 
-        return new ContactResponse.ContactMenteeDTO(mentee, menteeInterests);
+        return new ContactResponse.ContactMenteeDTO(contactUser, menteeInterests);
     }
 
     // contact, done 화면에서 게시글을 조회해서 갯수를 전달해주는 함수
