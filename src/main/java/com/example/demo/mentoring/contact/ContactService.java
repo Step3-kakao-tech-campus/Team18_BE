@@ -101,11 +101,11 @@ public class ContactService {
     }
 
     @Transactional
-    public void acceptContact(ContactRequest.ContactAcceptDTO contactAcceptDTO, User user) {
-        isMentor(user);
+    public void acceptContact(ContactRequest.ContactAcceptDTO contactAcceptDTO, User mentor) {
+        isMentor(mentor);
 
         // dto 예외 처리
-        if ( contactAcceptDTO.getMentorId() != user.getId() ) {
+        if ( contactAcceptDTO.getMentorId() != mentor.getId() ) {
             throw new Exception401("올바른 사용자가 아닙니다.");
         }
 
@@ -131,12 +131,12 @@ public class ContactService {
     }
 
     @Transactional
-    public void refuseContact(ContactRequest.ContactRefuseDTO contactRefuseDTO, User user) {
+    public void refuseContact(ContactRequest.ContactRefuseDTO contactRefuseDTO, User mentor) {
         // 예외 처리
-        isMentor(user);
+        isMentor(mentor);
 
         // dto 예외 처리
-        if ( contactRefuseDTO.getMentorId() != user.getId() ) {
+        if ( contactRefuseDTO.getMentorId() != mentor.getId() ) {
             throw new Exception401("올바른 사용자가 아닙니다.");
         }
 
