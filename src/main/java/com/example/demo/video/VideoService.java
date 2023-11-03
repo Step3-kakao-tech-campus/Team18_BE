@@ -39,4 +39,7 @@ public class VideoService {
         ).collect(Collectors.toList());
         return videoDTOList;
     }
+
+    public VideoResponse.VideoResponseDTO findVideo(int id) {
+    }
 }
