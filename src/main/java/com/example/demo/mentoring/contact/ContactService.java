@@ -1,6 +1,5 @@
 package com.example.demo.mentoring.contact;
 
-import com.example.demo.config.errors.exception.Exception400;
 import com.example.demo.config.errors.exception.Exception401;
 import com.example.demo.config.errors.exception.Exception404;
 import com.example.demo.mentoring.MentorPost;
@@ -9,7 +8,6 @@ import com.example.demo.mentoring.done.ConnectedUser;
 import com.example.demo.mentoring.done.DoneJPARepository;
 import com.example.demo.user.Role;
 import com.example.demo.user.User;
-import com.example.demo.user.UserJPARepository;
 import com.example.demo.user.userInterest.UserInterest;
 import com.example.demo.user.userInterest.UserInterestJPARepository;
 import lombok.RequiredArgsConstructor;
@@ -103,11 +101,11 @@ public class ContactService {
     }
 
     @Transactional
-    public void acceptContact(int userId, ContactRequest.ContactAcceptDTO contactAcceptDTO, User user) {
-        isMentor(userId, user);
+    public void acceptContact(ContactRequest.ContactAcceptDTO contactAcceptDTO, User user) {
+        isMentor(user);
 
         // dto 예외 처리
-        if ( contactAcceptDTO.getMentorId() != userId ) {
+        if ( contactAcceptDTO.getMentorId() != user.getId() ) {
             throw new Exception401("올바른 사용자가 아닙니다.");
         }
 
@@ -133,12 +131,12 @@ public class ContactService {
     }
 
     @Transactional
-    public void refuseContact(int userId, ContactRequest.ContactRefuseDTO contactRefuseDTO, User user) {
+    public void refuseContact(ContactRequest.ContactRefuseDTO contactRefuseDTO, User user) {
         // 예외 처리
-        isMentor(userId, user);
+        isMentor(user);
 
         // dto 예외 처리
-        if ( contactRefuseDTO.getMentorId() != userId ) {
+        if ( contactRefuseDTO.getMentorId() != user.getId() ) {
             throw new Exception401("올바른 사용자가 아닙니다.");
         }
 
@@ -153,13 +151,9 @@ public class ContactService {
     }
 
     @Transactional
-    public void createContact(int userId, ContactRequest.ContactCreateDTO contactCreateDTO, User mentee) {
+    public void createContact(ContactRequest.ContactCreateDTO contactCreateDTO, User mentee) {
         // 예외 처리
         isMentee(mentee);
-
-        if (userId != mentee.getId() ) {
-            throw new Exception401("올바른 사용자가 아닙니다.");
-        }
 
         int mentorPostId = contactCreateDTO.getMentorPostId();
 
@@ -173,30 +167,29 @@ public class ContactService {
     }
 
     @Transactional
-    public void deleteContact(int contactId, User mentee) {
-
-        // 해당하는 NotConnectedRegisterUser 가져오기
-        NotConnectedRegisterUser notConnectedRegisterUser = contactJPARepository.findById(contactId)
-                .orElseThrow(() -> new Exception404("해당 사용자를 찾을 수 없습니다." ));
+    public void deleteContact(List<Integer> contactId, User mentee) {
         // 예외 처리
         isMentee(mentee);
 
-        if ( notConnectedRegisterUser.getMenteeUser().getId() != mentee.getId() ) {
-            throw new Exception401("올바른 사용자가 아닙니다.");
+        // 해당하는 NotConnectedRegisterUser 가져오기
+        for (int contact : contactId) {
+            NotConnectedRegisterUser notConnectedRegisterUser = contactJPARepository.findById(contact)
+                    .orElseThrow(() -> new Exception404("해당 사용자를 찾을 수 없습니다." ));
+
+            if ( notConnectedRegisterUser.getMenteeUser().getId() != mentee.getId() ) {
+                throw new Exception401("올바른 사용자가 아닙니다.");
+            }
+            // notConnectedRegisterUser delete 요청 보내기
+            contactJPARepository.deleteById(notConnectedRegisterUser.getId());
         }
-        // notConnectedRegisterUser delete 요청 보내기
-        contactJPARepository.deleteById(notConnectedRegisterUser.getId());
+
     }
 
     // 멘토 인증을 위한 메소드
-    private void isMentor(int userId, User user) {
+    private void isMentor(User user) {
         // 예외 처리
         if ( user.getRole() != Role.MENTOR ) {
             throw new Exception401("해당 사용자는 멘토가 아닙니다.");
-        }
-        // user 체크
-        if (userId != user.getId() ) {
-            throw new Exception401("올바른 사용자가 아닙니다.");
         }
     }
 
