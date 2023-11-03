@@ -15,7 +15,7 @@ import javax.persistence.*;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 @Where(clause = "deleted_at IS NULL")
-@SQLDelete(sql = "UPDATE mentor_posts SET deleted_at = CURRENT_TIMESTAMP, is_deleted = TRUE where id = ?")
+@SQLDelete(sql = "UPDATE subtitles SET deleted_at = CURRENT_TIMESTAMP, is_deleted = TRUE where id = ?")
 @Table(name = "subtitles")
 public class Subtitle extends BaseTime {
     @GeneratedValue(strategy = GenerationType.IDENTITY)

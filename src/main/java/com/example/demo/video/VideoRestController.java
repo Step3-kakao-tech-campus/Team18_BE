@@ -21,7 +21,7 @@ public class VideoRestController {
 
     @GetMapping("/videos/main")
     public ResponseEntity<?> getUserCategoryVideo(@RequestParam(value = "page", defaultValue = "0") Integer page, @AuthenticationPrincipal CustomUserDetails userDetails) {
-        List<VideoResponse.VideoResponseDTO> responseDTOs = videoService.findUserCategoryVideo(page);
+        List<VideoResponse.VideoResponseDTO> responseDTOs = videoService.findAllVideo(page);
         return ResponseEntity.ok(ApiUtils.success(responseDTOs));
     }
 }
