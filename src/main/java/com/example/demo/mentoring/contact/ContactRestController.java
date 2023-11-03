@@ -1,7 +1,7 @@
 package com.example.demo.mentoring.contact;
 
 import com.example.demo.config.auth.CustomUserDetails;
-import com.example.demo.config.utils.ApiUtils;
+import com.example.demo.config.utils.ApiResponseBuilder;
 import com.example.demo.user.Role;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
@@ -23,10 +23,10 @@ public class ContactRestController {
     public ResponseEntity<?> findAll(@AuthenticationPrincipal CustomUserDetails userDetails) {
         if ( userDetails.getUser().getRole() == Role.MENTEE ) {
             List<ContactResponse.MenteeContactDTO> responseDTO = contactService.findAllByMentee(userDetails.getUser().getId());
-            return ResponseEntity.ok(ApiUtils.success(responseDTO));
+            return ResponseEntity.ok(ApiResponseBuilder.success(responseDTO));
         }
         List<ContactResponse.MentorPostDTO> responseDTO = contactService.findAllByMentor(userDetails.getUser().getId());
-        return ResponseEntity.ok(ApiUtils.success(responseDTO));
+        return ResponseEntity.ok(ApiResponseBuilder.success(responseDTO));
     }
 
     
@@ -43,7 +43,7 @@ public class ContactRestController {
         }
 
         ContactResponse.postCountDTO responseDTO = contactService.postCountsByMentor(userDetails.getUser().getId());
-        return ResponseEntity.ok(ApiUtils.success(responseDTO));
+        return ResponseEntity.ok(ApiResponseBuilder.success(responseDTO));
     }
 
 }
