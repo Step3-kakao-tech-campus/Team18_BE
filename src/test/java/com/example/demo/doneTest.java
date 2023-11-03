@@ -33,4 +33,25 @@ public class doneTest extends RestDoc {
         // verify
         resultActions.andExpect(jsonPath("$.status").value("success"));
     }
+
+    @Test
+    @WithUserDetails("john@example.com")
+    @DisplayName("멘토 기준 화면 조회 테스트 코드")
+    void contactMentorTest() throws Exception {
+
+        // given
+
+        // when
+        ResultActions resultActions = mvc.perform(
+                get("/contacts/done")
+        );
+
+        // console
+        String responseBody = resultActions.andReturn().getResponse().getContentAsString();
+        System.out.println("테스트 : "+responseBody);
+
+        // verify
+        resultActions.andExpect(jsonPath("$.status").value("success"));
+
+    }
 }
