@@ -1,10 +1,10 @@
 SET REFERENTIAL_INTEGRITY FALSE;
 TRUNCATE TABLE user_tb;
 TRUNCATE TABLE interest_tb;
-TRUNCATE TABLE mentor_post_tb;
+TRUNCATE TABLE mentor_posts;
 TRUNCATE TABLE user_interest_tb;
-TRUNCATE TABLE not_connected_register_user_tb;
-TRUNCATE TABLE connected_user_tb;
+TRUNCATE TABLE not_connected_register_users;
+TRUNCATE TABLE connected_users;
 SET REFERENTIAL_INTEGRITY TRUE;
 
 -- user Table
@@ -24,7 +24,7 @@ INSERT INTO interest_tb (created_at, category) VALUES
   (NOW(), 'Sports');
 
 -- mentorPost Table
-INSERT INTO mentor_post_tb (created_at, writer_id, title, content, state) VALUES
+INSERT INTO mentor_posts (created_at, writer_id, title, content, state) VALUES
       (NOW(), 1, 'Teaching Programming', 'I can teach you how to code.', 'ACTIVE'),
       (NOW(), 1, 'Art Workshop', 'Let''s create beautiful art together.', 'DONE'),
       (NOW(), 2, 'Software Development Mentorship', 'I can mentor you in software development.', 'ACTIVE'),
@@ -42,14 +42,16 @@ INSERT INTO mentor_post_tb (created_at, writer_id, title, content, state) VALUES
 
 
 -- notConnectedRegisterUser Table
-INSERT INTO not_connected_register_user_tb (created_at, mentor_post_id, mentee_user_id, state) VALUES
+INSERT INTO not_connected_register_users (created_at, mentor_post_id, mentee_user_id, state) VALUES
       (NOW(), 1, 3, 'AWAIT'),
+      (NOW(), 3, 3, 'AWAIT'),
       (NOW(), 1, 4, 'ACCEPT'),
       (NOW(), 3, 5, 'AWAIT');
 
 -- connectedUser Table
-INSERT INTO connected_user_tb (created_at, mentor_post_id, mentee_user_id) VALUES
+INSERT INTO connected_users (created_at, mentor_post_id, mentee_user_id) VALUES
     (NOW(), 2, 3),
+    (NOW(), 3, 3),
     (NOW(), 2, 5),
     (NOW(), 2, 6);
 

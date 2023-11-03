@@ -8,6 +8,7 @@ import com.example.demo.interest.Interest;
 import com.example.demo.interest.InterestJPARepository;
 import com.example.demo.mentoring.*;
 import com.example.demo.mentoring.contact.ContactJPARepository;
+import com.example.demo.mentoring.contact.ContactStateEnum;
 import com.example.demo.mentoring.contact.NotConnectedRegisterUser;
 import com.example.demo.user.Role;
 import com.example.demo.user.User;
@@ -253,13 +254,13 @@ public class MentoringTest extends RestDoc {
         NotConnectedRegisterUser menteeNotConnected1 = NotConnectedRegisterUser.builder()
                 .mentorPost(mentorPost3)
                 .menteeUser(mentee_One)
-                .state(NotConnectedRegisterUser.State.AWAIT)
+                .state(ContactStateEnum.AWAIT)
                 .build();
 
         NotConnectedRegisterUser menteeNotConnected2 = NotConnectedRegisterUser.builder()
                 .mentorPost(mentorPost3)
                 .menteeUser(mentee_Two)
-                .state(NotConnectedRegisterUser.State.AWAIT)
+                .state(ContactStateEnum.AWAIT)
                 .build();
 
         //when

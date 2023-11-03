@@ -40,6 +40,7 @@ public class MentorPostService {
         }
 
         MentorPost mentorPost = new MentorPost( writer, createDTO.getTitle(), createDTO.getContent());
+
         try {
             mentorPostJPARepository.save(mentorPost);
         } catch (Exception e) {
