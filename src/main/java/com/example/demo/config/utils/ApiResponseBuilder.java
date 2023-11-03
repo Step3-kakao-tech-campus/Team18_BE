@@ -3,16 +3,10 @@ package com.example.demo.config.utils;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.http.HttpStatus;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
-import org.springframework.validation.ObjectError;
 
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
-public class ApiUtils {
+public class ApiResponseBuilder {
 
     private static final String SUCCESS_STATUS = "success";
     private static final String FAIL_STATUS = "fail";
