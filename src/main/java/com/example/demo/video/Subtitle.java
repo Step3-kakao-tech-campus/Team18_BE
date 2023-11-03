@@ -12,7 +12,7 @@ import javax.persistence.*;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
-@Table(name = "subtitle_tb")
+@Table(name = "subtitles")
 public class Subtitle extends BaseTime {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id

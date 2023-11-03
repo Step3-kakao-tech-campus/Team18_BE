@@ -11,14 +11,15 @@ import java.util.stream.Collectors;
 public class VideoResponse {
     @Getter
     @Setter
-    public class UserCategoryVideoResponseDTO {
+    public static class VideoResponseDTO {
         private int videoID;
         private String videoUrl;
         private String videoInfoKorean;
         private String videoInfoEng;
         private List<String> interests;
+        private Subtitle subtitle;
 
-        public UserCategoryVideoResponseDTO(Video video, List<VideoInterest> videoInterests)
+        public VideoResponseDTO(Video video, List<VideoInterest> videoInterests, Subtitle subtitle)
         {
             this.videoID = video.getId();
             this.videoUrl = video.getVideoUrl();
@@ -27,6 +28,7 @@ public class VideoResponse {
             this.interests = videoInterests.stream()
                 .map(videoInterest -> videoInterest.getInterest().getCategory())
                 .collect(Collectors.toList());
+            this.subtitle = subtitle;
         }
     }
 }
