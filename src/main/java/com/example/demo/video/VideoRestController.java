@@ -24,9 +24,9 @@ public class VideoRestController {
         return ResponseEntity.ok(ApiUtils.success(responseDTOs));
     }
 
-//    @GetMapping("/videos/{id}")
-//    public ResponseEntity<?> getMentorPostId(@PathVariable int id) {
-//        VideoResponse.VideoResponseDTO responseDTO = videoService.findVideo(id);
-//        return ResponseEntity.ok(ApiUtils.success(responseDTO));
-//    }
+    @GetMapping("/videos/{id}")
+    public ResponseEntity<?> getMentorPostId(@PathVariable int id) {
+        VideoResponse.VideoResponseDTO responseDTO = videoService.findVideo(id);
+        return ResponseEntity.ok(ApiUtils.success(responseDTO));
+    }
 }

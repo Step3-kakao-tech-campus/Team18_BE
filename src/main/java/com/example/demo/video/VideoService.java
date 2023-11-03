@@ -28,7 +28,7 @@ public class VideoService {
             throw new Exception404("해당 영상들이 존재하지 않습니다");
         }
 
-        // 각 Video에대해서 Interest, Subtitle 끌어오기
+        // 각 Video에대해서 Interest 끌어오기
         List<VideoResponse.VideoAllResponseDTO> videoDTOList = pageContent.getContent().stream().map(
                 video -> {
                     List<VideoInterest> videoInterests = videoInterestJPARepository.findVideoInterestByVideoId(video.getId());
@@ -39,8 +39,16 @@ public class VideoService {
         return videoDTOList;
     }
 
-//    public VideoResponse.VideoResponseDTO findVideo(int id) {
-//
-//    }
+    public VideoResponse.VideoResponseDTO findVideo(int id) {
+        Video video = videoJPARepository.findById(id)
+                .orElseThrow(() -> new Exception404("해당 영상이 존재하지 않습니다.\n" + "id : " + id));;
+
+        List<VideoInterest> videoInterests = videoInterestJPARepository.findVideoInterestByVideoId(video.getId());
+        List<Subtitle> videoSubtitles = subtitleJPARepository.findSubtitleByVideoId(video.getId());
+
+        VideoResponse.VideoResponseDTO videoResponseDTO = new VideoResponse.VideoResponseDTO(video, videoInterests, videoSubtitles);
+
+        return videoResponseDTO;
+    }
 
 }

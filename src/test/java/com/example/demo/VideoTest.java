@@ -182,7 +182,7 @@ public class VideoTest extends RestDoc{
     @Test
     @Order(2)
     void findAllServiceTest() throws Exception {
-        List<VideoResponse.VideoAllResponseDTO> videoFind = videoService.findAllVideo(0);
+        VideoResponse.VideoResponseDTO videoFind = videoService.findVideo(1);
 
         String responseBody = om.writeValueAsString(videoFind);
 
