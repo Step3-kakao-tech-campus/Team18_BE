@@ -20,7 +20,7 @@ public class VideoInterest extends BaseTime {
     private int id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "video_id")
     private Video video;
 
     @ManyToOne(fetch = FetchType.LAZY)
