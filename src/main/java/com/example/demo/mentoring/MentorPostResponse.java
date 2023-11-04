@@ -1,6 +1,7 @@
 package com.example.demo.mentoring;
 
 
+import com.example.demo.mentoring.contact.ContactStateEnum;
 import com.example.demo.mentoring.contact.NotConnectedRegisterUser;
 import com.example.demo.user.Role;
 import com.example.demo.user.User;
@@ -94,7 +95,7 @@ public class MentorPostResponse {
                                 userInterest -> mentee.getMenteeUser().getId() == userInterest.getUser().getId()
                         ).collect(Collectors.toList());
 
-                        MentorPostDTO.MenteeDTO menteeDTO = new MentorPostDTO.MenteeDTO(mentee.getMenteeUser(), eachMenteeFavorite);
+                        MentorPostDTO.MenteeDTO menteeDTO = new MentorPostDTO.MenteeDTO(mentee, eachMenteeFavorite);
                         return menteeDTO;
                     })
                     .collect(Collectors.toList());
@@ -130,15 +131,17 @@ public class MentorPostResponse {
             private String country;
             private Role role;
             private int age;
+            private ContactStateEnum state;
             private List<String> interests;
 
-            public MenteeDTO(User user, List<UserInterest> userInterests) {
-                this.menteeId = user.getId();
-                this.profileImage = user.getProfileImage();
-                this.name = user.getFirstName() + " " + user.getLastName();
-                this.country = user.getCountry();
-                this.role = user.getRole();
-                this.age = user.getAge();
+            public MenteeDTO(NotConnectedRegisterUser notConnectedRegisterUser, List<UserInterest> userInterests) {
+                this.menteeId = notConnectedRegisterUser.getId();
+                this.profileImage = notConnectedRegisterUser.getMenteeUser().getProfileImage();
+                this.name = notConnectedRegisterUser.getMenteeUser().getFirstName() + " " + notConnectedRegisterUser.getMenteeUser().getLastName();
+                this.country = notConnectedRegisterUser.getMenteeUser().getCountry();
+                this.role = notConnectedRegisterUser.getMenteeUser().getRole();
+                this.age = notConnectedRegisterUser.getMenteeUser().getAge();
+                this.state = notConnectedRegisterUser.getState();
                 this.interests = userInterests.stream()
                         .map(userInterest -> userInterest.getInterest().getCategory())
                         .collect(Collectors.toList());

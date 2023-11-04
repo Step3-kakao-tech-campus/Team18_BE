@@ -113,8 +113,9 @@ public class MentorPostService {
         return mentorPostDTO;
     }
     @Transactional
-    public void updateMentorPost(MentorPostRequest.CreateDTO createDTO, int id)
-    {
+    public void updateMentorPost(MentorPostRequest.CreateDTO createDTO, int id, User writer) {
+        isMentor(writer);
+
         MentorPost mentorPost = mentorPostJPARepository.findById(id).
                 orElseThrow(() -> new Exception404("해당 글이 존재하지 않습니다."));
 
@@ -130,7 +131,10 @@ public class MentorPostService {
         }
     }
 
-    public void deleteMentorPost(int id) {
+    public void deleteMentorPost(int id, User writer) {
+
+        isMentor(writer);
+
         try {
             mentorPostJPARepository.deleteById(id);
         } catch (Exception e) {
@@ -155,8 +159,10 @@ public class MentorPostService {
         return mentorPostDTOList;
     }
 
-    public void changeMentorPostStatus(MentorPostRequest.StateDTO stateDTO, int id)
-    {
+    public void changeMentorPostStatus(MentorPostRequest.StateDTO stateDTO, int id, User writer) {
+
+        isMentor(writer);
+
         MentorPost mentorPost = mentorPostJPARepository.findById(id)
                 .orElseThrow(() -> new Exception404("해당 글이 존재하지 않습니다."));;
 
@@ -164,6 +170,12 @@ public class MentorPostService {
             mentorPost.changeStatus(stateDTO.getMentorPostStateEnum());
         } catch (Exception e) {
             throw new Exception500("unknown server error");
+        }
+    }
+
+    private void isMentor(User writer) {
+        if ( writer.getRole() == Role.MENTEE ) {
+            throw new Exception401("해당 사용자는 멘티입니다.");
         }
     }
 }

@@ -27,8 +27,7 @@ public class MentorPostRestController {
     public ResponseEntity<?> getMentorPost(
             @RequestParam(value = "category", required = false) MentorPostCategoryEnum category,
             @RequestParam(value = "search", defaultValue = "") String keyword,
-            @RequestParam(value = "page", defaultValue = "0") Integer page,
-            @AuthenticationPrincipal CustomUserDetails userDetails) {
+            @RequestParam(value = "page", defaultValue = "0") Integer page) {
 
         if(category == null)
             category = MentorPostCategoryEnum.NULL;
@@ -38,26 +37,26 @@ public class MentorPostRestController {
     }
 
     @GetMapping("/mentorings/post/{id}")
-    public ResponseEntity<?> getMentorPostId(@PathVariable int id, @AuthenticationPrincipal CustomUserDetails userDetails) {
+    public ResponseEntity<?> getMentorPostId(@PathVariable int id) {
         MentorPostResponse.MentorPostDTO responseDTO = mentorPostService.findMentorPost(id);
         return ResponseEntity.ok(ApiUtils.success(responseDTO));
     }
 
     @PutMapping(value = "/mentorings/post/{id}")
     public ResponseEntity<?> updateMentorPost(@PathVariable int id, @RequestBody @Valid MentorPostRequest.CreateDTO requestDTO, Errors errors, @AuthenticationPrincipal CustomUserDetails userDetails) {
-        mentorPostService.updateMentorPost(requestDTO, id);
+        mentorPostService.updateMentorPost(requestDTO, id, userDetails.getUser());
         return ResponseEntity.status(HttpStatus.OK).body(ApiUtils.successWithNoContent());
     }
 
     @DeleteMapping(value = "/mentorings/post/{id}")
-    public ResponseEntity<?> deleteMentorPost(@PathVariable int id, Errors errors, @AuthenticationPrincipal CustomUserDetails userDetails) {
-        mentorPostService.deleteMentorPost(id);
+    public ResponseEntity<?> deleteMentorPost(@PathVariable int id, @AuthenticationPrincipal CustomUserDetails userDetails) {
+        mentorPostService.deleteMentorPost(id, userDetails.getUser());
         return ResponseEntity.status(HttpStatus.OK).body(ApiUtils.successWithNoContent());
     }
 
     @PatchMapping(value = "/mentorings/post/{id}/done")
     public ResponseEntity<?> changeMentorPostStatus(@PathVariable int id,@RequestBody @Valid MentorPostRequest.StateDTO requestDTO, Errors errors, @AuthenticationPrincipal CustomUserDetails userDetails) {
-        mentorPostService.changeMentorPostStatus(requestDTO, id);
+        mentorPostService.changeMentorPostStatus(requestDTO, id, userDetails.getUser());
         return ResponseEntity.status(HttpStatus.OK).body(ApiUtils.successWithNoContent());
     }
 
