@@ -50,7 +50,7 @@ public class MentorPostRestController {
     }
 
     @DeleteMapping(value = "/mentorings/post/{id}")
-    public ResponseEntity<?> deleteMentorPost(@PathVariable int id, Errors errors, @AuthenticationPrincipal CustomUserDetails userDetails) {
+    public ResponseEntity<?> deleteMentorPost(@PathVariable int id, @AuthenticationPrincipal CustomUserDetails userDetails) {
         mentorPostService.deleteMentorPost(id);
         return ResponseEntity.status(HttpStatus.OK).body(ApiUtils.successWithNoContent());
     }
