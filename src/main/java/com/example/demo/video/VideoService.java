@@ -1,6 +1,8 @@
 package com.example.demo.video;
 
 import com.example.demo.config.errors.exception.Exception404;
+import com.example.demo.user.userInterest.UserInterest;
+import com.example.demo.user.userInterest.UserInterestJPARepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -18,6 +20,7 @@ public class VideoService {
     private final VideoJPARepository videoJPARepository;
     private final VideoInterestJPARepository videoInterestJPARepository;
     private final SubtitleJPARepository subtitleJPARepository;
+    private final UserInterestJPARepository userInterestJPARepository;
 
     public List<VideoResponse.VideoAllResponseDTO> findAllVideo(Integer page) {
         Pageable pageable = PageRequest.of(page,4);
@@ -51,4 +54,13 @@ public class VideoService {
         return videoResponseDTO;
     }
 
+//    public List<VideoResponse.VideoAllResponseDTO> findUserCategory(int id) {
+//        List<UserInterest> userInterests = userInterestJPARepository.findAllById(id);
+//        Pageable pageable = PageRequest.of(0,4);
+//        Page<Video> pageContent;
+//        if(userInterests.size() == 0)
+//        {
+//            pageContent = videoJPARepository.findAll(pageable);
+//        }
+//    }
 }
