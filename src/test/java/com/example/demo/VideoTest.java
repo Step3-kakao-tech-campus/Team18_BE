@@ -320,7 +320,7 @@ public class VideoTest extends RestDoc{
     @Test
     @Order(2)
     void findOmTest() throws Exception {
-        List<VideoResponse.VideoPageResponseDTO> videoFind = videoService.findAllVideo();
+        VideoResponse.VideoResponseDTO videoFind = videoService.findVideo(1);
 
         String responseBody = om.writeValueAsString(videoFind);
 
