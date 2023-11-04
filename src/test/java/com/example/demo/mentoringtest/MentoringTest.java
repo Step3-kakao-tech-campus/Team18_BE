@@ -316,7 +316,7 @@ public class MentoringTest extends RestDoc {
 
         userJPARepository.save(writer);
         mentorPostService.createMentorPost(mentorPostRequest, writer);
-        mentorPostService.updateMentorPost(mentorPostUpdated,2);
+        mentorPostService.updateMentorPost(mentorPostUpdated,2, writer);
 
         MentorPost mentorPostFind = mentorPostJPARepostiory.findById(2)
                 .orElseThrow(() -> new Exception404("해당 게시글이 존재하지 않습니다."));
@@ -372,7 +372,7 @@ public class MentoringTest extends RestDoc {
     @DisplayName("DeleteTest")
     public void DeleteMentorPost() throws Exception{
         int id = 2;
-        mentorPostService.deleteMentorPost(id);
+        mentorPostService.deleteMentorPost(id, User.builder().id(1).build());
 
         MentorPost mentorPostFind = mentorPostJPARepostiory.findById(2)
                 .orElse(null);
@@ -385,7 +385,7 @@ public class MentoringTest extends RestDoc {
         int id = 1;
         MentorPostRequest.StateDTO stateDTO = new MentorPostRequest.StateDTO();
         stateDTO.setMentorPostStateEnum(MentorPostStateEnum.DONE);
-        mentorPostService.changeMentorPostStatus(stateDTO, id);
+        mentorPostService.changeMentorPostStatus(stateDTO, id, User.builder().id(1).build());
     }
 
     @Test
