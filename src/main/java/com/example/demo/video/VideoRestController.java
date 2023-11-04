@@ -20,11 +20,11 @@ public class VideoRestController {
 
     private final VideoService videoService;
 
-   /* @GetMapping("/videos/interest")
+   @GetMapping("/videos/interest")
     public ResponseEntity<?> getUserCategoryVideo(@AuthenticationPrincipal CustomUserDetails userDetails){
         List<VideoResponse.VideoAllResponseDTO> responseDTOs = videoService.findUserCategory(userDetails.getUser().getId());
         return ResponseEntity.ok(ApiUtils.success(responseDTOs));
-    }*/
+    }
 
     @GetMapping("/videos/main")
     public ResponseEntity<?> getCategoryFilterVideo(@RequestParam(value = "page", defaultValue = "0") Integer page) {
