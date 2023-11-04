@@ -39,8 +39,8 @@ public class VideoRestController {
     }
 
     @GetMapping("/videos/history")
-    public ResponseEntity<?> getVideoHistory(@AuthenticationPrincipal CustomUserDetails userDetails) {
-        List<VideoResponse.VideoResponseDTO> responseDTO = videoService.findHistoryVideo(userDetails.getUser().getId());
+    public ResponseEntity<?> getVideoHistory(@RequestParam(value = "page", defaultValue = "0") Integer page, @AuthenticationPrincipal CustomUserDetails userDetails) {
+        List<VideoResponse.VideoAllResponseDTO> responseDTO = videoService.findHistoryVideo(page, userDetails.getUser().getId());
         return ResponseEntity.ok(ApiUtils.success(responseDTO));
     }
 }

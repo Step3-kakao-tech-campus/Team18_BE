@@ -2,6 +2,9 @@ package com.example.demo;
 
 import com.example.demo.interest.Interest;
 import com.example.demo.interest.InterestJPARepository;
+import com.example.demo.user.Role;
+import com.example.demo.user.User;
+import com.example.demo.user.UserJPARepository;
 import com.example.demo.video.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.*;
@@ -25,6 +28,10 @@ public class VideoTest extends RestDoc{
     private VideoJPARepository videoJPARepository;
     @Autowired
     private SubtitleJPARepository subtitleJPARepository;
+    @Autowired
+    private UserJPARepository userJPARepository;
+    @Autowired
+    private VideoHistoryJPARepository videoHistoryJPARepository;
 
     @Autowired
     private VideoService videoService;
@@ -35,6 +42,17 @@ public class VideoTest extends RestDoc{
     @Test
     @Order(1)
     void findAllTest() {
+
+        User user = User.builder()
+                .email("anjdal64@gmail.com")
+                .password("asdf1234!")
+                .firstName("Jin")
+                .lastName("Seung")
+                .country("Korea")
+                .age(21)
+                .role(Role.MENTOR)
+                .phone("010-0000-0000")
+                .build();
 
         Interest interest1 = Interest.builder()
                 .category("test_Interest_1")
@@ -159,6 +177,21 @@ public class VideoTest extends RestDoc{
                 .engSubtitleContent("ffff")
                 .build();
 
+        VideoHistory videoHistory1 = VideoHistory.builder()
+                .video(video1)
+                .user(user)
+                .build();
+
+        VideoHistory videoHistory2 = VideoHistory.builder()
+                .video(video5)
+                .user(user)
+                .build();
+
+        VideoHistory videoHistory3 = VideoHistory.builder()
+                .video(video3)
+                .user(user)
+                .build();
+
 
         interestJPARepository.save(interest1);
         interestJPARepository.save(interest2);
@@ -177,12 +210,16 @@ public class VideoTest extends RestDoc{
         videoInterestJPARepository.save(video6Interest2);
         subtitleJPARepository.save(subtitle1);
         subtitleJPARepository.save(subtitle2);
+        userJPARepository.save(user);
+        videoHistoryJPARepository.save(videoHistory1);
+        videoHistoryJPARepository.save(videoHistory2);
+        videoHistoryJPARepository.save(videoHistory3);
     }
 
     @Test
     @Order(2)
     void findAllServiceTest() throws Exception {
-        VideoResponse.VideoResponseDTO videoFind = videoService.findVideo(1);
+        List<VideoResponse.VideoAllResponseDTO> videoFind = videoService.findHistoryVideo(0,1);
 
         String responseBody = om.writeValueAsString(videoFind);
 

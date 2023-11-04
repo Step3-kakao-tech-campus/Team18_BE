@@ -21,9 +21,13 @@ public class VideoService {
     private final VideoInterestJPARepository videoInterestJPARepository;
     private final SubtitleJPARepository subtitleJPARepository;
     private final UserInterestJPARepository userInterestJPARepository;
+    private final VideoHistoryJPARepository videoHistoryJPARepository;
+
+    private final int MAINVIDEONUM = 4;
+    private final int HISTORYVIDEONUM = 5;
 
     public List<VideoResponse.VideoAllResponseDTO> findAllVideo(Integer page) {
-        Pageable pageable = PageRequest.of(page,4);
+        Pageable pageable = PageRequest.of(page,MAINVIDEONUM);
 
         Page<Video> pageContent = videoJPARepository.findAll(pageable);
 
@@ -54,8 +58,24 @@ public class VideoService {
         return videoResponseDTO;
     }
 
-    public List<VideoResponse.VideoResponseDTO> findHistoryVideo(int id) {
-        
+    public List<VideoResponse.VideoAllResponseDTO> findHistoryVideo(Integer page, int id) {
+        Pageable pageable = PageRequest.of(page,HISTORYVIDEONUM);
+
+        Page<VideoHistory> pageContent = videoHistoryJPARepository.findHistoryVideo(id, pageable);
+
+        if(pageContent.getTotalPages() == 0){
+            throw new Exception404("해당 영상들이 존재하지 않습니다");
+        }
+
+        // 각 Video에대해서 Interest 끌어오기
+        List<VideoResponse.VideoAllResponseDTO> videoDTOList = pageContent.getContent().stream().map(
+                video -> {
+                    List<VideoInterest> videoInterests = videoInterestJPARepository.findVideoInterestByVideoId(video.getVideo().getId());
+
+                    return new VideoResponse.VideoAllResponseDTO(video.getVideo(), videoInterests);
+                }
+        ).collect(Collectors.toList());
+        return videoDTOList;
     }
 
 //    public List<VideoResponse.VideoAllResponseDTO> findUserCategory(int id) {

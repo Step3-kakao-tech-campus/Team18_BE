@@ -3,6 +3,7 @@ package com.example.demo.video;
 import com.example.demo.config.utils.BaseTime;
 import com.example.demo.user.User;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.SQLDelete;
@@ -29,7 +30,8 @@ public class VideoHistory extends BaseTime {
     @JoinColumn(name = "video_id")
     private Video video;
 
-    public void VideoHistory( User user, Video video) {
+    @Builder
+    public VideoHistory( User user, Video video) {
         this.user = user;
         this.video = video;
     }
