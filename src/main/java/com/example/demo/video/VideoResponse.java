@@ -9,6 +9,21 @@ import java.util.stream.Collectors;
 public class VideoResponse {
     @Getter
     @Setter
+    public static class VideoPageResponseDTO{
+        private int page;
+        private List<VideoAllResponseDTO> videoAllResponseDTO;
+        private boolean last;
+
+        public VideoPageResponseDTO(int page, List<VideoAllResponseDTO> videoAllResponseDTO, boolean last){
+            this.page = page;
+            this.videoAllResponseDTO = videoAllResponseDTO;
+            this.last = last;
+        }
+    }
+
+
+    @Getter
+    @Setter
     public static class VideoAllResponseDTO {
         private int videoID;
         private String videoUrl;

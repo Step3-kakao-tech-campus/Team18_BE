@@ -11,6 +11,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -24,12 +25,12 @@ public class VideoService {
     private final UserInterestJPARepository userInterestJPARepository;
     private final VideoHistoryJPARepository videoHistoryJPARepository;
 
+    private final int MAINVIDEOTOTAL = 100;
     private final int MAINVIDEONUM = 4;
     private final int HISTORYVIDEONUM = 5;
 
-    public List<VideoResponse.VideoAllResponseDTO> findAllVideo(Integer page) {
-        Pageable pageable = PageRequest.of(page,MAINVIDEONUM);
-
+    public List<VideoResponse.VideoPageResponseDTO> findAllVideo() {
+        Pageable pageable = PageRequest.of(0 ,MAINVIDEOTOTAL);
         Page<Video> pageContent = videoJPARepository.findAll(pageable);
 
         if(pageContent.getTotalPages() == 0){
@@ -40,11 +41,30 @@ public class VideoService {
         List<VideoResponse.VideoAllResponseDTO> videoDTOList = pageContent.getContent().stream().map(
                 video -> {
                     VideoInterest videoInterests = videoInterestJPARepository.findVideoInterestByVideoId(video.getId());
-
                     return new VideoResponse.VideoAllResponseDTO(video, videoInterests);
                 }
         ).collect(Collectors.toList());
-        return videoDTOList;
+
+        List<VideoResponse.VideoPageResponseDTO> videoPageResponseDTOS = new ArrayList<>();
+        List<VideoResponse.VideoAllResponseDTO> tempGroup = new ArrayList<>();
+        int page = 0;
+        boolean finish = false;
+        for(int i = 0;i < videoDTOList.size();i++)
+        {
+            tempGroup.add(videoDTOList.get(i));
+            if ((i + 1) % 4 == 0 || i == videoDTOList.size() - 1) {
+                if(i == videoDTOList.size() - 1)
+                    finish = true;
+                VideoResponse.VideoPageResponseDTO videoPageResponseDTO = new VideoResponse.VideoPageResponseDTO(
+                        page, tempGroup, finish
+                );
+                tempGroup = new ArrayList<>();
+                videoPageResponseDTOS.add(videoPageResponseDTO);
+                page++;
+            }
+        }
+
+        return videoPageResponseDTOS;
     }
 
     public VideoResponse.VideoResponseDTO findVideo(int id) {
