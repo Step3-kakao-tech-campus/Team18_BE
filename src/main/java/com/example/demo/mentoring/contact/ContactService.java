@@ -186,9 +186,9 @@ public class ContactService {
     }
 
     // 멘토 인증을 위한 메소드
-    private void isMentor(User user) {
+    private void isMentor(User mentor) {
         // 예외 처리
-        if ( user.getRole() != Role.MENTOR ) {
+        if ( mentor.getRole() != Role.MENTOR ) {
             throw new Exception401("해당 사용자는 멘토가 아닙니다.");
         }
     }
