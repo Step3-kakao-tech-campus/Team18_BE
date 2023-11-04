@@ -54,6 +54,10 @@ public class VideoService {
         return videoResponseDTO;
     }
 
+    public List<VideoResponse.VideoResponseDTO> findHistoryVideo(int id) {
+        
+    }
+
 //    public List<VideoResponse.VideoAllResponseDTO> findUserCategory(int id) {
 //        List<UserInterest> userInterests = userInterestJPARepository.findAllById(id);
 //        Pageable pageable = PageRequest.of(0,4);
