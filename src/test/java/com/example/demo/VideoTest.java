@@ -1,12 +1,15 @@
 package com.example.demo;
 
+import com.example.demo.config.errors.exception.Exception404;
 import com.example.demo.interest.Interest;
 import com.example.demo.interest.InterestJPARepository;
+import com.example.demo.mentoring.MentorPost;
 import com.example.demo.user.Role;
 import com.example.demo.user.User;
 import com.example.demo.user.UserJPARepository;
 import com.example.demo.video.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -41,7 +44,7 @@ public class VideoTest extends RestDoc{
 
     @Test
     @Order(1)
-    void findAllTest() {
+    void save() {
 
         User user = User.builder()
                 .email("anjdal64@gmail.com")
@@ -218,7 +221,37 @@ public class VideoTest extends RestDoc{
 
     @Test
     @Order(2)
-    void findAllServiceTest() throws Exception {
+    void findAllTest() throws Exception{
+        List<VideoResponse.VideoAllResponseDTO> videoFind = videoService.findAllVideo(0);
+        org.assertj.core.api.Assertions.assertThat(1)
+                .isEqualTo(videoFind.get(0).getVideoID());
+        Assertions.assertThat("첫번째 비디오")
+                .isEqualTo(videoFind.get(0).getVideoTitleKorean());
+    }
+
+    @Test
+    @Order(2)
+    void findTest() throws Exception{
+        VideoResponse.VideoResponseDTO videoFind = videoService.findVideo(1);
+        org.assertj.core.api.Assertions.assertThat(1)
+                .isEqualTo(videoFind.getVideoID());
+        Assertions.assertThat("첫번째 비디오")
+                .isEqualTo(videoFind.getVideoTitleKorean());
+        Assertions.assertThat("asdfasdf")
+                .isEqualTo(videoFind.getSubtitles().get(0).getKorSubtitleContent());
+    }
+
+    @Test
+    @Order(2)
+    void findHistoryTest() throws Exception{
+        List<VideoResponse.VideoAllResponseDTO> videoFind = videoService.findHistoryVideo(0,1);
+        org.assertj.core.api.Assertions.assertThat(3)
+                .isEqualTo(videoFind.get(0).getVideoID());
+    }
+
+    @Test
+    @Order(2)
+    void findOmTest() throws Exception {
         List<VideoResponse.VideoAllResponseDTO> videoFind = videoService.findHistoryVideo(0,1);
 
         String responseBody = om.writeValueAsString(videoFind);
