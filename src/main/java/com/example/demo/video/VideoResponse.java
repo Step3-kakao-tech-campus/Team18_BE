@@ -14,21 +14,19 @@ public class VideoResponse {
         private String videoUrl;
         private String videoTitleKorean;
         private String videoTitleEng;
-        private List<String> interests;
+        private String interests;
         private long views;
         private String videoThumbnailUrl;
         private String videoStartTime;
         private String videoEndTime;
 
-        public VideoAllResponseDTO(Video video, List<VideoInterest> videoInterests)
+        public VideoAllResponseDTO(Video video, VideoInterest videoInterest)
         {
             this.videoID = video.getId();
             this.videoUrl = video.getVideoUrl();
             this.videoTitleKorean = video.getVideoTitleKorean();
             this.videoTitleEng = video.getVideoTitleEng();
-            this.interests = videoInterests.stream()
-                .map(videoInterest -> videoInterest.getInterest().getCategory())
-                .collect(Collectors.toList());
+            this.interests = videoInterest.getInterest().getCategory();
             this.views = video.getViews();
             this.videoThumbnailUrl = video.getVideoThumbnailUrl();
             this.videoStartTime = video.getVideoStartTime();
@@ -43,22 +41,20 @@ public class VideoResponse {
         private String videoUrl;
         private String videoTitleKorean;
         private String videoTitleEng;
-        private List<String> interests;
+        private String interests;
         private long views;
         private String videoThumbnailUrl;
         private String videoStartTime;
         private String videoEndTime;
         private List<SubtitleDTO> subtitles;
 
-        public VideoResponseDTO(Video video, List<VideoInterest> videoInterests, List<Subtitle> subtitles)
+        public VideoResponseDTO(Video video, VideoInterest videoInterest, List<Subtitle> subtitles)
         {
             this.videoID = video.getId();
             this.videoUrl = video.getVideoUrl();
             this.videoTitleKorean = video.getVideoTitleKorean();
             this.videoTitleEng = video.getVideoTitleEng();
-            this.interests = videoInterests.stream()
-                    .map(videoInterest -> videoInterest.getInterest().getCategory())
-                    .collect(Collectors.toList());
+            this.interests = videoInterest.getInterest().getCategory();
             this.views = video.getViews();
             this.videoThumbnailUrl = video.getVideoThumbnailUrl();
             this.videoStartTime = video.getVideoStartTime();

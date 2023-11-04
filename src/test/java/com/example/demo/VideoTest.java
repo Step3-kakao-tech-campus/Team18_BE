@@ -205,7 +205,6 @@ public class VideoTest extends RestDoc{
         videoJPARepository.save(video5);
         videoJPARepository.save(video6);
         videoInterestJPARepository.save(video1Interest1);
-        videoInterestJPARepository.save(video1Interest2);
         videoInterestJPARepository.save(video2Interest1);
         videoInterestJPARepository.save(video3Interest1);
         videoInterestJPARepository.save(video4Interest2);
@@ -252,7 +251,7 @@ public class VideoTest extends RestDoc{
     @Test
     @Order(2)
     void findOmTest() throws Exception {
-        List<VideoResponse.VideoAllResponseDTO> videoFind = videoService.findHistoryVideo(0,1);
+        VideoResponse.VideoResponseDTO videoFind = videoService.findVideo(1);
 
         String responseBody = om.writeValueAsString(videoFind);
 

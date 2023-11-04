@@ -10,5 +10,5 @@ import java.util.List;
 
 public interface VideoInterestJPARepository  extends JpaRepository<VideoInterest, Integer> {
     @Query("select vi from VideoInterest vi where vi.video.id = :video")
-    List<VideoInterest> findVideoInterestByVideoId(@Param("video") int video);
+    VideoInterest findVideoInterestByVideoId(@Param("video") int video);
 }

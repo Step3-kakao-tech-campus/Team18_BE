@@ -38,7 +38,7 @@ public class VideoService {
         // 각 Video에대해서 Interest 끌어오기
         List<VideoResponse.VideoAllResponseDTO> videoDTOList = pageContent.getContent().stream().map(
                 video -> {
-                    List<VideoInterest> videoInterests = videoInterestJPARepository.findVideoInterestByVideoId(video.getId());
+                    VideoInterest videoInterests = videoInterestJPARepository.findVideoInterestByVideoId(video.getId());
 
                     return new VideoResponse.VideoAllResponseDTO(video, videoInterests);
                 }
@@ -50,10 +50,10 @@ public class VideoService {
         Video video = videoJPARepository.findById(id)
                 .orElseThrow(() -> new Exception404("해당 영상이 존재하지 않습니다.\n" + "id : " + id));;
 
-        List<VideoInterest> videoInterests = videoInterestJPARepository.findVideoInterestByVideoId(video.getId());
+        VideoInterest videoInterest = videoInterestJPARepository.findVideoInterestByVideoId(video.getId());
         List<Subtitle> videoSubtitles = subtitleJPARepository.findSubtitleByVideoId(video.getId());
 
-        VideoResponse.VideoResponseDTO videoResponseDTO = new VideoResponse.VideoResponseDTO(video, videoInterests, videoSubtitles);
+        VideoResponse.VideoResponseDTO videoResponseDTO = new VideoResponse.VideoResponseDTO(video, videoInterest, videoSubtitles);
 
         return videoResponseDTO;
     }
@@ -70,9 +70,9 @@ public class VideoService {
         // 각 Video에대해서 Interest 끌어오기
         List<VideoResponse.VideoAllResponseDTO> videoDTOList = pageContent.getContent().stream().map(
                 video -> {
-                    List<VideoInterest> videoInterests = videoInterestJPARepository.findVideoInterestByVideoId(video.getVideo().getId());
+                    VideoInterest videoInterest = videoInterestJPARepository.findVideoInterestByVideoId(video.getVideo().getId());
 
-                    return new VideoResponse.VideoAllResponseDTO(video.getVideo(), videoInterests);
+                    return new VideoResponse.VideoAllResponseDTO(video.getVideo(), videoInterest);
                 }
         ).collect(Collectors.toList());
         return videoDTOList;
