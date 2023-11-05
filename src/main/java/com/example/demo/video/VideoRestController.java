@@ -20,15 +20,15 @@ public class VideoRestController {
 
     private final VideoService videoService;
 
-   /* @GetMapping("/videos/interest")
+   @GetMapping("/videos/interest")
     public ResponseEntity<?> getUserCategoryVideo(@AuthenticationPrincipal CustomUserDetails userDetails){
         List<VideoResponse.VideoAllResponseDTO> responseDTOs = videoService.findUserCategory(userDetails.getUser().getId());
-        return ResponseEntity.ok(ApiUtils.success(responseDTOs));
-    }*/
+        return ResponseEntity.ok(ApiResponseBuilder.success(responseDTOs));
+    }
 
     @GetMapping("/videos/main")
-    public ResponseEntity<?> getCategoryFilterVideo(@RequestParam(value = "page", defaultValue = "0") Integer page) {
-        List<VideoResponse.VideoAllResponseDTO> responseDTOs = videoService.findAllVideo(page);
+    public ResponseEntity<?> getCategoryFilterVideo(@RequestParam(value = "category", defaultValue = "0") int id) {
+        List<VideoResponse.VideoPageResponseDTO> responseDTOs = videoService.findAllVideo(id);
         return ResponseEntity.ok(ApiResponseBuilder.success(responseDTOs));
     }
 

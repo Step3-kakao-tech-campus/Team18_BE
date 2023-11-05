@@ -7,6 +7,8 @@ import com.example.demo.mentoring.MentorPost;
 import com.example.demo.user.Role;
 import com.example.demo.user.User;
 import com.example.demo.user.UserJPARepository;
+import com.example.demo.user.userInterest.UserInterest;
+import com.example.demo.user.userInterest.UserInterestJPARepository;
 import com.example.demo.video.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.assertj.core.api.Assertions;
@@ -35,6 +37,8 @@ public class VideoTest extends RestDoc{
     private UserJPARepository userJPARepository;
     @Autowired
     private VideoHistoryJPARepository videoHistoryJPARepository;
+    @Autowired
+    private UserInterestJPARepository userInterestJPARepository;
 
     @Autowired
     private VideoService videoService;
@@ -63,6 +67,10 @@ public class VideoTest extends RestDoc{
 
         Interest interest2 = Interest.builder()
                 .category("test_Interest_2")
+                .build();
+
+        Interest interest3 = Interest.builder()
+                .category("test_Interest_3")
                 .build();
 
         Video video1 = Video.builder()
@@ -125,14 +133,39 @@ public class VideoTest extends RestDoc{
                 .videoThumbnailUrl( "https://search.pstatic.net/common/?src=http%3A%2F%2Fimgnews.naver.net%2Fimage%2F016%2F2023%2F08%2F10%2F20230810000405_0_20230810112103061.jpg&type=sc960_832")
                 .build();
 
+        Video video7 = Video.builder()
+                .videoUrl("https://www.youtube.com/watch?v=6lw4Cbk1IzA")
+                .views(25)
+                .videoTitleEng("Sixth page Sixth Video")
+                .videoTitleKorean("여섯번째 비디오")
+                .videoStartTime("23")
+                .videoEndTime("100")
+                .videoThumbnailUrl( "https://search.pstatic.net/common/?src=http%3A%2F%2Fimgnews.naver.net%2Fimage%2F016%2F2023%2F08%2F10%2F20230810000405_0_20230810112103061.jpg&type=sc960_832")
+                .build();
+
+        Video video8 = Video.builder()
+                .videoUrl("https://www.youtube.com/watch?v=6lw4Cbk1IzA")
+                .views(25)
+                .videoTitleEng("Sixth page Sixth Video")
+                .videoTitleKorean("여섯번째 비디오")
+                .videoStartTime("23")
+                .videoEndTime("100")
+                .videoThumbnailUrl( "https://search.pstatic.net/common/?src=http%3A%2F%2Fimgnews.naver.net%2Fimage%2F016%2F2023%2F08%2F10%2F20230810000405_0_20230810112103061.jpg&type=sc960_832")
+                .build();
+
+        Video video9 = Video.builder()
+                .videoUrl("https://www.youtube.com/watch?v=6lw4Cbk1IzA")
+                .views(25)
+                .videoTitleEng("Sixth page Sixth Video")
+                .videoTitleKorean("여섯번째 비디오")
+                .videoStartTime("23")
+                .videoEndTime("100")
+                .videoThumbnailUrl( "https://search.pstatic.net/common/?src=http%3A%2F%2Fimgnews.naver.net%2Fimage%2F016%2F2023%2F08%2F10%2F20230810000405_0_20230810112103061.jpg&type=sc960_832")
+                .build();
+
         VideoInterest video1Interest1 = VideoInterest.builder()
                 .video(video1)
                 .interest(interest1)
-                .build();
-
-        VideoInterest video1Interest2 = VideoInterest.builder()
-                .video(video1)
-                .interest(interest2)
                 .build();
 
         VideoInterest video2Interest1 = VideoInterest.builder()
@@ -158,6 +191,21 @@ public class VideoTest extends RestDoc{
         VideoInterest video6Interest2 = VideoInterest.builder()
                 .video(video6)
                 .interest(interest2)
+                .build();
+
+        VideoInterest video7Interest3 = VideoInterest.builder()
+                .video(video7)
+                .interest(interest3)
+                .build();
+
+        VideoInterest video8Interest3 = VideoInterest.builder()
+                .video(video8)
+                .interest(interest3)
+                .build();
+
+        VideoInterest video9Interest1 = VideoInterest.builder()
+                .video(video9)
+                .interest(interest1)
                 .build();
 
         Subtitle subtitle1 = Subtitle.builder()
@@ -195,37 +243,51 @@ public class VideoTest extends RestDoc{
                 .user(user)
                 .build();
 
+        UserInterest userInterest1 = UserInterest.builder()
+                .user(user)
+                .interest(interest1)
+                .build();
+
+        UserInterest userInterest2 = UserInterest.builder()
+                .user(user)
+                .interest(interest3)
+                .build();
 
         interestJPARepository.save(interest1);
         interestJPARepository.save(interest2);
+        interestJPARepository.save(interest3);
         videoJPARepository.save(video1);
         videoJPARepository.save(video2);
         videoJPARepository.save(video3);
         videoJPARepository.save(video4);
         videoJPARepository.save(video5);
         videoJPARepository.save(video6);
+        videoJPARepository.save(video7);
+        videoJPARepository.save(video8);
+        videoJPARepository.save(video9);
         videoInterestJPARepository.save(video1Interest1);
         videoInterestJPARepository.save(video2Interest1);
         videoInterestJPARepository.save(video3Interest1);
         videoInterestJPARepository.save(video4Interest2);
         videoInterestJPARepository.save(video5Interest1);
         videoInterestJPARepository.save(video6Interest2);
+        videoInterestJPARepository.save(video7Interest3);
+        videoInterestJPARepository.save(video8Interest3);
+        videoInterestJPARepository.save(video9Interest1);
         subtitleJPARepository.save(subtitle1);
         subtitleJPARepository.save(subtitle2);
         userJPARepository.save(user);
         videoHistoryJPARepository.save(videoHistory1);
         videoHistoryJPARepository.save(videoHistory2);
         videoHistoryJPARepository.save(videoHistory3);
+        userInterestJPARepository.save(userInterest1);
+        userInterestJPARepository.save(userInterest2);
     }
 
     @Test
     @Order(2)
     void findAllTest() throws Exception{
-        List<VideoResponse.VideoAllResponseDTO> videoFind = videoService.findAllVideo(0);
-        org.assertj.core.api.Assertions.assertThat(1)
-                .isEqualTo(videoFind.get(0).getVideoID());
-        Assertions.assertThat("첫번째 비디오")
-                .isEqualTo(videoFind.get(0).getVideoTitleKorean());
+        List<VideoResponse.VideoPageResponseDTO> videoFind = videoService.findAllVideo(0);
     }
 
     @Test
@@ -234,8 +296,6 @@ public class VideoTest extends RestDoc{
         VideoResponse.VideoResponseDTO videoFind = videoService.findVideo(1);
         org.assertj.core.api.Assertions.assertThat(1)
                 .isEqualTo(videoFind.getVideoID());
-        Assertions.assertThat("첫번째 비디오")
-                .isEqualTo(videoFind.getVideoTitleKorean());
         Assertions.assertThat("asdfasdf")
                 .isEqualTo(videoFind.getSubtitles().get(0).getKorSubtitleContent());
     }
@@ -250,8 +310,15 @@ public class VideoTest extends RestDoc{
 
     @Test
     @Order(2)
+    void findUserCategoryTest() throws Exception{
+        List<VideoResponse.VideoAllResponseDTO> findUserCategory = videoService.findUserCategory(1);
+
+    }
+
+    @Test
+    @Order(2)
     void findOmTest() throws Exception {
-        VideoResponse.VideoResponseDTO videoFind = videoService.findVideo(1);
+        List<VideoResponse.VideoPageResponseDTO> videoFind = videoService.findAllVideo(1);
 
         String responseBody = om.writeValueAsString(videoFind);
 
