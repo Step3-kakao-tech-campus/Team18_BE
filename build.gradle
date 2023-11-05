@@ -6,7 +6,7 @@ plugins {
 }
 
 group = 'com.example'
-version = '0.0.1-SNAPSHOT'
+version = '1.0'
 
 java {
 	sourceCompatibility = '11'
@@ -50,6 +50,9 @@ dependencies {
 	// swagger
 	implementation group: 'io.springfox', name: 'springfox-boot-starter', version: '3.0.0'
 	implementation group: 'io.springfox', name: 'springfox-swagger-ui', version: '3.0.0'
+
+	// kargo, ide
+	runtimeOnly 'org.mariadb.jdbc:mariadb-java-client'
 }
 
 tasks.named('test') {
@@ -60,4 +63,8 @@ tasks.named('test') {
 tasks.named('asciidoctor') {
 	inputs.dir snippetsDir
 	dependsOn test
+}
+
+jar {
+	enabled = false
 }
