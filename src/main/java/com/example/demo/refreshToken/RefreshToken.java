@@ -14,7 +14,7 @@ import javax.persistence.*;
 @Table(name = "refresh_tokens")
 public class RefreshToken {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
     @OneToOne
