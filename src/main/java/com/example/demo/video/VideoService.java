@@ -29,9 +29,15 @@ public class VideoService {
     private final int MAINVIDEONUM = 4;
     private final int HISTORYVIDEONUM = 5;
 
-    public List<VideoResponse.VideoPageResponseDTO> findAllVideo() {
+    public List<VideoResponse.VideoPageResponseDTO> findAllVideo(int categoryId) {
         Pageable pageable = PageRequest.of(0 ,MAINVIDEOTOTAL);
-        Page<Video> pageContent = videoJPARepository.findAll(pageable);
+
+        Page<Video> pageContent;
+        if(categoryId == 0)
+            pageContent = videoJPARepository.findAll(pageable);
+        else
+            pageContent = videoJPARepository.findByCategoryId(categoryId, pageable);
+
 
         if(pageContent.getTotalPages() == 0){
             throw new Exception404("해당 영상들이 존재하지 않습니다");

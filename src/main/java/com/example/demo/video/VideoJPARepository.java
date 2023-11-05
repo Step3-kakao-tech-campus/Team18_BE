@@ -27,4 +27,6 @@ public interface VideoJPARepository extends JpaRepository<Video, Integer> {
     Page<Video> findByVideoCategory(@Param("userInterests") List<String> userInterests, Pageable pageable);
 
 
+    @Query(value = "select v from Video v inner join VideoInterest vi on v.id = vi.video.id where vi.interest.id = :categoryId")
+    Page<Video> findByCategoryId(@Param("categoryId") int id, Pageable pageable);
 }

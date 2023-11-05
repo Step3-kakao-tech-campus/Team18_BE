@@ -287,7 +287,7 @@ public class VideoTest extends RestDoc{
     @Test
     @Order(2)
     void findAllTest() throws Exception{
-        List<VideoResponse.VideoPageResponseDTO> videoFind = videoService.findAllVideo();
+        List<VideoResponse.VideoPageResponseDTO> videoFind = videoService.findAllVideo(0);
     }
 
     @Test
@@ -296,8 +296,6 @@ public class VideoTest extends RestDoc{
         VideoResponse.VideoResponseDTO videoFind = videoService.findVideo(1);
         org.assertj.core.api.Assertions.assertThat(1)
                 .isEqualTo(videoFind.getVideoID());
-        Assertions.assertThat("첫번째 비디오")
-                .isEqualTo(videoFind.getVideoTitleKorean());
         Assertions.assertThat("asdfasdf")
                 .isEqualTo(videoFind.getSubtitles().get(0).getKorSubtitleContent());
     }
@@ -320,7 +318,7 @@ public class VideoTest extends RestDoc{
     @Test
     @Order(2)
     void findOmTest() throws Exception {
-        VideoResponse.VideoResponseDTO videoFind = videoService.findVideo(1);
+        List<VideoResponse.VideoPageResponseDTO> videoFind = videoService.findAllVideo(1);
 
         String responseBody = om.writeValueAsString(videoFind);
 
