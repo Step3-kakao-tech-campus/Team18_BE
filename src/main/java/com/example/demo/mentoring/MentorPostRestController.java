@@ -1,7 +1,7 @@
 package com.example.demo.mentoring;
 
 import com.example.demo.config.auth.CustomUserDetails;
-import com.example.demo.config.utils.ApiUtils;
+import com.example.demo.config.utils.ApiResponseBuilder;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,7 +20,7 @@ public class MentorPostRestController {
     @PostMapping(value = "/mentorings/post")
     public ResponseEntity<?> createMentorPost(@RequestBody @Valid MentorPostRequest.CreateDTO requestDTO, Errors errors, @AuthenticationPrincipal CustomUserDetails userDetails) {
         mentorPostService.createMentorPost(requestDTO, userDetails.getUser());
-        return ResponseEntity.status(HttpStatus.OK).body(ApiUtils.successWithNoContent());
+        return ResponseEntity.status(HttpStatus.OK).body(ApiResponseBuilder.successWithNoContent());
     }
 
     @GetMapping("/mentorings/post")
@@ -39,7 +39,7 @@ public class MentorPostRestController {
     @GetMapping("/mentorings/post/{id}")
     public ResponseEntity<?> getMentorPostId(@PathVariable int id) {
         MentorPostResponse.MentorPostDTO responseDTO = mentorPostService.findMentorPost(id);
-        return ResponseEntity.ok(ApiUtils.success(responseDTO));
+        return ResponseEntity.ok(ApiResponseBuilder.success(responseDTO));
     }
 
     @PutMapping(value = "/mentorings/post/{id}")

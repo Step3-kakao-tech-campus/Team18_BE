@@ -5,6 +5,9 @@ import com.example.demo.interest.Interest;
 import com.example.demo.interest.InterestJPARepository;
 import com.example.demo.config.errors.exception.Exception400;
 import com.example.demo.config.jwt.JWTTokenProvider;
+import com.example.demo.refreshToken.RefreshToken;
+import com.example.demo.refreshToken.RefreshTokenJPARepository;
+import com.example.demo.refreshToken.TokenResponse;
 import com.example.demo.user.userInterest.UserInterest;
 import com.example.demo.user.userInterest.UserInterestJPARepository;
 import lombok.RequiredArgsConstructor;
@@ -23,6 +26,7 @@ public class UserService {
 
     private final PasswordEncoder passwordEncoder;
     private final UserJPARepository userJPARepository;
+    private final RefreshTokenJPARepository refreshTokenJPARepository;
     private final InterestJPARepository interestJPARepository;
     private final UserInterestJPARepository userInterestJPARepository;
 
@@ -42,6 +46,7 @@ public class UserService {
                         .country(requestDTO.getCountry())
                         .introduction(requestDTO.getIntroduction())
                         .age(requestDTO.getAge())
+                        .phone(requestDTO.getPhone())
                         .profileImage(requestDTO.getProfileImage())
                         .role(requestDTO.getRole())
                         .build();
@@ -58,6 +63,7 @@ public class UserService {
         userInterestJPARepository.saveAll(userInterestList);
     }
 
+    @Transactional
     public UserResponse.LoginDTO login(UserRequest.LoginDTO requestDTO) {
         User user = userJPARepository.findByEmail(requestDTO.getEmail())
                 .orElseThrow(() -> new Exception400("잘못된 이메일입니다."));
@@ -66,12 +72,28 @@ public class UserService {
             throw new Exception400("잘못된 비밀번호입니다.");
         }
 
-        return new UserResponse.LoginDTO(user, JWTTokenProvider.create(user));
+        TokenResponse.TokenDTO token = JWTTokenProvider.createToken(user);
+
+        Optional<RefreshToken> refreshTokenInfo = refreshTokenJPARepository.findByUser(user);
+        if (refreshTokenInfo.isPresent()) {
+            refreshTokenInfo.get().updateRefreshToken(token.getRefreshToken());
+        } else {
+            RefreshToken newRefreshToken = RefreshToken.builder().user(user).refreshToken(token.getRefreshToken()).build();
+            refreshTokenJPARepository.save(newRefreshToken);
+        }
+
+        return new UserResponse.LoginDTO(user, token);
     }
 
-    public UserResponse.ProfileDTO findProfile(int id) {
-        User user = userJPARepository.findById(id)
-                .orElseThrow(() -> new Exception404("해당 사용자가 존재하지 않습니다."));
+    public UserResponse.ProfileDTO findProfile(Integer id, User sessionUser) {
+        User user;
+        if (id == null) {
+            user = userJPARepository.findById(sessionUser.getId())
+                    .orElseThrow(() -> new Exception404("해당 사용자가 존재하지 않습니다."));
+        } else {
+            user = userJPARepository.findById(id)
+                    .orElseThrow(() -> new Exception404("해당 사용자가 존재하지 않습니다."));
+        }
         return new UserResponse.ProfileDTO(user);
     }
 
@@ -88,6 +110,7 @@ public class UserService {
                 .country(requestDTO.getCountry())
                 .introduction(requestDTO.getIntroduction())
                 .age(requestDTO.getAge())
+                .phone(requestDTO.getPhone())
                 .profileImage(requestDTO.getProfileImage())
                 .role(requestDTO.getRole())
                 .build();

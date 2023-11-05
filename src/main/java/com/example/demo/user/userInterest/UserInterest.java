@@ -14,7 +14,7 @@ import java.util.List;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
-@Table(name = "user_interest_tb")
+@Table(name = "user_interests")
 public class UserInterest extends BaseTime {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
