@@ -125,7 +125,7 @@ public class contactTest extends RestDoc {
         requestDTOs.setMentorId(1);
 
         List<ContactRequest.ContactRefuseDTO.RefuseMenteeDTO> refuseMenteeDTOS = new ArrayList<>();
-        refuseMenteeDTOS.add(new ContactRequest.ContactRefuseDTO.RefuseMenteeDTO(3));
+        refuseMenteeDTOS.add(new ContactRequest.ContactRefuseDTO.RefuseMenteeDTO(1));
 
         requestDTOs.setMentees(refuseMenteeDTOS);
 
@@ -135,7 +135,7 @@ public class contactTest extends RestDoc {
 
         // when
         ResultActions result = mvc.perform(
-                MockMvcRequestBuilders.patch("/contacts/1/refuse")
+                MockMvcRequestBuilders.patch("/contacts/refuse")
                         .content(requestBody)
                         .contentType(MediaType.APPLICATION_JSON)
         );
@@ -143,7 +143,7 @@ public class contactTest extends RestDoc {
         System.out.println("테스트 : "+responseBody);
 
         // 테스트가 잘 됐는지 ( 값이 잘 바뀌는지 확인 )
-        NotConnectedRegisterUser notConnectedRegisterUser = contactJPARepository.findByMentorPostIdAndMenteeUserId(1, 3)
+        NotConnectedRegisterUser notConnectedRegisterUser = contactJPARepository.findById(1)
                 .orElseThrow(() -> new Exception404("해당 사용자를 찾을 수 없습니다."));
 
         System.out.println("state 확인 : " + notConnectedRegisterUser.getState());
@@ -151,7 +151,7 @@ public class contactTest extends RestDoc {
         // verify
         result.andExpect(jsonPath("$.status").value("success")); // 성공 테스트 확인
         // 값이 잘 들어가는지 확인
-        Assertions.assertThat(notConnectedRegisterUser.getState()).isEqualTo(NotConnectedRegisterUser.State.REFUSE);
+        Assertions.assertThat(notConnectedRegisterUser.getState()).isEqualTo(ContactStateEnum.REFUSE);
     }
 
     @Test
@@ -165,7 +165,7 @@ public class contactTest extends RestDoc {
         requestDTOs.setMentorId(1);
 
         List<ContactRequest.ContactAcceptDTO.AcceptMenteeDTO> acceptMenteeDTOS = new ArrayList<>();
-        acceptMenteeDTOS.add(new ContactRequest.ContactAcceptDTO.AcceptMenteeDTO(3));
+        acceptMenteeDTOS.add(new ContactRequest.ContactAcceptDTO.AcceptMenteeDTO(1));
 
         requestDTOs.setMentees(acceptMenteeDTOS);
 
@@ -175,7 +175,7 @@ public class contactTest extends RestDoc {
 
         // when
         ResultActions result = mvc.perform(
-                MockMvcRequestBuilders.post("/contacts/1/accept")
+                MockMvcRequestBuilders.post("/contacts/accept")
                         .content(requestBody)
                         .contentType(MediaType.APPLICATION_JSON)
         );
@@ -183,7 +183,7 @@ public class contactTest extends RestDoc {
         System.out.println("테스트 : "+responseBody);
 
         // 테스트가 잘 됐는지 ( 값이 잘 바뀌는지 확인 )
-        NotConnectedRegisterUser notConnectedRegisterUser = contactJPARepository.findByMentorPostIdAndMenteeUserId(1, 3)
+        NotConnectedRegisterUser notConnectedRegisterUser = contactJPARepository.findById(1)
                 .orElseThrow(() -> new Exception404("해당 사용자를 찾을 수 없습니다."));
 
         System.out.println("state 확인 : " + notConnectedRegisterUser.getState());
@@ -197,7 +197,7 @@ public class contactTest extends RestDoc {
         // verify
         result.andExpect(jsonPath("$.status").value("success")); // 성공 테스트 확인
         // 값이 잘 들어가는지 확인
-        Assertions.assertThat(notConnectedRegisterUser.getState()).isEqualTo(NotConnectedRegisterUser.State.ACCEPT);
+        Assertions.assertThat(notConnectedRegisterUser.getState()).isEqualTo(ContactStateEnum.ACCEPT);
         Assertions.assertThat(connectedUser.getId()).isEqualTo(4);
     }
 
@@ -218,7 +218,7 @@ public class contactTest extends RestDoc {
 
         // when
         ResultActions result = mvc.perform(
-                MockMvcRequestBuilders.post("/contacts/4")
+                MockMvcRequestBuilders.post("/contacts")
                         .content(requestBody)
                         .contentType(MediaType.APPLICATION_JSON)
         );
@@ -233,7 +233,7 @@ public class contactTest extends RestDoc {
         // verify
         result.andExpect(jsonPath("$.status").value("success")); // 성공 테스트 확인
         // 값이 잘 들어가는지 확인
-        Assertions.assertThat(notConnectedRegisterUser.getState()).isEqualTo(NotConnectedRegisterUser.State.AWAIT);
+        Assertions.assertThat(notConnectedRegisterUser.getState()).isEqualTo(ContactStateEnum.AWAIT);
 
     }
 
@@ -242,13 +242,11 @@ public class contactTest extends RestDoc {
     @DisplayName("멘티 : 신청 취소 테스트 코드")
     void deleteTest() throws Exception {
         // given
-        int id = 3;
-        int mentorPostId = 1;
 
         // when
         ResultActions result = mvc.perform(
-                MockMvcRequestBuilders.delete("/contacts/" + id)
-                        .param("mentorPostId", String.valueOf(mentorPostId))
+                MockMvcRequestBuilders.delete("/contacts")
+                        .header("contactId", 1,2)
                         .contentType(MediaType.APPLICATION_JSON)
         );
         String responseBody = result.andReturn().getResponse().getContentAsString();

@@ -15,6 +15,9 @@ public interface MentorPostJPARepostiory extends JpaRepository<MentorPost, Integ
     @Query("select m from MentorPost m where m.writer.id = :writer and m.state = 'ACTIVE'")
     List<MentorPost> findAllByWriter(@Param("writer") int writer);
 
+    @Query("select m from MentorPost m where m.writer.id = :writer and m.state = 'DONE'")
+    List<MentorPost> findAllByWriterDone(@Param("writer") int writer);
+
     @Query("select m from MentorPost m where m.title like :keyword")
     Page<MentorPost> findAllByTitleKeyword(@Param("keyword") String keyword, Pageable pageable);
 
@@ -32,6 +35,4 @@ public interface MentorPostJPARepostiory extends JpaRepository<MentorPost, Integ
     @Query("select count(*) from MentorPost m where m.writer.id = :userId and m.state = 'DONE'")
     int countDoneByMentorId(int userId);
 
-    @Query("SELECT m FROM MentorPost m INNER JOIN NotConnectedRegisterUser ncru ON m.id = ncru.mentorPost.id WHERE ncru.menteeUser.id = :menteeUserId")
-    List<MentorPost> findAllByMenteeUserId(@Param("menteeUserId") int menteeUserId);
 }
