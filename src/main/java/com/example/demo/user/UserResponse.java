@@ -1,5 +1,6 @@
 package com.example.demo.user;
 
+import com.example.demo.refreshToken.TokenResponse;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -8,11 +9,11 @@ public class UserResponse {
     @Setter
     public static class LoginDTO {
         private UserDetailDTO userDetailDTO;
-        private String JWTToken;
+        private JWTToken jwtToken;
 
-        public LoginDTO(User user, String JWTToken) {
+        public LoginDTO(User user, TokenResponse.TokenDTO token) {
             this.userDetailDTO = new UserDetailDTO(user);
-            this.JWTToken = JWTToken;
+            this.jwtToken = new JWTToken(token);
         }
 
         @Getter
@@ -34,6 +35,18 @@ public class UserResponse {
                 this.country = user.getCountry();
                 this.profileImage = user.getProfileImage();
                 this.role = user.getRole();
+            }
+        }
+
+        @Getter
+        @Setter
+        public class JWTToken {
+            private String accessToken;
+            private String refreshToken;
+
+            public JWTToken(TokenResponse.TokenDTO token) {
+                this.accessToken = token.getAccessToken();
+                this.refreshToken = token.getRefreshToken();
             }
         }
     }

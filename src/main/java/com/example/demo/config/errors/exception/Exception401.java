@@ -1,8 +1,7 @@
 package com.example.demo.config.errors.exception;
 
-import com.example.demo.config.utils.ApiUtils;
+import com.example.demo.config.utils.ApiResponseBuilder;
 import lombok.Getter;
-import org.springframework.http.HttpStatus;
 
 @Getter
 public class Exception401 extends RuntimeException {
@@ -10,7 +9,7 @@ public class Exception401 extends RuntimeException {
         super(message);
     }
 
-    public ApiUtils.ApiResponse<?> body(){
-        return ApiUtils.error(getMessage());
+    public ApiResponseBuilder.ApiResponse<?> body(){
+        return ApiResponseBuilder.error(getMessage());
     }
 }

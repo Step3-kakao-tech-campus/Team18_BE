@@ -2,13 +2,13 @@ package com.example.demo.mentoringtest;
 
 
 import com.example.demo.RestDoc;
-import com.example.demo.config.errors.exception.Exception400;
 import com.example.demo.config.errors.exception.Exception404;
-import com.example.demo.config.utils.StateEnum;
+import com.example.demo.mentoring.MentorPostStateEnum;
 import com.example.demo.interest.Interest;
 import com.example.demo.interest.InterestJPARepository;
 import com.example.demo.mentoring.*;
 import com.example.demo.mentoring.contact.ContactJPARepository;
+import com.example.demo.mentoring.contact.ContactStateEnum;
 import com.example.demo.mentoring.contact.NotConnectedRegisterUser;
 import com.example.demo.user.Role;
 import com.example.demo.user.User;
@@ -23,11 +23,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.ResultActions;
 
 
@@ -126,6 +123,17 @@ public class MentoringTest extends RestDoc {
                 .phone("010-0000-0000")
                 .build();
 
+        User mentor2 = User.builder()
+                .email("anj2312364@gmail.com")
+                .password("adf1234!")
+                .firstName("Jin123")
+                .lastName("Seun123g")
+                .country("Korea")
+                .age(23)
+                .role(Role.MENTOR)
+                .phone("010-0000-0000")
+                .build();
+
         User mentee_One = User.builder()
                 .email("anjda22l6664@gmail.com")
                 .password("asdf221234!")
@@ -190,22 +198,69 @@ public class MentoringTest extends RestDoc {
                 .interest(interest3)
                 .build();
 
+        UserInterest userInterest7 = UserInterest.builder()
+                .user(mentor2)
+                .interest(interest1)
+                .build();
+
         MentorPost mentorPost3 = MentorPost.builder()
                 .writer(mentor)
                 .title("title")
                 .content("content")
                 .build();
 
+        MentorPost mentorPost4 = MentorPost.builder()
+                .writer(mentor)
+                .title("abtitle4")
+                .content("content")
+                .build();
+
+        MentorPost mentorPost5 = MentorPost.builder()
+                .writer(mentor)
+                .title("title5")
+                .content("content")
+                .build();
+
+        MentorPost mentorPost6 = MentorPost.builder()
+                .writer(mentor)
+                .title("tabitle6")
+                .content("content")
+                .build();
+
+        MentorPost mentorPost7 = MentorPost.builder()
+                .writer(mentor)
+                .title("title7")
+                .content("content")
+                .build();
+
+        MentorPost mentorPost8 = MentorPost.builder()
+                .writer(mentor)
+                .title("abtitle8")
+                .content("content")
+                .build();
+
+        MentorPost mentorPost9 = MentorPost.builder()
+                .writer(mentor2)
+                .title("abtitle8")
+                .content("content")
+                .build();
+
+        MentorPost mentorPost10 = MentorPost.builder()
+                .writer(mentor2)
+                .title("abtitle83")
+                .content("content")
+                .build();
+
         NotConnectedRegisterUser menteeNotConnected1 = NotConnectedRegisterUser.builder()
                 .mentorPost(mentorPost3)
                 .menteeUser(mentee_One)
-                .state(NotConnectedRegisterUser.State.AWAIT)
+                .state(ContactStateEnum.AWAIT)
                 .build();
 
         NotConnectedRegisterUser menteeNotConnected2 = NotConnectedRegisterUser.builder()
                 .mentorPost(mentorPost3)
                 .menteeUser(mentee_Two)
-                .state(NotConnectedRegisterUser.State.AWAIT)
+                .state(ContactStateEnum.AWAIT)
                 .build();
 
         //when
@@ -213,15 +268,24 @@ public class MentoringTest extends RestDoc {
         interestJPARepository.save(interest2);
         interestJPARepository.save(interest3);
         userJPARepository.save(mentor);
+        userJPARepository.save(mentor2);
         userJPARepository.save(mentee_One);
         userJPARepository.save(mentee_Two);
         mentorPostJPARepostiory.save(mentorPost3);
+        mentorPostJPARepostiory.save(mentorPost4);
+        mentorPostJPARepostiory.save(mentorPost5);
+        mentorPostJPARepostiory.save(mentorPost6);
+        mentorPostJPARepostiory.save(mentorPost7);
+        mentorPostJPARepostiory.save(mentorPost8);
+        mentorPostJPARepostiory.save(mentorPost9);
+        mentorPostJPARepostiory.save(mentorPost10);
         userInterestJPARepository.save(userInterest1);
         userInterestJPARepository.save(userInterest2);
         userInterestJPARepository.save(userInterest3);
         userInterestJPARepository.save(userInterest4);
         userInterestJPARepository.save(userInterest5);
         userInterestJPARepository.save(userInterest6);
+        userInterestJPARepository.save(userInterest7);
         contactJPARepository.save(menteeNotConnected1);
         contactJPARepository.save(menteeNotConnected2);
 
@@ -252,7 +316,7 @@ public class MentoringTest extends RestDoc {
 
         userJPARepository.save(writer);
         mentorPostService.createMentorPost(mentorPostRequest, writer);
-        mentorPostService.updateMentorPost(mentorPostUpdated,2);
+        mentorPostService.updateMentorPost(mentorPostUpdated,2, writer);
 
         MentorPost mentorPostFind = mentorPostJPARepostiory.findById(2)
                 .orElseThrow(() -> new Exception404("해당 게시글이 존재하지 않습니다."));
@@ -308,7 +372,7 @@ public class MentoringTest extends RestDoc {
     @DisplayName("DeleteTest")
     public void DeleteMentorPost() throws Exception{
         int id = 2;
-        mentorPostService.deleteMentorPost(id);
+        mentorPostService.deleteMentorPost(id, User.builder().id(1).build());
 
         MentorPost mentorPostFind = mentorPostJPARepostiory.findById(2)
                 .orElse(null);
@@ -320,13 +384,13 @@ public class MentoringTest extends RestDoc {
     public void PatchDoneMentorPost() throws Exception{
         int id = 1;
         MentorPostRequest.StateDTO stateDTO = new MentorPostRequest.StateDTO();
-        stateDTO.setStateEnum(StateEnum.DONE);
-        mentorPostService.changeMentorPostStatus(stateDTO, id);
+        stateDTO.setMentorPostStateEnum(MentorPostStateEnum.DONE);
+        mentorPostService.changeMentorPostStatus(stateDTO, id, User.builder().id(1).build());
     }
 
     @Test
     void mentorPostServiceTest() throws Exception {
-        List<MentorPostResponse.MentorPostAllWithTimeStampDTO> mentorPostFind = mentorPostService.findAllMentorPostWithTimeStamp();
+        List<MentorPostResponse.MentorPostAllDTO> mentorPostFind = mentorPostService.findAllMentorPost(MentorPostCategoryEnum.NULL,"",2);
 
         String responseBody = om.writeValueAsString(mentorPostFind);
 
