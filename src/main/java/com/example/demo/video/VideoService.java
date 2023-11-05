@@ -58,7 +58,7 @@ public class VideoService {
         for(int i = 0;i < videoDTOList.size();i++)
         {
             tempGroup.add(videoDTOList.get(i));
-            if ((i + 1) % 4 == 0 || i == videoDTOList.size() - 1) {
+            if ((i + 1) % MAINVIDEONUM == 0 || i == videoDTOList.size() - 1) {
                 if(i == videoDTOList.size() - 1)
                     finish = true;
                 VideoResponse.VideoPageResponseDTO videoPageResponseDTO = new VideoResponse.VideoPageResponseDTO(
