@@ -1,7 +1,7 @@
 package com.example.demo.mentoring;
 
 
-import com.example.demo.config.utils.StateEnum;
+import com.example.demo.mentoring.contact.ContactStateEnum;
 import com.example.demo.mentoring.contact.NotConnectedRegisterUser;
 import com.example.demo.user.Role;
 import com.example.demo.user.User;
@@ -27,14 +27,14 @@ public class MentorPostResponse {
         private int postId;
         private String title;
         private String content;
-        private StateEnum stateEnum;
+        private MentorPostStateEnum mentorPostStateEnum;
         private WriterDTO writerDTO;
 
         public MentorPostAllDTO(MentorPost mentorPost, List<UserInterest> userInterests) {
             this.postId = mentorPost.getId();
             this.title = mentorPost.getTitle();
             this.content = mentorPost.getContent();
-            this.stateEnum = mentorPost.getState();
+            this.mentorPostStateEnum = mentorPost.getState();
             WriterDTO writerDTO = new MentorPostAllDTO.WriterDTO(mentorPost.getWriter(), userInterests);
             this.writerDTO = writerDTO;
         }
@@ -79,14 +79,14 @@ public class MentorPostResponse {
         private String title;
         private String content;
         private WriterDTO writerDTO;
-        private StateEnum stateEnum;
+        private MentorPostStateEnum mentorPostStateEnum;
         private List<MenteeDTO> menteeDTOList;
 
         public MentorPostDTO(MentorPost mentorPost, List<UserInterest> mentorFavorites, List<NotConnectedRegisterUser> mentees, List<UserInterest> menteeInterest) {
             this.postId = mentorPost.getId();
             this.title = mentorPost.getTitle();
             this.content = mentorPost.getContent();
-            this.stateEnum = mentorPost.getState();
+            this.mentorPostStateEnum = mentorPost.getState();
             MentorPostDTO.WriterDTO writerDTO = new MentorPostDTO.WriterDTO(mentorPost.getWriter(), mentorFavorites);
             this.writerDTO = writerDTO;
             List<MentorPostDTO.MenteeDTO> menteeDTOList = mentees.stream()
@@ -95,7 +95,7 @@ public class MentorPostResponse {
                                 userInterest -> mentee.getMenteeUser().getId() == userInterest.getUser().getId()
                         ).collect(Collectors.toList());
 
-                        MentorPostDTO.MenteeDTO menteeDTO = new MentorPostDTO.MenteeDTO(mentee.getMenteeUser(), eachMenteeFavorite);
+                        MentorPostDTO.MenteeDTO menteeDTO = new MentorPostDTO.MenteeDTO(mentee, eachMenteeFavorite);
                         return menteeDTO;
                     })
                     .collect(Collectors.toList());
@@ -131,15 +131,17 @@ public class MentorPostResponse {
             private String country;
             private Role role;
             private int age;
+            private ContactStateEnum state;
             private List<String> interests;
 
-            public MenteeDTO(User user, List<UserInterest> userInterests) {
-                this.menteeId = user.getId();
-                this.profileImage = user.getProfileImage();
-                this.name = user.getFirstName() + " " + user.getLastName();
-                this.country = user.getCountry();
-                this.role = user.getRole();
-                this.age = user.getAge();
+            public MenteeDTO(NotConnectedRegisterUser notConnectedRegisterUser, List<UserInterest> userInterests) {
+                this.menteeId = notConnectedRegisterUser.getId();
+                this.profileImage = notConnectedRegisterUser.getMenteeUser().getProfileImage();
+                this.name = notConnectedRegisterUser.getMenteeUser().getFirstName() + " " + notConnectedRegisterUser.getMenteeUser().getLastName();
+                this.country = notConnectedRegisterUser.getMenteeUser().getCountry();
+                this.role = notConnectedRegisterUser.getMenteeUser().getRole();
+                this.age = notConnectedRegisterUser.getMenteeUser().getAge();
+                this.state = notConnectedRegisterUser.getState();
                 this.interests = userInterests.stream()
                         .map(userInterest -> userInterest.getInterest().getCategory())
                         .collect(Collectors.toList());
@@ -153,7 +155,7 @@ public class MentorPostResponse {
         private int postId;
         private String title;
         private String content;
-        private StateEnum stateEnum;
+        private MentorPostStateEnum mentorPostStateEnum;
         private WriterDTO writerDTO;
         private LocalDateTime createdAt;
         private LocalDateTime deletedAt;
@@ -163,7 +165,7 @@ public class MentorPostResponse {
             this.postId = mentorPost.getId();
             this.title = mentorPost.getTitle();
             this.content = mentorPost.getContent();
-            this.stateEnum = mentorPost.getState();
+            this.mentorPostStateEnum = mentorPost.getState();
             WriterDTO writerDTO = new MentorPostAllWithTimeStampDTO.WriterDTO(mentorPost.getWriter(), userInterests);
             this.writerDTO = writerDTO;
             this.createdAt = mentorPost.getCreatedAt();
