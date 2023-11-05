@@ -6,13 +6,17 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
-@Table(name = "subtitle_tb")
+@Where(clause = "deleted_at IS NULL")
+@SQLDelete(sql = "UPDATE subtitles SET deleted_at = CURRENT_TIMESTAMP, is_deleted = TRUE where id = ?")
+@Table(name = "subtitles")
 public class Subtitle extends BaseTime {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id

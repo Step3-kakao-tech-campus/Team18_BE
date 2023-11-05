@@ -7,20 +7,24 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
-@Table(name = "videoInterest_tb")
+@Where(clause = "deleted_at IS NULL")
+@SQLDelete(sql = "UPDATE video_interests SET deleted_at = CURRENT_TIMESTAMP, is_deleted = TRUE where id = ?")
+@Table(name = "video_interests")
 public class VideoInterest extends BaseTime {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     private int id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "video_id")
     private Video video;
 
     @ManyToOne(fetch = FetchType.LAZY)
