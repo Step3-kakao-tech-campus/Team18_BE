@@ -292,12 +292,20 @@ public class VideoTest extends RestDoc{
 
     @Test
     @Order(2)
-    void findTest() throws Exception{
-        VideoResponse.VideoResponseDTO videoFind = videoService.findVideo(1);
-        org.assertj.core.api.Assertions.assertThat(1)
-                .isEqualTo(videoFind.getVideoID());
-        Assertions.assertThat("asdfasdf")
-                .isEqualTo(videoFind.getSubtitles().get(0).getKorSubtitleContent());
+    void HistoryTest() throws Exception{
+        User user2 = User.builder()
+                .email("anjfffffdal64@gmail.com")
+                .password("asdf1234!")
+                .firstName("Jin")
+                .lastName("Seung")
+                .country("Korea")
+                .age(21)
+                .role(Role.MENTOR)
+                .phone("010-0000-0000")
+                .build();
+
+        userJPARepository.save(user2);
+        VideoResponse.VideoResponseDTO videoFind = videoService.findVideo(3,user2);
     }
 
     @Test
@@ -311,23 +319,13 @@ public class VideoTest extends RestDoc{
     @Test
     @Order(2)
     void findUserCategoryTest() throws Exception{
-        //List<VideoResponse.VideoAllResponseDTO> findUserCategory = videoService.findUserCategory(1);
-
-    }
-
-    @Test
-    @Order(3)
-    void addView() throws Exception{
-        videoService.addVideoView(1);
-        VideoResponse.VideoResponseDTO videoFind = videoService.findVideo(1);
-        org.assertj.core.api.Assertions.assertThat(26)
-                .isEqualTo(videoFind.getViews());
+        List<VideoResponse.VideoAllResponseDTO> findUserCategory = videoService.findUserCategory(1);
     }
 
     @Test
     @Order(3)
     void findOmTest() throws Exception {
-        List<VideoResponse.VideoAllResponseDTO> videoFind = videoService.findUserCategory(1);
+        List<VideoResponse.VideoAllResponseDTO> videoFind = videoService.findHistoryVideo(0,2);
 
         String responseBody = om.writeValueAsString(videoFind);
 

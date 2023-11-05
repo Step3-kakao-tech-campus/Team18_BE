@@ -32,8 +32,8 @@ public class VideoRestController {
     }
 
     @GetMapping("/videos/{id}")
-    public ResponseEntity<?> getVideoId(@PathVariable int id) {
-        VideoResponse.VideoResponseDTO responseDTO = videoService.findVideo(id);
+    public ResponseEntity<?> getVideoId(@PathVariable int id, @AuthenticationPrincipal CustomUserDetails userDetails) {
+        VideoResponse.VideoResponseDTO responseDTO = videoService.findVideo(id, userDetails.getUser());
         return ResponseEntity.ok(ApiResponseBuilder.success(responseDTO));
     }
 
@@ -41,11 +41,5 @@ public class VideoRestController {
     public ResponseEntity<?> getVideoHistory(@RequestParam(value = "page", defaultValue = "0") Integer page, @AuthenticationPrincipal CustomUserDetails userDetails) {
         List<VideoResponse.VideoAllResponseDTO> responseDTO = videoService.findHistoryVideo(page, userDetails.getUser().getId());
         return ResponseEntity.ok(ApiResponseBuilder.success(responseDTO));
-    }
-
-    @PostMapping("videos/view/{id}")
-    public ResponseEntity<?> postVideoView(@PathVariable int id){
-        videoService.addVideoView(id);
-        return ResponseEntity.status(HttpStatus.OK).body(ApiResponseBuilder.successWithNoContent());
     }
 }
