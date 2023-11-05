@@ -1,7 +1,7 @@
 package com.example.demo.mentoring.done;
 
 import com.example.demo.config.auth.CustomUserDetails;
-import com.example.demo.config.utils.ApiUtils;
+import com.example.demo.config.utils.ApiResponseBuilder;
 import com.example.demo.user.Role;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
@@ -23,9 +23,9 @@ public class DoneRestController {
     public ResponseEntity<?> findAllContacts(@AuthenticationPrincipal CustomUserDetails userDetails) {
         if (userDetails.getUser().getRole().equals(Role.MENTEE)) {
             List<DoneResponse.DoneDashBoardDTO> responseDTO = doneService.findByMentee(userDetails.getUser());
-            return ResponseEntity.ok(ApiUtils.success(responseDTO));
+            return ResponseEntity.ok(ApiResponseBuilder.success(responseDTO));
         }
         List<DoneResponse.DoneDashBoardDTO> responseDTO = doneService.findByMentor(userDetails.getUser());
-        return ResponseEntity.ok(ApiUtils.success(responseDTO));
+        return ResponseEntity.ok(ApiResponseBuilder.success(responseDTO));
     }
 }

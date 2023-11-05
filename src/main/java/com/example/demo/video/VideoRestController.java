@@ -1,7 +1,7 @@
 package com.example.demo.video;
 
 import com.example.demo.config.auth.CustomUserDetails;
-import com.example.demo.config.utils.ApiUtils;
+import com.example.demo.config.utils.ApiResponseBuilder;
 import io.swagger.annotations.Api;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -29,18 +29,18 @@ public class VideoRestController {
     @GetMapping("/videos/main")
     public ResponseEntity<?> getCategoryFilterVideo(@RequestParam(value = "page", defaultValue = "0") Integer page) {
         List<VideoResponse.VideoAllResponseDTO> responseDTOs = videoService.findAllVideo(page);
-        return ResponseEntity.ok(ApiUtils.success(responseDTOs));
+        return ResponseEntity.ok(ApiResponseBuilder.success(responseDTOs));
     }
 
     @GetMapping("/videos/{id}")
     public ResponseEntity<?> getVideoId(@PathVariable int id) {
         VideoResponse.VideoResponseDTO responseDTO = videoService.findVideo(id);
-        return ResponseEntity.ok(ApiUtils.success(responseDTO));
+        return ResponseEntity.ok(ApiResponseBuilder.success(responseDTO));
     }
 
     @GetMapping("/videos/history")
     public ResponseEntity<?> getVideoHistory(@RequestParam(value = "page", defaultValue = "0") Integer page, @AuthenticationPrincipal CustomUserDetails userDetails) {
         List<VideoResponse.VideoAllResponseDTO> responseDTO = videoService.findHistoryVideo(page, userDetails.getUser().getId());
-        return ResponseEntity.ok(ApiUtils.success(responseDTO));
+        return ResponseEntity.ok(ApiResponseBuilder.success(responseDTO));
     }
 }
