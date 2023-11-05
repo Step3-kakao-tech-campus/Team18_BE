@@ -311,14 +311,23 @@ public class VideoTest extends RestDoc{
     @Test
     @Order(2)
     void findUserCategoryTest() throws Exception{
-        List<VideoResponse.VideoAllResponseDTO> findUserCategory = videoService.findUserCategory(1);
+        //List<VideoResponse.VideoAllResponseDTO> findUserCategory = videoService.findUserCategory(1);
 
     }
 
     @Test
-    @Order(2)
+    @Order(3)
+    void addView() throws Exception{
+        videoService.addVideoView(1);
+        VideoResponse.VideoResponseDTO videoFind = videoService.findVideo(1);
+        org.assertj.core.api.Assertions.assertThat(26)
+                .isEqualTo(videoFind.getViews());
+    }
+
+    @Test
+    @Order(3)
     void findOmTest() throws Exception {
-        List<VideoResponse.VideoPageResponseDTO> videoFind = videoService.findAllVideo(1);
+        List<VideoResponse.VideoAllResponseDTO> videoFind = videoService.findUserCategory(1);
 
         String responseBody = om.writeValueAsString(videoFind);
 
