@@ -33,7 +33,7 @@ public class MentorPostRestController {
             category = MentorPostCategoryEnum.NULL;
 
         List<MentorPostResponse.MentorPostAllDTO> responseDTOs = mentorPostService.findAllMentorPost(category, keyword, page);
-        return ResponseEntity.ok(ApiUtils.success(responseDTOs));
+        return ResponseEntity.ok(ApiResponseBuilder.success(responseDTOs));
     }
 
     @GetMapping("/mentorings/post/{id}")
@@ -45,19 +45,19 @@ public class MentorPostRestController {
     @PutMapping(value = "/mentorings/post/{id}")
     public ResponseEntity<?> updateMentorPost(@PathVariable int id, @RequestBody @Valid MentorPostRequest.CreateDTO requestDTO, Errors errors, @AuthenticationPrincipal CustomUserDetails userDetails) {
         mentorPostService.updateMentorPost(requestDTO, id, userDetails.getUser());
-        return ResponseEntity.status(HttpStatus.OK).body(ApiUtils.successWithNoContent());
+        return ResponseEntity.status(HttpStatus.OK).body(ApiResponseBuilder.successWithNoContent());
     }
 
     @DeleteMapping(value = "/mentorings/post/{id}")
     public ResponseEntity<?> deleteMentorPost(@PathVariable int id, @AuthenticationPrincipal CustomUserDetails userDetails) {
         mentorPostService.deleteMentorPost(id, userDetails.getUser());
-        return ResponseEntity.status(HttpStatus.OK).body(ApiUtils.successWithNoContent());
+        return ResponseEntity.status(HttpStatus.OK).body(ApiResponseBuilder.successWithNoContent());
     }
 
     @PatchMapping(value = "/mentorings/post/{id}/done")
     public ResponseEntity<?> changeMentorPostStatus(@PathVariable int id,@RequestBody @Valid MentorPostRequest.StateDTO requestDTO, Errors errors, @AuthenticationPrincipal CustomUserDetails userDetails) {
         mentorPostService.changeMentorPostStatus(requestDTO, id, userDetails.getUser());
-        return ResponseEntity.status(HttpStatus.OK).body(ApiUtils.successWithNoContent());
+        return ResponseEntity.status(HttpStatus.OK).body(ApiResponseBuilder.successWithNoContent());
     }
 
 }
