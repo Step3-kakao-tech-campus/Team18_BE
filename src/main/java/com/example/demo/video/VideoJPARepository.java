@@ -16,12 +16,12 @@ public interface VideoJPARepository extends JpaRepository<Video, Integer> {
 
     @Query(value = "SELECT * FROM videos v " +
             "INNER JOIN video_interests vi ON v.id = vi.video_id " +
-            "INNER JOIN interest_tb i ON vi.interest_id = i.id " +
+            "INNER JOIN interests i ON vi.interest_id = i.id " +
             "WHERE i.category IN :userInterests " +
             "ORDER BY RAND()", // MySQL에서 랜덤 정렬
             countQuery = "SELECT COUNT(*) FROM videos v " +
                     "INNER JOIN video_interests vi ON v.id = vi.video_id " +
-                    "INNER JOIN interest_tb i ON vi.interest_id = i.id " +
+                    "INNER JOIN interests i ON vi.interest_id = i.id " +
                     "WHERE i.category IN :userInterests", // 페이징을 위한 count 쿼리
             nativeQuery = true)
     Page<Video> findByVideoCategory(@Param("userInterests") List<String> userInterests, Pageable pageable);

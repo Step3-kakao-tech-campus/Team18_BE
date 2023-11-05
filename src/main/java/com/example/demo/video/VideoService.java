@@ -2,6 +2,7 @@ package com.example.demo.video;
 
 import com.example.demo.config.errors.exception.Exception404;
 import com.example.demo.interest.Interest;
+import com.example.demo.user.User;
 import com.example.demo.user.userInterest.UserInterest;
 import com.example.demo.user.userInterest.UserInterestJPARepository;
 import lombok.RequiredArgsConstructor;
@@ -58,7 +59,7 @@ public class VideoService {
         for(int i = 0;i < videoDTOList.size();i++)
         {
             tempGroup.add(videoDTOList.get(i));
-            if ((i + 1) % 4 == 0 || i == videoDTOList.size() - 1) {
+            if ((i + 1) % MAINVIDEONUM == 0 || i == videoDTOList.size() - 1) {
                 if(i == videoDTOList.size() - 1)
                     finish = true;
                 VideoResponse.VideoPageResponseDTO videoPageResponseDTO = new VideoResponse.VideoPageResponseDTO(
@@ -73,9 +74,16 @@ public class VideoService {
         return videoPageResponseDTOS;
     }
 
-    public VideoResponse.VideoResponseDTO findVideo(int id) {
+    public VideoResponse.VideoResponseDTO findVideo(int id, User user) {
         Video video = videoJPARepository.findById(id)
-                .orElseThrow(() -> new Exception404("해당 영상이 존재하지 않습니다.\n" + "id : " + id));;
+                .orElseThrow(() -> new Exception404("해당 영상이 존재하지 않습니다.\n" + "id : " + id));
+
+        video.addView();
+        if(user != null)
+        {
+            VideoHistory videoHistory = new VideoHistory(user, video);
+            videoHistoryJPARepository.save(videoHistory);
+        }
 
         VideoInterest videoInterest = videoInterestJPARepository.findVideoInterestByVideoId(video.getId());
         List<Subtitle> videoSubtitles = subtitleJPARepository.findSubtitleByVideoId(video.getId());

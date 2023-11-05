@@ -5,10 +5,12 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -36,7 +38,8 @@ public class Video extends BaseTime {
     @Column
     private String videoEndTime;
 
-    @Column
+    @Column(nullable = false)
+    @ColumnDefault("0")
     private long views;
 
     @Column
@@ -51,5 +54,9 @@ public class Video extends BaseTime {
         this.videoEndTime = videoEndTime;
         this.views = views;
         this.videoThumbnailUrl = videoThumbnailUrl;
+    }
+
+    public void addView(){
+        this.views += 1;
     }
 }
