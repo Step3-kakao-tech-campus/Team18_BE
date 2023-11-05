@@ -75,7 +75,7 @@ public class VideoService {
 
     public VideoResponse.VideoResponseDTO findVideo(int id) {
         Video video = videoJPARepository.findById(id)
-                .orElseThrow(() -> new Exception404("해당 영상이 존재하지 않습니다.\n" + "id : " + id));;
+                .orElseThrow(() -> new Exception404("해당 영상이 존재하지 않습니다.\n" + "id : " + id));
 
         VideoInterest videoInterest = videoInterestJPARepository.findVideoInterestByVideoId(video.getId());
         List<Subtitle> videoSubtitles = subtitleJPARepository.findSubtitleByVideoId(video.getId());
@@ -132,5 +132,11 @@ public class VideoService {
                 }
         ).collect(Collectors.toList());
         return videoDTOList;
+    }
+
+    public void addVideoView(int id) {
+        Video video = videoJPARepository.findById(id)
+                .orElseThrow(() -> new Exception404("해당 영상이 존재하지 않습니다.\n" + "id : " + id));
+        video.addView();
     }
 }

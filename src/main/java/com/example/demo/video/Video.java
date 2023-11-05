@@ -52,4 +52,8 @@ public class Video extends BaseTime {
         this.views = views;
         this.videoThumbnailUrl = videoThumbnailUrl;
     }
+
+    public void addView(){
+        this.views += 1;
+    }
 }
