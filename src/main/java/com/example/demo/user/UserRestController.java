@@ -8,14 +8,17 @@ import io.swagger.models.Response;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.net.URLEncoder;
@@ -35,9 +38,9 @@ public class UserRestController {
     }
 
     @Operation(summary = "회원가입", description = "회원가입")
-    @PostMapping(value = "/users/signup")
-    public ResponseEntity<?> signup(@RequestBody @Valid UserRequest.SignUpDTO requestDTO, Errors errors) {
-        userService.signup(requestDTO);
+    @PostMapping(value = "/users/signup", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
+    public ResponseEntity<?> signup(@RequestPart @Valid UserRequest.SignUpDTO requestDTO, Errors errors, @RequestPart MultipartFile file) throws IOException {
+        userService.signup(requestDTO, file);
         return ResponseEntity.status(HttpStatus.OK).body(ApiResponseBuilder.successWithNoContent());
     }
 
@@ -83,9 +86,9 @@ public class UserRestController {
     }
 
     @Operation(summary = "마이 페이지 프로필 수정", description = "마이 페이지에서 프로필 수정")
-    @PutMapping(value = "/profiles")
-    public ResponseEntity<?> profileUpdate(@RequestBody @Valid UserRequest.ProfileUpdateDTO requestDTO, Errors errors, @AuthenticationPrincipal CustomUserDetails userDetails) {
-        UserResponse.ProfileDTO responseDTO = userService.updateProfile(userDetails, requestDTO);
+    @PutMapping(value = "/profiles", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
+    public ResponseEntity<?> profileUpdate(@RequestPart @Valid UserRequest.ProfileUpdateDTO requestDTO, Errors errors, @RequestPart MultipartFile file, @AuthenticationPrincipal CustomUserDetails userDetails) throws IOException {
+        UserResponse.ProfileDTO responseDTO = userService.updateProfile(userDetails, requestDTO, file);
         return ResponseEntity.status(HttpStatus.OK).body(ApiResponseBuilder.success(responseDTO));
     }
 }

@@ -3,6 +3,7 @@ package com.example.demo.user;
 import com.example.demo.config.auth.CustomUserDetails;
 import com.example.demo.config.errors.exception.Exception400;
 import com.example.demo.config.errors.exception.Exception404;
+import com.example.demo.config.s3.S3Uploader;
 import com.example.demo.interest.Interest;
 import com.example.demo.interest.InterestJPARepository;
 import com.example.demo.config.jwt.JWTTokenProvider;
@@ -16,7 +17,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.time.Period;
 import java.util.ArrayList;
@@ -34,6 +37,7 @@ public class UserService {
     private final RefreshTokenJPARepository refreshTokenJPARepository;
     private final InterestJPARepository interestJPARepository;
     private final UserInterestJPARepository userInterestJPARepository;
+    private final S3Uploader s3Uploader;
 
     public void emailCheck(UserRequest.EmailCheckDTO requestDTO) {
         Optional<User> optionalUser = userJPARepository.findByEmail(requestDTO.getEmail());
@@ -43,9 +47,12 @@ public class UserService {
     }
 
     @Transactional
-    public void signup(UserRequest.SignUpDTO requestDTO) {
+    public void signup(UserRequest.SignUpDTO requestDTO, MultipartFile file) throws IOException {
+        String profileImageURL = s3Uploader.uploadFile(file);
+        System.out.println(profileImageURL);
+
         requestDTO.setPassword(passwordEncoder.encode(requestDTO.getPassword()));
-        User user = userJPARepository.save(requestDTO.toEntity());
+        User user = userJPARepository.save(requestDTO.toEntity(profileImageURL));
 
         List<UserInterest> userInterestList = new ArrayList<>();
         List<String> categoryList = requestDTO.getCategoryList();
@@ -117,10 +124,16 @@ public class UserService {
     }
 
     @Transactional
-    public UserResponse.ProfileDTO updateProfile(CustomUserDetails userDetails, UserRequest.ProfileUpdateDTO requestDTO) {
+    public UserResponse.ProfileDTO updateProfile(CustomUserDetails userDetails, UserRequest.ProfileUpdateDTO requestDTO, MultipartFile file) throws IOException {
         User user = userJPARepository.findById(userDetails.getUser().getId())
                 .orElseThrow(() -> new Exception404("해당 사용자가 존재하지 않습니다."));
-        user = user.updateProfile(requestDTO.toEntity());
+
+        String profileImageURL = user.getProfileImage();
+        String key = profileImageURL.split("/")[3];
+        s3Uploader.deleteFile(key);
+
+        String newProfileImageURL = s3Uploader.uploadFile(file);
+        user = user.updateProfile(requestDTO.toEntity(newProfileImageURL));
 
         List<String> userCategoryList = userInterestJPARepository.findAllById(user.getId()).stream()
                 .map(interest -> interest.getInterest().getCategory())
