@@ -1,7 +1,6 @@
 package com.example.demo;
 
 import com.example.demo.config.errors.exception.Exception404;
-import com.example.demo.user.Role;
 import com.example.demo.user.User;
 import com.example.demo.user.UserJPARepository;
 import org.assertj.core.api.Assertions;

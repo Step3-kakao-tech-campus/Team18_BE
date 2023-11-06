@@ -1,9 +1,9 @@
 package com.example.demo.user;
 
+import com.example.demo.config.errors.exception.Exception400;
 import com.example.demo.config.errors.exception.Exception404;
 import com.example.demo.interest.Interest;
 import com.example.demo.interest.InterestJPARepository;
-import com.example.demo.config.errors.exception.Exception400;
 import com.example.demo.config.jwt.JWTTokenProvider;
 import com.example.demo.refreshToken.RefreshToken;
 import com.example.demo.refreshToken.RefreshTokenJPARepository;
@@ -33,7 +33,7 @@ public class UserService {
     public void emailCheck(UserRequest.EmailCheckDTO requestDTO) {
         Optional<User> optionalUser = userJPARepository.findByEmail(requestDTO.getEmail());
         if (optionalUser.isPresent()) {
-            throw new Exception400("동일한 이메일이 존재합니다.");
+            throw new Exception400(null, "동일한 이메일이 존재합니다.");
         }
     }
 
@@ -56,7 +56,7 @@ public class UserService {
         List<String> categoryList = requestDTO.getCategoryList();
         for (String category : categoryList) {
             Interest interest = interestJPARepository.findByCategory(category)
-                    .orElseThrow(() -> new Exception400("해당 관심사가 존재하지 않습니다."));
+                    .orElseThrow(() -> new Exception400(null, "해당 관심사가 존재하지 않습니다."));
             UserInterest userInterest = UserInterest.builder().user(user).interest(interest).build();
             userInterestList.add(userInterest);
         }
@@ -66,10 +66,10 @@ public class UserService {
     @Transactional
     public UserResponse.LoginDTO login(UserRequest.LoginDTO requestDTO) {
         User user = userJPARepository.findByEmail(requestDTO.getEmail())
-                .orElseThrow(() -> new Exception400("잘못된 이메일입니다."));
+                .orElseThrow(() -> new Exception400(null, "잘못된 이메일입니다."));
 
         if (!passwordEncoder.matches(requestDTO.getPassword(), user.getPassword())) {
-            throw new Exception400("잘못된 비밀번호입니다.");
+            throw new Exception400(null, "잘못된 비밀번호입니다.");
         }
 
         TokenResponse.TokenDTO token = JWTTokenProvider.createToken(user);
