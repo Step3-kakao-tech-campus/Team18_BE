@@ -1,17 +1,13 @@
 package com.example.demo;
 
-import com.example.demo.config.errors.exception.Exception404;
 import com.example.demo.interest.Interest;
 import com.example.demo.interest.InterestJPARepository;
-import com.example.demo.mentoring.MentorPost;
-import com.example.demo.user.Role;
 import com.example.demo.user.User;
 import com.example.demo.user.UserJPARepository;
 import com.example.demo.user.userInterest.UserInterest;
 import com.example.demo.user.userInterest.UserInterestJPARepository;
 import com.example.demo.video.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;

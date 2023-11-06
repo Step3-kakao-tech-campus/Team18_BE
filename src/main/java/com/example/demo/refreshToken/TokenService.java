@@ -1,17 +1,10 @@
 package com.example.demo.refreshToken;
 
-import com.example.demo.config.errors.exception.Exception400;
 import com.example.demo.config.errors.exception.Exception401;
 import com.example.demo.config.jwt.JWTTokenProvider;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Optional;
 
 @Transactional
 @RequiredArgsConstructor
