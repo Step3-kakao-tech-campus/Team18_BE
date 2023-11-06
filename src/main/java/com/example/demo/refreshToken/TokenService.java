@@ -1,16 +1,26 @@
 package com.example.demo.refreshToken;
 
+import com.example.demo.config.errors.exception.Exception400;
 import com.example.demo.config.errors.exception.Exception401;
+import com.example.demo.config.errors.exception.Exception404;
 import com.example.demo.config.jwt.JWTTokenProvider;
+import com.example.demo.user.User;
+import com.example.demo.user.UserJPARepository;
+import com.example.demo.user.userInterest.UserInterestJPARepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Transactional
 @RequiredArgsConstructor
 @Service
 public class TokenService {
 
+    private final UserJPARepository userJPARepository;
+    private final UserInterestJPARepository userInterestJPARepository;
     private final RefreshTokenJPARepository refreshTokenJPARepository;
     private final JWTTokenProvider jwtTokenProvider;
 
@@ -29,7 +39,13 @@ public class TokenService {
                 throw new Exception401("유효하지 않은 토큰입니다.3");
             }
 
-            String accessToken = JWTTokenProvider.createAccessToken(refreshTokenInfo.getUser());
+            User user = userJPARepository.findById(refreshTokenInfo.getUser().getId())
+                    .orElseThrow(() -> new Exception404("해당 사용자가 존재하지 않습니다."));
+            List<String> userCategoryList = userInterestJPARepository.findAllById(user.getId()).stream()
+                    .map(interest -> interest.getInterest().getCategory())
+                    .collect(Collectors.toList());
+
+            String accessToken = JWTTokenProvider.createAccessToken(user, userCategoryList);
             return JWTTokenProvider.Token_Prefix + accessToken;
         }
         return null;

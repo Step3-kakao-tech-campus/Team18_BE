@@ -43,11 +43,12 @@ public class UserRequest {
         private String introduction;
 
         @NotNull(message = "생년월일을 입력해주세요.")
-        private LocalDate birthdate;
+        private LocalDate birthDate;
 
         @NotNull(message = "연락처를 입력해주세요.")
+        @Pattern(regexp = "^\\d{2,3}-\\d{3,4}-\\d{4}$")
         private String phone;
-        
+
         // 프로필 이미지의 경우, 추후 변경 예정
         private String profileImage;
 
@@ -55,21 +56,23 @@ public class UserRequest {
         private Role role;
 
         @NotNull(message = "관심 분야를 선택해주세요.")
+        @Size(min = 1, max = 3)
         private List<String> categoryList;
 
-//        public User toEntity() {
-//            return User.builder()
-//                    .firstName(firstName)
-//                    .lastName(lastName)
-//                    .email(email)
-//                    .password(password)
-//                    .country(country)
-//                    .introduction(introduction)
-//                    .age(age)
-//                    .profileImage(profileImage)
-//                    .role(role)
-//                    .build();
-//        }
+        public User toEntity() {
+            return User.builder()
+                    .firstName(firstName)
+                    .lastName(lastName)
+                    .email(email)
+                    .password(password)
+                    .country(country)
+                    .introduction(introduction)
+                    .birthDate(birthDate)
+                    .phone(phone)
+                    .profileImage(profileImage)
+                    .role(role)
+                    .build();
+        }
     }
 
     @Getter
@@ -95,10 +98,6 @@ public class UserRequest {
         private String lastName;
 
         @NotNull
-        @Pattern(regexp = "^[\\w._%+-]+@[\\w.-]+\\.[a-zA-Z]{2,6}$", message = "이메일을 올바르게 입력해주세요.")
-        private String email;
-
-        @NotNull
         @Size(min = 8, max = 16, message = "8~16자 이내로 입력해주세요.")
         @Pattern(regexp = "^(?=.*[a-zA-Z])(?=.*\\d)(?=.*[@#$%^&+=!~`<>,./?;:'\"\\[\\]{}\\\\()|_-])\\S*$", message = "영문 대/소문자, 숫자, 특수문자를 포함해주세요.")
         private String password;
@@ -108,10 +107,11 @@ public class UserRequest {
 
         private String introduction;
 
-        @NotNull(message = "나이를 입력해주세요.")
-        private int age;
+        @NotNull(message = "생년월일을 입력해주세요.")
+        private LocalDate birthDate;
 
         @NotNull(message = "연락처를 입력해주세요.")
+        @Pattern(regexp = "^\\d{2,3}-\\d{3,4}-\\d{4}$")
         private String phone;
 
         // 프로필 이미지의 경우, 추후 변경 예정
@@ -121,6 +121,21 @@ public class UserRequest {
         private Role role;
 
         @NotNull(message = "관심 분야를 선택해주세요.")
+        @Size(min = 1, max = 3)
         private List<String> categoryList;
+
+        public User toEntity() {
+            return User.builder()
+                    .firstName(firstName)
+                    .lastName(lastName)
+                    .password(password)
+                    .country(country)
+                    .introduction(introduction)
+                    .birthDate(birthDate)
+                    .phone(phone)
+                    .profileImage(profileImage)
+                    .role(role)
+                    .build();
+        }
     }
 }

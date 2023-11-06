@@ -7,6 +7,7 @@ import com.example.demo.user.userInterest.UserInterest;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -33,7 +34,7 @@ public class DoneResponse {
         private String profileImage;
         private String name;
         private String country;
-        private int age;
+        private LocalDate birthDate;
         private Role role;
         private List<String> favorites;
 
@@ -42,7 +43,7 @@ public class DoneResponse {
             this.profileImage = mentor.getProfileImage();
             this.name = mentor.getFirstName() + " " + mentor.getLastName();
             this.country = mentor.getCountry();
-            this.age = mentor.getAge();
+            this.birthDate = mentor.getBirthDate();
             this.role = mentor.getRole();
             this.favorites = userInterests.stream()
                     .map(userInterest -> userInterest.getInterest().getCategory())
@@ -55,15 +56,16 @@ public class DoneResponse {
         private String profileImage;
         private String name;
         private String country;
-        private int age;
+        private LocalDate birthDate;
         private Role role;
         private List<String> favorites;
+
         public DoneMenteeDTO(ConnectedUser connectedUser, List<UserInterest> userInterests) {
             this.menteeId = connectedUser.getId();
             this.profileImage = connectedUser.getMenteeUser().getProfileImage();
             this.name = connectedUser.getMenteeUser().getFirstName() + " " + connectedUser.getMenteeUser().getLastName();
             this.country = connectedUser.getMenteeUser().getCountry();
-            this.age = connectedUser.getMenteeUser().getAge();
+            this.birthDate = connectedUser.getMenteeUser().getBirthDate();
             this.role = connectedUser.getMenteeUser().getRole();
             this.favorites = userInterests.stream()
                     .map(userInterest -> userInterest.getInterest().getCategory())
