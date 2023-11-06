@@ -11,6 +11,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -24,12 +27,16 @@ public class TokenService {
     private final RefreshTokenJPARepository refreshTokenJPARepository;
     private final JWTTokenProvider jwtTokenProvider;
 
-    public String reissueAccessToken(String jwtRefreshToken) {
-        if (jwtRefreshToken == null || !(jwtRefreshToken.startsWith("Bearer "))) {
+    public String reissueAccessToken(String jwtRefreshToken) throws UnsupportedEncodingException {
+
+        String decodedJwtRefreshToken = URLDecoder.decode(jwtRefreshToken, "utf-8");
+
+        if (decodedJwtRefreshToken == null || !(decodedJwtRefreshToken.startsWith("Bearer "))) {
             throw new Exception401("유효하지 않은 토큰입니다.1");
         }
 
-        String extractedJwtRefreshToken = jwtRefreshToken.replace(JWTTokenProvider.Token_Prefix, "");
+
+        String extractedJwtRefreshToken = decodedJwtRefreshToken.replace(JWTTokenProvider.Token_Prefix, "");
         if (jwtTokenProvider.validateToken(extractedJwtRefreshToken)) {
             int id = Integer.valueOf(jwtTokenProvider.decodeJwtToken(extractedJwtRefreshToken).get("id").toString());
             RefreshToken refreshTokenInfo = refreshTokenJPARepository.findByUserId(id)
