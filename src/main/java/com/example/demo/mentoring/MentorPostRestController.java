@@ -28,12 +28,9 @@ public class MentorPostRestController {
     @GetMapping("/mentorings/post")
     @Operation(summary = "mentorpost 가져오기", description = "category, search로 필터링, pagination 적용")
     public ResponseEntity<?> getMentorPost(
-            @RequestParam(value = "category", required = false) MentorPostCategoryEnum category,
+            @RequestParam(value = "category", defaultValue = "NULL") String category,
             @RequestParam(value = "search", defaultValue = "") String keyword,
             @RequestParam(value = "page", defaultValue = "0") Integer page) {
-
-        if(category == null)
-            category = MentorPostCategoryEnum.NULL;
 
         List<MentorPostResponse.MentorPostAllDTO> responseDTOs = mentorPostService.findAllMentorPost(category, keyword, page);
         return ResponseEntity.ok(ApiResponseBuilder.success(responseDTOs));
