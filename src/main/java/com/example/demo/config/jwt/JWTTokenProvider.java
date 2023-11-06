@@ -48,7 +48,7 @@ public class JWTTokenProvider {
                 .claim("email", user.getEmail())
                 .claim("country", user.getCountry())
                 .claim("introduction", user.getIntroduction())
-                .claim("birthDate", user.getBirthDate())
+                .claim("birthDate", user.getBirthDate().toString())
                 .claim("phone", user.getPhone())
                 .claim("profileImage", user.getProfileImage())
                 .claim("role", user.getRole())
