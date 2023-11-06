@@ -129,7 +129,7 @@ public class UserService {
         List<String> categoryList = requestDTO.getCategoryList();
         for (String category : categoryList) {
             Interest interest = interestJPARepository.findByCategory(category)
-                    .orElseThrow(() -> new Exception400("해당 관심사가 존재하지 않습니다."));
+                    .orElseThrow(() -> new Exception400(null,"해당 관심사가 존재하지 않습니다."));
             UserInterest updateUserInterest = UserInterest.builder().user(user).interest(interest).build();
             updateUserInterestList.add(updateUserInterest);
         }
