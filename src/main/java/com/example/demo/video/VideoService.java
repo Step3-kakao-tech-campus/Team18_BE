@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -52,6 +53,8 @@ public class VideoService {
                 }
         ).collect(Collectors.toList());
 
+        Collections.shuffle(videoDTOList);
+
         List<VideoResponse.VideoPageResponseDTO> videoPageResponseDTOS = new ArrayList<>();
         List<VideoResponse.VideoAllResponseDTO> tempGroup = new ArrayList<>();
         int page = 0;
@@ -88,7 +91,12 @@ public class VideoService {
         VideoInterest videoInterest = videoInterestJPARepository.findVideoInterestByVideoId(video.getId());
         List<Subtitle> videoSubtitles = subtitleJPARepository.findSubtitleByVideoId(video.getId());
 
-        VideoResponse.VideoResponseDTO videoResponseDTO = new VideoResponse.VideoResponseDTO(video, videoInterest, videoSubtitles);
+        List<Video> recommendVideo = videoJPARepository.findThreeRandomVideo(id);
+        List<VideoInterest> recommendVideoInterest = recommendVideo.stream()
+                .map(rv -> videoInterestJPARepository.findVideoInterestByVideoId(rv.getId()))
+                .collect(Collectors.toList());
+
+        VideoResponse.VideoResponseDTO videoResponseDTO = new VideoResponse.VideoResponseDTO(video, videoInterest, videoSubtitles,recommendVideo,recommendVideoInterest);
 
         return videoResponseDTO;
     }

@@ -42,7 +42,7 @@ public class MentoringTest2 extends RestDoc {
 
         // console
         String responseBody = resultActions.andReturn().getResponse().getContentAsString();
-        System.out.println("테스트 : "+responseBody);
+        System.out.println("멘토링 화면 조회 테스트 : "+responseBody);
 
         // verify
         resultActions.andExpect(jsonPath("$.status").value("success"));
@@ -62,7 +62,7 @@ public class MentoringTest2 extends RestDoc {
 
         // console
         String responseBody = resultActions.andReturn().getResponse().getContentAsString();
-        System.out.println("테스트 : "+responseBody);
+        System.out.println("카테고리 멘토링 화면 조회 테스트 : "+responseBody);
 
         // verify
         resultActions.andExpect(jsonPath("$.status").value("success"));
