@@ -2,6 +2,7 @@ package com.example.demo.mentoring.contact;
 
 import com.example.demo.config.auth.CustomUserDetails;
 import com.example.demo.config.utils.ApiResponseBuilder;
+import com.example.demo.user.Role;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

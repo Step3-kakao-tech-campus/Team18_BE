@@ -25,8 +25,8 @@ public class JWTTokenProvider {
     public static final String Token_Prefix = "Bearer ";
 
     public static final String SecretKey = "a2FrYW8tdGVjaC1jYW1wdXMtcHJvamVjdC1nYXJkZW4tc3ByaW5nLXNlY3VyaXR5LWp3dC10b2tlbi1zZWNyZXQta2V5";
-    public static final int AccessTokenValidTime = 1000 * 60 * 2;
-    public static final int RefreshTokenValidTime = 1000 * 60 * 5;
+    public static final int AccessTokenValidTime = 1000 * 60 * 5; // 5분
+    public static final int RefreshTokenValidTime = 1000 * 60 * 60 * 24; // 1일
 
     private final CustomUserDetailService userDetailService;
     private final RefreshTokenJPARepository refreshTokenJPARepository;
