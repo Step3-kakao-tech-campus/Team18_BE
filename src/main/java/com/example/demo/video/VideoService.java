@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -51,6 +52,8 @@ public class VideoService {
                     return new VideoResponse.VideoAllResponseDTO(video, videoInterests);
                 }
         ).collect(Collectors.toList());
+
+        Collections.shuffle(videoDTOList);
 
         List<VideoResponse.VideoPageResponseDTO> videoPageResponseDTOS = new ArrayList<>();
         List<VideoResponse.VideoAllResponseDTO> tempGroup = new ArrayList<>();
