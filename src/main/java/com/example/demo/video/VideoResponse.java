@@ -10,7 +10,7 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 public class VideoResponse {
-    private static int relatedVideoNum = 3;
+    private static int recommendVideoNum = 3;
     @Getter
     @Setter
     public static class VideoPageResponseDTO{
@@ -63,8 +63,8 @@ public class VideoResponse {
         private String startTime;
         private String endTime;
         private List<SubtitleDTO> subtitles;
-        private List<RelatedVideoDTO> relatedVideos;
-        public VideoResponseDTO(Video video, VideoInterest videoInterest, List<Subtitle> subtitles, List<Video> relatedVideos, List<VideoInterest> relatedInterest)
+        private List<RelatedVideoDTO> recommendVideos;
+        public VideoResponseDTO(Video video, VideoInterest videoInterest, List<Subtitle> subtitles, List<Video> recommendVideos, List<VideoInterest> recommendInterest)
         {
             this.videoID = video.getId();
             this.url = video.getVideoUrl();
@@ -75,8 +75,8 @@ public class VideoResponse {
             this.subtitles = subtitles.stream()
             .map(SubtitleDTO::new)
             .collect(Collectors.toList());
-            this.relatedVideos = IntStream.range(0, relatedVideoNum)
-                    .mapToObj(i -> new RelatedVideoDTO(relatedVideos.get(i), relatedInterest.get(i)))
+            this.recommendVideos = IntStream.range(0, recommendVideoNum)
+                    .mapToObj(i -> new RelatedVideoDTO(recommendVideos.get(i), recommendInterest.get(i)))
                     .collect(Collectors.toList());
         }
 

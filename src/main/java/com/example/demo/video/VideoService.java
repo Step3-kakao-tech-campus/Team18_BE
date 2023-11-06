@@ -91,7 +91,12 @@ public class VideoService {
         VideoInterest videoInterest = videoInterestJPARepository.findVideoInterestByVideoId(video.getId());
         List<Subtitle> videoSubtitles = subtitleJPARepository.findSubtitleByVideoId(video.getId());
 
-        VideoResponse.VideoResponseDTO videoResponseDTO = new VideoResponse.VideoResponseDTO(video, videoInterest, videoSubtitles);
+        List<Video> recommendVideo = videoJPARepository.findThreeRandomVideo(id);
+        List<VideoInterest> recommendVideoInterest = recommendVideo.stream()
+                .map(rv -> videoInterestJPARepository.findVideoInterestByVideoId(rv.getId()))
+                .collect(Collectors.toList());
+
+        VideoResponse.VideoResponseDTO videoResponseDTO = new VideoResponse.VideoResponseDTO(video, videoInterest, videoSubtitles,recommendVideo,recommendVideoInterest);
 
         return videoResponseDTO;
     }
