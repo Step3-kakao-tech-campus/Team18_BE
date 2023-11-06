@@ -107,6 +107,15 @@ public class UserService {
         return new UserResponse.ProfileDTO(user, userCategoryList);
     }
 
+    public void passwordCheck(UserRequest.PasswordCheckDTO requestDTO, CustomUserDetails userDetails) {
+        User user = userJPARepository.findById(userDetails.getUser().getId())
+                .orElseThrow(() -> new Exception404("해당 사용자가 존재하지 않습니다."));
+
+        if (!passwordEncoder.matches(requestDTO.getPassword(), user.getPassword())) {
+            throw new Exception400(null, "잘못된 비밀번호입니다.");
+        }
+    }
+
     @Transactional
     public UserResponse.ProfileDTO updateProfile(CustomUserDetails userDetails, UserRequest.ProfileUpdateDTO requestDTO) {
         User user = userJPARepository.findById(userDetails.getUser().getId())

@@ -4,6 +4,7 @@ import com.example.demo.config.auth.CustomUserDetails;
 import com.example.demo.config.jwt.JWTTokenProvider;
 import com.example.demo.config.utils.ApiResponseBuilder;
 import io.swagger.annotations.Api;
+import io.swagger.models.Response;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -54,7 +55,7 @@ public class UserRestController {
         cookie.setHttpOnly(true);
         cookie.setSecure(true);
         cookie.setPath("/");
-        cookie.setMaxAge(60 * 60 * 24);
+        cookie.setMaxAge(60 * 60 * 24 * 7);
         httpServletResponse.addCookie(cookie);
 
         return ResponseEntity.status(HttpStatus.OK).body(ApiResponseBuilder.success(responseDTO.getUserDetailDTO()));
@@ -73,7 +74,14 @@ public class UserRestController {
         UserResponse.ProfileDTO responseDTO = userService.findProfile(id, userDetails);
         return ResponseEntity.status(HttpStatus.OK).body(ApiResponseBuilder.success(responseDTO));
     }
-    
+
+    @Operation(summary = "마이 페이지 프로필 수정 전 본인 확인", description = "마이 페이지 프로필 수정 전 본인 확인")
+    @PostMapping(value = "/users/passwordcheck")
+    public ResponseEntity<?> passwordCheck(@RequestBody @Valid UserRequest.PasswordCheckDTO requestDTO, Errors errors, @AuthenticationPrincipal CustomUserDetails userDetails) {
+        userService.passwordCheck(requestDTO, userDetails);
+        return ResponseEntity.status(HttpStatus.OK).body(ApiResponseBuilder.successWithNoContent());
+    }
+
     @Operation(summary = "마이 페이지 프로필 수정", description = "마이 페이지에서 프로필 수정")
     @PutMapping(value = "/profiles")
     public ResponseEntity<?> profileUpdate(@RequestBody @Valid UserRequest.ProfileUpdateDTO requestDTO, Errors errors, @AuthenticationPrincipal CustomUserDetails userDetails) {
