@@ -1,7 +1,9 @@
 package com.example.demo.video;
 
+import com.example.demo.config.errors.exception.Exception401;
 import com.example.demo.config.errors.exception.Exception404;
 import com.example.demo.interest.Interest;
+import com.example.demo.user.Role;
 import com.example.demo.user.User;
 import com.example.demo.user.userInterest.UserInterest;
 import com.example.demo.user.userInterest.UserInterestJPARepository;
@@ -148,5 +150,41 @@ public class VideoService {
                 }
         ).collect(Collectors.toList());
         return videoDTOList;
+    }
+
+    public void createVideo(VideoRequest.CreateDTO createDTO, User user) {
+        if ( user.getRole() != Role.ADMIN ) {
+            throw new Exception401("관리자만 가능합니다.");
+        }
+
+        Video video = Video.builder()
+                .videoUrl(createDTO.getVideoUrl())
+                .videoEndTime(createDTO.getVideoEndTime())
+                .videoStartTime(createDTO.getVideoStartTime())
+                .videoThumbnailUrl(createDTO.getVideoThumbnailUrl())
+                .videoTitleEng(createDTO.getVideoTitleEng())
+                .videoTitleKorean(createDTO.getVideoTitleKorean())
+                .build();
+
+        VideoInterest videoInterest = VideoInterest.builder()
+                .video(video)
+                .interest(createDTO.getVideoInterest())
+                .build();
+
+        videoJPARepository.save(video);
+        videoInterestJPARepository.save(videoInterest);
+
+        for (VideoRequest.CreateDTO.SubtitleCreateDTO subtitleDTO : createDTO.getSubtitleCreateDTOList()) {
+            Subtitle subtitle = Subtitle.builder()
+                    .video(video)
+                    .korStartTime(subtitleDTO.getKorStartTime())
+                    .korEndTime(subtitleDTO.getKorEndTime())
+                    .korSubtitleContent(subtitleDTO.getKorSubtitleContent())
+                    .engStartTime(subtitleDTO.getEngStartTime())
+                    .engEndTime(subtitleDTO.getEngEndTime())
+                    .engSubtitleContent(subtitleDTO.getEngSubtitleContent())
+                    .build();
+            subtitleJPARepository.save(subtitle);
+        }
     }
 }
