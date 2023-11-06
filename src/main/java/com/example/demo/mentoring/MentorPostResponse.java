@@ -3,6 +3,7 @@ package com.example.demo.mentoring;
 
 import com.example.demo.mentoring.contact.ContactStateEnum;
 import com.example.demo.mentoring.contact.NotConnectedRegisterUser;
+import com.example.demo.user.Role;
 import com.example.demo.user.User;
 import com.example.demo.user.userInterest.UserInterest;
 import lombok.Getter;
