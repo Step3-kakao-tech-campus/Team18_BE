@@ -55,9 +55,9 @@ public class MentorPostService {
     public List<MentorPostResponse.MentorPostAllDTO> findAllMentorPost(String search, String keyword, int page) {
         Pageable pageable = PageRequest.of(page,5);
 
-        SearchCategory searchCategory = SearchCategory.valueOf(search.toUpperCase(Locale.ROOT));
+        MentorSearchCategory mentorSearchCategory = MentorSearchCategory.valueOf(search.toUpperCase(Locale.ROOT));
 
-        Page<MentorPost> result = searchCategory.execute(keyword, pageable, mentorPostJPARepository);
+        Page<MentorPost> result = mentorSearchCategory.execute(keyword, pageable, mentorPostJPARepository);
         List<MentorPostResponse.MentorPostAllDTO> mentorPostAllDTOS = result.stream().map(mentorPost -> {
             List<UserInterest> writerInterests = userInterestJPARepository.findAllById(mentorPost.getWriter().getId());
             return new MentorPostResponse.MentorPostAllDTO(mentorPost, writerInterests);
