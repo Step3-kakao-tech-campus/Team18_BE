@@ -14,6 +14,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @SpringBootTest
@@ -319,10 +320,73 @@ public class VideoTest extends RestDoc{
     }
 
     @Test
+    @Order(2)
+    void videoPostTest() throws Exception{
+        User user3 = User.builder()
+                .email("anjfffffffffdal64@gmail.com")
+                .password("asdf1234!")
+                .firstName("Jin")
+                .lastName("Seung")
+                .country("Korea")
+                .age(21)
+                .role(Role.ADMIN)
+                .phone("010-0000-0000")
+                .build();
+
+        Interest interest4 = Interest.builder()
+                .category("test_Interest_4")
+                .build();
+
+        interestJPARepository.save(interest4);
+
+        VideoRequest.CreateDTO createDTO = getCreateDTO();
+        createDTO.setVideoInterest(interest4);
+
+        videoService.createVideo(createDTO, user3);
+    }
+
+    private static VideoRequest.CreateDTO getCreateDTO() {
+        VideoRequest.CreateDTO createDTO = new VideoRequest.CreateDTO();
+        List<VideoRequest.CreateDTO.SubtitleCreateDTO> subtitleCreateDTOs = getSubtitleCreateDTOS();
+
+        createDTO.setVideoUrl("www.naver.com");
+        createDTO.setVideoStartTime("0");
+        createDTO.setVideoEndTime("15");
+        createDTO.setVideoTitleKorean("네이버");
+        createDTO.setVideoTitleEng("naver");
+        createDTO.setVideoThumbnailUrl("alsjflsdjfsakl.com");
+        createDTO.setSubtitleCreateDTOList(subtitleCreateDTOs);
+        return createDTO;
+    }
+
+    private static List<VideoRequest.CreateDTO.SubtitleCreateDTO> getSubtitleCreateDTOS() {
+        VideoRequest.CreateDTO.SubtitleCreateDTO subDTO1 = new VideoRequest.CreateDTO.SubtitleCreateDTO();
+        VideoRequest.CreateDTO.SubtitleCreateDTO subDTO2 = new VideoRequest.CreateDTO.SubtitleCreateDTO();
+
+        subDTO1.setKorStartTime("1");
+        subDTO1.setKorEndTime("3");
+        subDTO1.setKorSubtitleContent("한글");
+        subDTO1.setEngStartTime("1");
+        subDTO1.setEngEndTime("4");
+        subDTO1.setEngSubtitleContent("sdfasdfsd");
+
+        subDTO2.setKorStartTime("1");
+        subDTO2.setKorEndTime("3");
+        subDTO2.setKorSubtitleContent("한글");
+        subDTO2.setEngStartTime("1");
+        subDTO2.setEngEndTime("4");
+        subDTO2.setEngSubtitleContent("sdfasdfsd");
+
+        List<VideoRequest.CreateDTO.SubtitleCreateDTO> subtitleCreateDTOs = new ArrayList<>();
+        subtitleCreateDTOs.add(subDTO1);
+        subtitleCreateDTOs.add(subDTO2);
+        return subtitleCreateDTOs;
+    }
+
+    @Test
     @Order(3)
     void findOmTest() throws Exception {
-
-        VideoResponse.VideoResponseDTO videoFind = videoService.findVideo(3, null);
+        List<VideoResponse.VideoPageResponseDTO> videoFind = videoService.findAllVideo(0);
 
         String responseBody = om.writeValueAsString(videoFind);
 

@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -46,5 +47,12 @@ public class VideoRestController {
     public ResponseEntity<?> getVideoHistory(@RequestParam(value = "page", defaultValue = "0") Integer page, @AuthenticationPrincipal CustomUserDetails userDetails) {
         List<VideoResponse.VideoAllResponseDTO> responseDTO = videoService.findHistoryVideo(page, userDetails.getUser().getId());
         return ResponseEntity.ok(ApiResponseBuilder.success(responseDTO));
+    }
+
+    @PostMapping("/videos")
+    @Operation(summary = "영상 올리기")
+    public ResponseEntity<?> postVideo(@RequestBody @Valid VideoRequest.CreateDTO createDTO, @AuthenticationPrincipal  CustomUserDetails userDetails) {
+        videoService.createVideo(createDTO, userDetails.getUser());
+        return ResponseEntity.status(HttpStatus.OK).body(ApiResponseBuilder.successWithNoContent());
     }
 }
