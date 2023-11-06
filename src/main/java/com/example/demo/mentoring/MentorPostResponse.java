@@ -9,6 +9,7 @@ import com.example.demo.user.userInterest.UserInterest;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -130,7 +131,7 @@ public class MentorPostResponse {
             private String name;
             private String country;
             private Role role;
-            private int age;
+            private LocalDate birthDate;
             private ContactStateEnum state;
             private List<String> interests;
 
@@ -140,7 +141,7 @@ public class MentorPostResponse {
                 this.name = notConnectedRegisterUser.getMenteeUser().getFirstName() + " " + notConnectedRegisterUser.getMenteeUser().getLastName();
                 this.country = notConnectedRegisterUser.getMenteeUser().getCountry();
                 this.role = notConnectedRegisterUser.getMenteeUser().getRole();
-                this.age = notConnectedRegisterUser.getMenteeUser().getAge();
+                this.birthDate = notConnectedRegisterUser.getMenteeUser().getBirthDate();
                 this.state = notConnectedRegisterUser.getState();
                 this.interests = userInterests.stream()
                         .map(userInterest -> userInterest.getInterest().getCategory())

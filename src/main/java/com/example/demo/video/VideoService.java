@@ -1,7 +1,9 @@
 package com.example.demo.video;
 
+import com.example.demo.config.errors.exception.Exception401;
 import com.example.demo.config.errors.exception.Exception404;
 import com.example.demo.interest.Interest;
+import com.example.demo.user.Role;
 import com.example.demo.user.User;
 import com.example.demo.user.userInterest.UserInterest;
 import com.example.demo.user.userInterest.UserInterestJPARepository;
@@ -13,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -52,6 +55,8 @@ public class VideoService {
                 }
         ).collect(Collectors.toList());
 
+        Collections.shuffle(videoDTOList);
+
         List<VideoResponse.VideoPageResponseDTO> videoPageResponseDTOS = new ArrayList<>();
         List<VideoResponse.VideoAllResponseDTO> tempGroup = new ArrayList<>();
         int page = 0;
@@ -88,7 +93,12 @@ public class VideoService {
         VideoInterest videoInterest = videoInterestJPARepository.findVideoInterestByVideoId(video.getId());
         List<Subtitle> videoSubtitles = subtitleJPARepository.findSubtitleByVideoId(video.getId());
 
-        VideoResponse.VideoResponseDTO videoResponseDTO = new VideoResponse.VideoResponseDTO(video, videoInterest, videoSubtitles);
+        List<Video> recommendVideo = videoJPARepository.findThreeRandomVideo(id);
+        List<VideoInterest> recommendVideoInterest = recommendVideo.stream()
+                .map(rv -> videoInterestJPARepository.findVideoInterestByVideoId(rv.getId()))
+                .collect(Collectors.toList());
+
+        VideoResponse.VideoResponseDTO videoResponseDTO = new VideoResponse.VideoResponseDTO(video, videoInterest, videoSubtitles,recommendVideo,recommendVideoInterest);
 
         return videoResponseDTO;
     }
@@ -140,5 +150,41 @@ public class VideoService {
                 }
         ).collect(Collectors.toList());
         return videoDTOList;
+    }
+
+    public void createVideo(VideoRequest.CreateDTO createDTO, User user) {
+        if ( user.getRole() != Role.ADMIN ) {
+            throw new Exception401("관리자만 가능합니다.");
+        }
+
+        Video video = Video.builder()
+                .videoUrl(createDTO.getVideoUrl())
+                .videoEndTime(createDTO.getVideoEndTime())
+                .videoStartTime(createDTO.getVideoStartTime())
+                .videoThumbnailUrl(createDTO.getVideoThumbnailUrl())
+                .videoTitleEng(createDTO.getVideoTitleEng())
+                .videoTitleKorean(createDTO.getVideoTitleKorean())
+                .build();
+
+        VideoInterest videoInterest = VideoInterest.builder()
+                .video(video)
+                .interest(createDTO.getVideoInterest())
+                .build();
+
+        videoJPARepository.save(video);
+        videoInterestJPARepository.save(videoInterest);
+
+        for (VideoRequest.CreateDTO.SubtitleCreateDTO subtitleDTO : createDTO.getSubtitleCreateDTOList()) {
+            Subtitle subtitle = Subtitle.builder()
+                    .video(video)
+                    .korStartTime(subtitleDTO.getKorStartTime())
+                    .korEndTime(subtitleDTO.getKorEndTime())
+                    .korSubtitleContent(subtitleDTO.getKorSubtitleContent())
+                    .engStartTime(subtitleDTO.getEngStartTime())
+                    .engEndTime(subtitleDTO.getEngEndTime())
+                    .engSubtitleContent(subtitleDTO.getEngSubtitleContent())
+                    .build();
+            subtitleJPARepository.save(subtitle);
+        }
     }
 }
