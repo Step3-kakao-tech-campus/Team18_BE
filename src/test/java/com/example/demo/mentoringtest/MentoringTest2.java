@@ -1,7 +1,6 @@
 package com.example.demo.mentoringtest;
 
 import com.example.demo.RestDoc;
-import com.example.demo.config.errors.exception.Exception400;
 import com.example.demo.mentoring.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;

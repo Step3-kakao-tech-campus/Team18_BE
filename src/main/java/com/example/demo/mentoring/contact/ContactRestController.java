@@ -1,9 +1,7 @@
 package com.example.demo.mentoring.contact;
 
 import com.example.demo.config.auth.CustomUserDetails;
-import com.example.demo.config.utils.ApiUtils;
-import com.example.demo.mentoring.done.DoneService;
-import com.example.demo.user.Role;
+import com.example.demo.config.utils.ApiResponseBuilder;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -25,10 +23,10 @@ public class ContactRestController {
     public ResponseEntity<?> findAllContacts(@AuthenticationPrincipal CustomUserDetails userDetails) {
         if ( userDetails.getUser().getRole() == Role.MENTEE ) {
             List<ContactResponse.ContactDashBoardMenteeDTO> responseDTO = contactService.findAllByMentee(userDetails.getUser());
-            return ResponseEntity.ok(ApiUtils.success(responseDTO));
+            return ResponseEntity.ok(ApiResponseBuilder.success(responseDTO));
         }
         List<ContactResponse.ContactDashboardMentorDTO> responseDTO = contactService.findAllByMentor(userDetails.getUser());
-        return ResponseEntity.ok(ApiUtils.success(responseDTO));
+        return ResponseEntity.ok(ApiResponseBuilder.success(responseDTO));
     }
 
     
@@ -42,11 +40,11 @@ public class ContactRestController {
 
         if ( role == Role.MENTEE ) {
             ContactResponse.PostCountDTO responseDTO = contactService.postCountsMyMentee(userDetails.getUser().getId());
-            return ResponseEntity.ok(ApiUtils.success(responseDTO));
+            return ResponseEntity.ok(ApiResponseBuilder.success(responseDTO));
         }
 
         ContactResponse.PostCountDTO responseDTO = contactService.postCountsByMentor(userDetails.getUser().getId());
-        return ResponseEntity.ok(ApiUtils.success(responseDTO));
+        return ResponseEntity.ok(ApiResponseBuilder.success(responseDTO));
     }
 
     @PostMapping(value = "/contacts/accept")
@@ -54,7 +52,7 @@ public class ContactRestController {
     public ResponseEntity<?> acceptContact(@RequestBody @Valid ContactRequest.ContactAcceptDTO contactAcceptDTO, Error errors, @AuthenticationPrincipal CustomUserDetails userDetails) {
         // TO-DO : 멘토링 신청 수락 API 로직 만들기
         contactService.acceptContact(contactAcceptDTO, userDetails.getUser());
-        return ResponseEntity.status(HttpStatus.OK).body(ApiUtils.successWithNoContent());
+        return ResponseEntity.status(HttpStatus.OK).body(ApiResponseBuilder.successWithNoContent());
     }
 
     @PatchMapping(value = "/contacts/refuse")
@@ -62,7 +60,7 @@ public class ContactRestController {
     public ResponseEntity<?> refuseContact(@RequestBody @Valid ContactRequest.ContactRefuseDTO contactRefuseDTO, Error errors, @AuthenticationPrincipal CustomUserDetails userDetails) {
         // TO-DO : 멘토링 신청 거절 API 로직 만들기
         contactService.refuseContact(contactRefuseDTO, userDetails.getUser());
-        return ResponseEntity.status(HttpStatus.OK).body(ApiUtils.successWithNoContent());
+        return ResponseEntity.status(HttpStatus.OK).body(ApiResponseBuilder.successWithNoContent());
     }
 
     @PostMapping(value = "/contacts")
@@ -70,7 +68,7 @@ public class ContactRestController {
     public ResponseEntity<?> createContact(@RequestBody @Valid ContactRequest.ContactCreateDTO contactCreateDTO, Error errors, @AuthenticationPrincipal CustomUserDetails userDetails) {
         // TO-DO : 멘토링 신청 API 로직 만들기
         contactService.createContact(contactCreateDTO, userDetails.getUser());
-        return ResponseEntity.status(HttpStatus.OK).body(ApiUtils.successWithNoContent());
+        return ResponseEntity.status(HttpStatus.OK).body(ApiResponseBuilder.successWithNoContent());
     }
 
     @DeleteMapping(value = "/contacts")
@@ -78,7 +76,7 @@ public class ContactRestController {
     public ResponseEntity<?> deleteContact(@RequestHeader("contactId") List<Integer> contactId, Error errors, @AuthenticationPrincipal CustomUserDetails userDetails) {
         // TO-DO : 멘토링 신청 취소 API 로직 만들기
         contactService.deleteContact(contactId, userDetails.getUser());
-        return ResponseEntity.status(HttpStatus.OK).body(ApiUtils.successWithNoContent());
+        return ResponseEntity.status(HttpStatus.OK).body(ApiResponseBuilder.successWithNoContent());
     }
 
 }
