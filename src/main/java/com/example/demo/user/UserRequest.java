@@ -6,6 +6,8 @@ import lombok.Setter;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 public class UserRequest {
@@ -40,8 +42,8 @@ public class UserRequest {
 
         private String introduction;
 
-        @NotNull(message = "나이를 입력해주세요.")
-        private int age;
+        @NotNull(message = "생년월일을 입력해주세요.")
+        private LocalDate birthdate;
 
         @NotNull(message = "연락처를 입력해주세요.")
         private String phone;

@@ -15,6 +15,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
+import java.time.Period;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -39,13 +41,18 @@ public class UserService {
 
     @Transactional
     public void signup(UserRequest.SignUpDTO requestDTO) {
+        // requestDTO 의 Birthdate -> age 로 변경해주는 코드
+        // 나이 계산하기
+        LocalDate currentDate = LocalDate.now(); // 현재 날짜 가져오기
+        int age = Period.between(requestDTO.getBirthdate(), currentDate).getYears(); // 현재 날짜와 생일을 비교해서 나이 계산
+
         User user = User.builder().firstName(requestDTO.getFirstName())
                         .lastName(requestDTO.getLastName())
                         .email(requestDTO.getEmail())
                         .password(passwordEncoder.encode(requestDTO.getPassword()))
                         .country(requestDTO.getCountry())
                         .introduction(requestDTO.getIntroduction())
-                        .age(requestDTO.getAge())
+                        .age(age)
                         .phone(requestDTO.getPhone())
                         .profileImage(requestDTO.getProfileImage())
                         .role(requestDTO.getRole())
