@@ -2,6 +2,7 @@ package com.example.demo;
 
 import com.example.demo.interest.Interest;
 import com.example.demo.interest.InterestJPARepository;
+import com.example.demo.user.Role;
 import com.example.demo.user.User;
 import com.example.demo.user.UserJPARepository;
 import com.example.demo.user.userInterest.UserInterest;
@@ -14,6 +15,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -53,7 +55,7 @@ public class VideoTest extends RestDoc{
                 .firstName("Jin")
                 .lastName("Seung")
                 .country("Korea")
-                .age(21)
+                .birthDate(LocalDate.of(1990, 1, 1))
                 .role(Role.MENTOR)
                 .phone("010-0000-0000")
                 .build();
@@ -296,7 +298,7 @@ public class VideoTest extends RestDoc{
                 .firstName("Jin")
                 .lastName("Seung")
                 .country("Korea")
-                .age(21)
+                .birthDate(LocalDate.of(1990, 1, 1))
                 .role(Role.MENTOR)
                 .phone("010-0000-0000")
                 .build();
@@ -328,7 +330,7 @@ public class VideoTest extends RestDoc{
                 .firstName("Jin")
                 .lastName("Seung")
                 .country("Korea")
-                .age(21)
+                .birthDate(LocalDate.of(1990, 1, 1))
                 .role(Role.ADMIN)
                 .phone("010-0000-0000")
                 .build();
