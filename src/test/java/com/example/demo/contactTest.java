@@ -18,6 +18,7 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
@@ -242,11 +243,12 @@ public class contactTest extends RestDoc {
     @DisplayName("멘티 : 신청 취소 테스트 코드")
     void deleteTest() throws Exception {
         // given
+        List<Integer> connectionIds = Arrays.asList(1, 2); // 실제로 취소할 연결 ID 목록
 
         // when
         ResultActions result = mvc.perform(
                 MockMvcRequestBuilders.delete("/contacts")
-                        .header("contactId", 1,2)
+                        .param("connectionId", connectionIds.stream().map(String::valueOf).toArray(String[]::new)) // 정수 목록을 문자열 배열로 변환
                         .contentType(MediaType.APPLICATION_JSON)
         );
         String responseBody = result.andReturn().getResponse().getContentAsString();
