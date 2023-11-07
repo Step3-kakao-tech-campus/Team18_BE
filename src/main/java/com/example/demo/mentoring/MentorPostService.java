@@ -30,17 +30,17 @@ public class MentorPostService {
 
     //mentorPost생성
     @Transactional
-    public void createMentorPost(MentorPostRequest.CreateDTO createDTO, User writer) {
+    public void createMentorPost(MentorPostRequest.CreateMentorPostDTO createMentorPostDTO, User writer) {
         if ( writer.getRole() == Role.MENTEE ) {
             throw new Exception401("해당 사용자는 멘티입니다.");
         }
 
         //글자수 확인
-        if(createDTO.getContent().length() > 300){
+        if(createMentorPostDTO.getContent().length() > 300){
             throw new Exception404("글자수가 300자를 넘어갑니다.");
         }
 
-        MentorPost mentorPost = new MentorPost( writer, createDTO.getTitle(), createDTO.getContent());
+        MentorPost mentorPost = new MentorPost( writer, createMentorPostDTO.getTitle(), createMentorPostDTO.getContent());
 
         try {
             mentorPostJPARepository.save(mentorPost);
@@ -87,19 +87,19 @@ public class MentorPostService {
         return mentorPostDTO;
     }
     @Transactional
-    public void updateMentorPost(MentorPostRequest.CreateDTO createDTO, int id, User writer) {
+    public void updateMentorPost(MentorPostRequest.CreateMentorPostDTO createMentorPostDTO, int id, User writer) {
         isMentor(writer);
 
         MentorPost mentorPost = mentorPostJPARepository.findById(id).
                 orElseThrow(() -> new Exception404("해당 글이 존재하지 않습니다."));
 
         //글자수 확인
-        if(createDTO.getContent().length() > 300){
+        if(createMentorPostDTO.getContent().length() > 300){
             throw new Exception404("글자수가 300자를 넘어갑니다.");
         }
 
         try {
-            mentorPost.update(createDTO.getTitle(), createDTO.getContent());
+            mentorPost.update(createMentorPostDTO.getTitle(), createMentorPostDTO.getContent());
         } catch (Exception e) {
             throw new Exception500("unknown server error");
         }
