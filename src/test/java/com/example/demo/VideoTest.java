@@ -1,9 +1,7 @@
 package com.example.demo;
 
-import com.example.demo.config.errors.exception.Exception404;
 import com.example.demo.interest.Interest;
 import com.example.demo.interest.InterestJPARepository;
-import com.example.demo.mentoring.MentorPost;
 import com.example.demo.user.Role;
 import com.example.demo.user.User;
 import com.example.demo.user.UserJPARepository;
@@ -11,13 +9,14 @@ import com.example.demo.user.userInterest.UserInterest;
 import com.example.demo.user.userInterest.UserInterestJPARepository;
 import com.example.demo.video.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 @SpringBootTest
@@ -56,7 +55,7 @@ public class VideoTest extends RestDoc{
                 .firstName("Jin")
                 .lastName("Seung")
                 .country("Korea")
-                .age(21)
+                .birthDate(LocalDate.of(1990, 1, 1))
                 .role(Role.MENTOR)
                 .phone("010-0000-0000")
                 .build();
@@ -299,7 +298,7 @@ public class VideoTest extends RestDoc{
                 .firstName("Jin")
                 .lastName("Seung")
                 .country("Korea")
-                .age(21)
+                .birthDate(LocalDate.of(1990, 1, 1))
                 .role(Role.MENTOR)
                 .phone("010-0000-0000")
                 .build();
@@ -323,9 +322,73 @@ public class VideoTest extends RestDoc{
     }
 
     @Test
+    @Order(2)
+    void videoPostTest() throws Exception{
+        User user3 = User.builder()
+                .email("anjfffffffffdal64@gmail.com")
+                .password("asdf1234!")
+                .firstName("Jin")
+                .lastName("Seung")
+                .country("Korea")
+                .birthDate(LocalDate.of(1990, 1, 1))
+                .role(Role.ADMIN)
+                .phone("010-0000-0000")
+                .build();
+
+        Interest interest4 = Interest.builder()
+                .category("test_Interest_4")
+                .build();
+
+        interestJPARepository.save(interest4);
+
+        VideoRequest.CreateDTO createDTO = getCreateDTO();
+        createDTO.setVideoInterest(interest4);
+
+        videoService.createVideo(createDTO, user3);
+    }
+
+    private static VideoRequest.CreateDTO getCreateDTO() {
+        VideoRequest.CreateDTO createDTO = new VideoRequest.CreateDTO();
+        List<VideoRequest.CreateDTO.SubtitleCreateDTO> subtitleCreateDTOs = getSubtitleCreateDTOS();
+
+        createDTO.setVideoUrl("www.naver.com");
+        createDTO.setVideoStartTime("0");
+        createDTO.setVideoEndTime("15");
+        createDTO.setVideoTitleKorean("네이버");
+        createDTO.setVideoTitleEng("naver");
+        createDTO.setVideoThumbnailUrl("alsjflsdjfsakl.com");
+        createDTO.setSubtitleCreateDTOList(subtitleCreateDTOs);
+        return createDTO;
+    }
+
+    private static List<VideoRequest.CreateDTO.SubtitleCreateDTO> getSubtitleCreateDTOS() {
+        VideoRequest.CreateDTO.SubtitleCreateDTO subDTO1 = new VideoRequest.CreateDTO.SubtitleCreateDTO();
+        VideoRequest.CreateDTO.SubtitleCreateDTO subDTO2 = new VideoRequest.CreateDTO.SubtitleCreateDTO();
+
+        subDTO1.setKorStartTime("1");
+        subDTO1.setKorEndTime("3");
+        subDTO1.setKorSubtitleContent("한글");
+        subDTO1.setEngStartTime("1");
+        subDTO1.setEngEndTime("4");
+        subDTO1.setEngSubtitleContent("sdfasdfsd");
+
+        subDTO2.setKorStartTime("1");
+        subDTO2.setKorEndTime("3");
+        subDTO2.setKorSubtitleContent("한글");
+        subDTO2.setEngStartTime("1");
+        subDTO2.setEngEndTime("4");
+        subDTO2.setEngSubtitleContent("sdfasdfsd");
+
+        List<VideoRequest.CreateDTO.SubtitleCreateDTO> subtitleCreateDTOs = new ArrayList<>();
+        subtitleCreateDTOs.add(subDTO1);
+        subtitleCreateDTOs.add(subDTO2);
+        return subtitleCreateDTOs;
+    }
+
+    @Test
     @Order(3)
     void findOmTest() throws Exception {
-        List<VideoResponse.VideoAllResponseDTO> videoFind = videoService.findHistoryVideo(0,2);
+        List<VideoResponse.VideoPageResponseDTO> videoFind = videoService.findAllVideo(0);
 
         String responseBody = om.writeValueAsString(videoFind);
 

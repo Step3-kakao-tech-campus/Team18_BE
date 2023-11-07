@@ -29,4 +29,7 @@ public interface VideoJPARepository extends JpaRepository<Video, Integer> {
 
     @Query(value = "select v from Video v inner join VideoInterest vi on v.id = vi.video.id where vi.interest.id = :categoryId")
     Page<Video> findByCategoryId(@Param("categoryId") int id, Pageable pageable);
+
+    @Query(value = "select * from videos v where id != :videoId order by RAND() LIMIT 3", nativeQuery = true)
+    List<Video> findThreeRandomVideo(@Param("videoId")int id);
 }

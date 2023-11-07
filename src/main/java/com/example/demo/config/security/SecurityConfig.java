@@ -76,7 +76,7 @@ public class SecurityConfig {
 
         // 11. 인증, 권한 필터 설정
         httpSecurity.authorizeRequests(
-                authorize -> authorize.antMatchers("/profiles/**").authenticated()
+                authorize -> authorize.antMatchers("/profiles", "/users/passwordcheck").authenticated()
                         .antMatchers("/admin/**").access("hasRole('ADMIN')")
                         .anyRequest().permitAll()
         );
