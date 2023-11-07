@@ -129,7 +129,7 @@ public class MentoringTest2 extends RestDoc {
     }
 
     @Test
-    @WithUserDetails("john@example.com")
+    @WithUserDetails("test1@example.com")
     @DisplayName("게시글 수정 테스트")
     void MentoringTestDetails() throws Exception {
         // given
@@ -169,7 +169,7 @@ public class MentoringTest2 extends RestDoc {
     }
 
     @Test
-    @WithUserDetails("john@example.com")
+    @WithUserDetails("test1@example.com")
     @DisplayName("게시글 삭제 테스트 코드")
     void MentoringTestDelete() throws Exception {
         // given
@@ -193,7 +193,7 @@ public class MentoringTest2 extends RestDoc {
     }
 
     @Test
-    @WithUserDetails("john@example.com")
+    @WithUserDetails("test1@example.com")
     @DisplayName("게시글 Done 테스트 코드")
     void MentoringTestDone() throws Exception {
         // given
@@ -229,7 +229,7 @@ public class MentoringTest2 extends RestDoc {
     }
 
     @Test
-    @WithUserDetails("admin@example.com")
+    @WithUserDetails("test3@example.com")
     @DisplayName("멘티가 게시글을 수정하려고 하는 경우 테스트")
     void MentoringTest2() throws Exception {
         int pid = 1;
