@@ -1,6 +1,7 @@
 package com.example.demo;
 
 import com.example.demo.config.errors.exception.Exception404;
+import com.example.demo.user.Role;
 import com.example.demo.user.User;
 import com.example.demo.user.UserJPARepository;
 import org.assertj.core.api.Assertions;
@@ -9,6 +10,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
+
+import java.time.LocalDate;
 
 @SpringBootTest
 @ActiveProfiles("test")
@@ -27,7 +30,7 @@ public class AccountTest {
                 .firstName("Jin")
                 .lastName("Seung")
                 .country("Korea")
-                .age(21)
+                .birthDate(LocalDate.of(1990, 1, 1))
                 .role(Role.MENTOR)
                 .phone("010-0000-0000")
                 .build();
