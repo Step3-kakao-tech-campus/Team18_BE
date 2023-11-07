@@ -9,12 +9,14 @@ SET REFERENTIAL_INTEGRITY TRUE;
 
 -- user Table
 INSERT INTO users (created_at, first_name, last_name, email, password, country, introduction, birth_date, profile_image, role, phone) VALUES
- (NOW(), 'John', 'Doe', 'john@example.com', '{bcrypt}$2a$10$...', 'USA', 'Hello, I am John.', '1998-01-01', 'profile.jpg', 'MENTOR', '010-0000-0000'),
- (NOW(), 'Alice', 'Smith', 'alice.smith@example.com', '{bcrypt}$2a$10$...', 'Canada', 'I love painting.', '1998-01-01', 'image2.jpg', 'MENTOR', '010-0000-0000'),
- (NOW(), 'Admin', 'Admin', 'admin@example.com', '{bcrypt}$2a$10$...', 'USA', 'I am an admin user.', '1988-01-01', 'admin.jpg', 'MENTEE', '010-0000-0000'),
- (NOW(), 'Jane', 'Smith', 'jane@example.com', '{bcrypt}$2a$10$...', 'Canada', 'I love coding.', '1993-01-01', 'profile.jpg', 'MENTEE', '010-0000-0000'),
- (NOW(), 'Admin', 'Adminson', 'admin22222@example.com', '{bcrypt}$2a$10$...', 'USA', 'I am the admin.', '1988-01-01', 'admin.jpg', 'MENTEE', '010-0000-0000'),
- (NOW(), 'Adminnnn', 'Adminsonnnnn', 'admin33333@example.com', '{bcrypt}$2a$10$...', 'USA', 'I am the admin.', '1988-01-01', 'admin.jpg', 'MENTEE', '010-0000-0000');
+ (NOW(), 'John', 'Doe', 'test1@example.com', '{bcrypt}$2a$10$...', 'USA', 'Hello, I am John.', '1998-01-01', 'profile.jpg', 'MENTOR', '010-0000-0000'),
+ (NOW(), 'Alice', 'Smith', 'test2@example.com', '{bcrypt}$2a$10$...', 'Canada', 'I love painting.', '1998-01-01', 'image2.jpg', 'MENTOR', '010-0000-0000'),
+ (NOW(), 'Admin', 'Admin', 'test3@example.com', '{bcrypt}$2a$10$...', 'USA', 'I am an admin user.', '1988-01-01', 'admin.jpg', 'MENTEE', '010-0000-0000'),
+ (NOW(), 'Jane', 'Smith', 'test4@example.com', '{bcrypt}$2a$10$...', 'Canada', 'I love coding.', '1993-01-01', 'profile.jpg', 'MENTEE', '010-0000-0000'),
+ (NOW(), 'Adccczczmin', 'qwdasd', 'test5@example.com', '{bcrypt}$2a$10$...', 'USA', 'I am the qwdad.', '1988-01-01', 'admin.jpg', 'MENTEE', '010-0000-0000'),
+ (NOW(), 'adadad', 'adaddddd', 'test6@example.com', '{bcrypt}$2a$10$...', 'USA', 'I am the adadad.', '1988-01-01', 'admin.jpg', 'MENTEE', '010-0000-0000'),
+(NOW(), 'admin', 'admin', 'admin@example.com', '{bcrypt}$2a$10$...', 'USA', 'I am the admin.', '1988-01-01', 'admin.jpg', 'ADMIN', '010-0000-0000');
+
 -- interst Table
 INSERT INTO interests (created_at, category) VALUES
   (NOW(), 'IDOL'),
