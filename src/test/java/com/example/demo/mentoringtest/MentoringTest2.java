@@ -136,7 +136,7 @@ public class MentoringTest2 extends RestDoc {
         int pid = 1;
 
         // requestDTO : title, content
-        MentorPostRequest.CreateDTO requestDTO = new MentorPostRequest.CreateDTO();
+        MentorPostRequest.CreateMentorPostDTO requestDTO = new MentorPostRequest.CreateMentorPostDTO();
         requestDTO.setTitle("바뀐 제목111");
         requestDTO.setContent("바뀐 내용111");
 
@@ -235,7 +235,7 @@ public class MentoringTest2 extends RestDoc {
         int pid = 1;
 
         // requestDTO : title, content
-        MentorPostRequest.CreateDTO requestDTO = new MentorPostRequest.CreateDTO();
+        MentorPostRequest.CreateMentorPostDTO requestDTO = new MentorPostRequest.CreateMentorPostDTO();
         requestDTO.setTitle("바뀐 제목111");
         requestDTO.setContent("바뀐 내용111");
 

@@ -119,7 +119,7 @@ public class ContactService {
         for ( ContactRequest.ContactAcceptDTO.AcceptMenteeDTO acceptMenteeDTO : contactAcceptDTO.getMentees() ) {
 
             // notConnectedRegisterUser 의 state 바꾸기 -> ACCEPT
-            NotConnectedRegisterUser notConnectedRegisterUser = contactJPARepository.findById(acceptMenteeDTO.getMenteeId())
+            NotConnectedRegisterUser notConnectedRegisterUser = contactJPARepository.findById(acceptMenteeDTO.getConnectionId())
                     .orElseThrow(() -> new Exception404("해당 사용자를 찾을 수 없습니다."));
 
             notConnectedRegisterUser.updateStatus(ContactStateEnum.ACCEPT);
@@ -143,7 +143,7 @@ public class ContactService {
         // notConnectedRegisterUser 의 state 바꾸기 -> REFUSE
         for ( ContactRequest.ContactRefuseDTO.RefuseMenteeDTO refuseMenteeDTO : contactRefuseDTO.getMentees() ) {
 
-            NotConnectedRegisterUser notConnectedRegisterUser = contactJPARepository.findById(refuseMenteeDTO.getMenteeId())
+            NotConnectedRegisterUser notConnectedRegisterUser = contactJPARepository.findById(refuseMenteeDTO.getConnectionId())
                     .orElseThrow(() -> new Exception404("해당 사용자를 찾을 수 없습니다."));
 
             notConnectedRegisterUser.updateStatus(ContactStateEnum.REFUSE);

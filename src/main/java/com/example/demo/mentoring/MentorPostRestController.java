@@ -20,7 +20,7 @@ public class MentorPostRestController {
 
     @PostMapping(value = "/mentorings")
     @Operation(summary = "mentorpost 생성")
-    public ResponseEntity<?> createMentorPost(@RequestBody @Valid MentorPostRequest.CreateDTO requestDTO, Errors errors, @AuthenticationPrincipal CustomUserDetails userDetails) {
+    public ResponseEntity<?> createMentorPost(@RequestBody @Valid MentorPostRequest.CreateMentorPostDTO requestDTO, Errors errors, @AuthenticationPrincipal CustomUserDetails userDetails) {
         mentorPostService.createMentorPost(requestDTO, userDetails.getUser());
         return ResponseEntity.status(HttpStatus.OK).body(ApiResponseBuilder.successWithNoContent());
     }
@@ -45,7 +45,7 @@ public class MentorPostRestController {
 
     @PutMapping(value = "/mentorings/{id}")
     @Operation(summary = "mentorpost 수정 요청")
-    public ResponseEntity<?> updateMentorPost(@PathVariable int id, @RequestBody @Valid MentorPostRequest.CreateDTO requestDTO, Errors errors, @AuthenticationPrincipal CustomUserDetails userDetails) {
+    public ResponseEntity<?> updateMentorPost(@PathVariable int id, @RequestBody @Valid MentorPostRequest.CreateMentorPostDTO requestDTO, Errors errors, @AuthenticationPrincipal CustomUserDetails userDetails) {
         mentorPostService.updateMentorPost(requestDTO, id, userDetails.getUser());
         return ResponseEntity.status(HttpStatus.OK).body(ApiResponseBuilder.successWithNoContent());
     }
