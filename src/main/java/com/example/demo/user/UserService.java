@@ -32,12 +32,12 @@ import java.util.stream.Collectors;
 @Service
 public class UserService {
 
+    private final S3Uploader s3Uploader;
     private final PasswordEncoder passwordEncoder;
     private final UserJPARepository userJPARepository;
     private final RefreshTokenJPARepository refreshTokenJPARepository;
     private final InterestJPARepository interestJPARepository;
     private final UserInterestJPARepository userInterestJPARepository;
-    private final S3Uploader s3Uploader;
 
     public void emailCheck(UserRequest.EmailCheckDTO requestDTO) {
         Optional<User> optionalUser = userJPARepository.findByEmail(requestDTO.getEmail());
