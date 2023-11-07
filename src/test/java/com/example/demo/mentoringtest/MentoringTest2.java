@@ -42,7 +42,7 @@ public class MentoringTest2 extends RestDoc {
 
         // console
         String responseBody = resultActions.andReturn().getResponse().getContentAsString();
-        System.out.println("테스트 : "+responseBody);
+        System.out.println("멘토링 화면 조회 테스트 : "+responseBody);
 
         // verify
         resultActions.andExpect(jsonPath("$.status").value("success"));
@@ -62,7 +62,7 @@ public class MentoringTest2 extends RestDoc {
 
         // console
         String responseBody = resultActions.andReturn().getResponse().getContentAsString();
-        System.out.println("테스트 : "+responseBody);
+        System.out.println("카테고리 멘토링 화면 조회 테스트 : "+responseBody);
 
         // verify
         resultActions.andExpect(jsonPath("$.status").value("success"));
@@ -157,7 +157,7 @@ public class MentoringTest2 extends RestDoc {
 
         // pid 에 해당하는 게시글 조회
         MentorPost mentorPost = mentorPostJPARepostiory.findById(pid).orElseThrow(
-                () -> new Exception400("해당 게시글이 없습니다."));
+                () -> new Exception400(null, "해당 게시글이 없습니다."));
 
         // 데이터 확인
         System.out.println(mentorPost.getTitle());
@@ -219,7 +219,7 @@ public class MentoringTest2 extends RestDoc {
 
         // pid 에 해당하는 게시글 조회
         MentorPost mentorPost = mentorPostJPARepostiory.findById(pid).orElseThrow(
-                () -> new Exception400("해당 게시글이 없습니다."));
+                () -> new Exception400(null, "해당 게시글이 없습니다."));
 
         System.out.println(mentorPost.getState());
 
@@ -256,7 +256,7 @@ public class MentoringTest2 extends RestDoc {
 
         // pid 에 해당하는 게시글 조회
         MentorPost mentorPost = mentorPostJPARepostiory.findById(pid).orElseThrow(
-                () -> new Exception400("해당 게시글이 없습니다."));
+                () -> new Exception400(null, "해당 게시글이 없습니다."));
 
         // 데이터 확인
         System.out.println(mentorPost.getTitle());

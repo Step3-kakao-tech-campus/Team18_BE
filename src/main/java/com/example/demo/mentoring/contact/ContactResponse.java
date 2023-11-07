@@ -7,6 +7,7 @@ import com.example.demo.user.userInterest.UserInterest;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -67,7 +68,7 @@ public class ContactResponse {
         private String profileImage;
         private String name;
         private String country;
-        private int age;
+        private LocalDate birthDate;
         private Role role;
         private List<String> favorites;
 
@@ -76,7 +77,7 @@ public class ContactResponse {
             this.profileImage = mentor.getProfileImage();
             this.name = mentor.getFirstName() + " " + mentor.getLastName();
             this.country = mentor.getCountry();
-            this.age = mentor.getAge();
+            this.birthDate = mentor.getBirthDate();
             this.role = mentor.getRole();
             this.favorites = userInterests.stream()
                     .map(userInterest -> userInterest.getInterest().getCategory())
@@ -89,7 +90,7 @@ public class ContactResponse {
         private String profileImage;
         private String name;
         private String country;
-        private int age;
+        private LocalDate birthDate;
         private Role role;
         private ContactStateEnum state;
         private List<String> favorites; // 고민할 부분 : 유저의 favorite List 를 어떻게 가져올 것 인가?
@@ -106,7 +107,7 @@ public class ContactResponse {
             this.profileImage = notConnectedRegisterUser.getMenteeUser().getProfileImage();
             this.name = notConnectedRegisterUser.getMenteeUser().getFirstName() + " " + notConnectedRegisterUser.getMenteeUser().getLastName();
             this.country = notConnectedRegisterUser.getMenteeUser().getCountry();
-            this.age = notConnectedRegisterUser.getMenteeUser().getAge();
+            this.birthDate = notConnectedRegisterUser.getMenteeUser().getBirthDate();
             this.role = notConnectedRegisterUser.getMenteeUser().getRole();
             this.state = notConnectedRegisterUser.getState();
             this.favorites = userInterests.stream()
