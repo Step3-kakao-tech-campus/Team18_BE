@@ -38,7 +38,7 @@ public class VideoRestController {
     @GetMapping("/videos/{id}")
     @Operation(summary = "영상 개인페이지 요청")
     public ResponseEntity<?> getVideoId(@PathVariable int id, @AuthenticationPrincipal CustomUserDetails userDetails) {
-        VideoResponse.VideoResponseDTO responseDTO = videoService.findVideo(id, userDetails.getUser());
+        VideoResponse.VideoResponseDTO responseDTO = videoService.findVideo(id, userDetails);
         return ResponseEntity.ok(ApiResponseBuilder.success(responseDTO));
     }
 

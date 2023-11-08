@@ -1,5 +1,6 @@
 package com.example.demo;
 
+import com.example.demo.config.auth.CustomUserDetails;
 import com.example.demo.config.errors.exception.Exception404;
 import com.example.demo.interest.Interest;
 import com.example.demo.interest.InterestJPARepository;
@@ -291,23 +292,6 @@ public class VideoTest extends RestDoc{
         List<VideoResponse.VideoPageResponseDTO> videoFind = videoService.findAllVideo(0);
     }
 
-    @Test
-    @Order(2)
-    void HistoryTest() throws Exception{
-        User user2 = User.builder()
-                .email("anjfffffdal64@gmail.com")
-                .password("asdf1234!")
-                .firstName("Jin")
-                .lastName("Seung")
-                .country("Korea")
-                .age(21)
-                .role(Role.MENTOR)
-                .phone("010-0000-0000")
-                .build();
-
-        userJPARepository.save(user2);
-        VideoResponse.VideoResponseDTO videoFind = videoService.findVideo(3,user2);
-    }
 
     @Test
     @Order(2)

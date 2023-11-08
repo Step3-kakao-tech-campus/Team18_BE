@@ -1,5 +1,6 @@
 package com.example.demo.video;
 
+import com.example.demo.config.auth.CustomUserDetails;
 import com.example.demo.config.errors.exception.Exception401;
 import com.example.demo.config.errors.exception.Exception404;
 import com.example.demo.interest.Interest;
@@ -17,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Transactional
@@ -79,7 +81,12 @@ public class VideoService {
         return videoPageResponseDTOS;
     }
 
-    public VideoResponse.VideoResponseDTO findVideo(int id, User user) {
+    public VideoResponse.VideoResponseDTO findVideo(int id, CustomUserDetails customUserDetails) {
+
+        User user = Optional.ofNullable(customUserDetails)
+                .map(CustomUserDetails::getUser)
+                .orElse(null);
+
         Video video = videoJPARepository.findById(id)
                 .orElseThrow(() -> new Exception404("해당 영상이 존재하지 않습니다.\n" + "id : " + id));
 
