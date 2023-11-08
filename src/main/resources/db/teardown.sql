@@ -5,6 +5,9 @@ TRUNCATE TABLE mentor_posts;
 TRUNCATE TABLE user_interests;
 TRUNCATE TABLE not_connected_register_users;
 TRUNCATE TABLE connected_users;
+TRUNCATE TABLE videos;
+TRUNCATE TABLE video_interests;
+TRUNCATE TABLE subtitles;
 SET REFERENTIAL_INTEGRITY TRUE;
 
 -- user Table
