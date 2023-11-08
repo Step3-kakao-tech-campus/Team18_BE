@@ -65,11 +65,6 @@ public class VideoService {
         Page<Video> pageContent = (categoryId == 0) ?
                 videoJPARepository.findAll(pageable) :
                 videoJPARepository.findByCategoryId(categoryId, pageable);
-
-        if (pageContent.getTotalPages() == 0) {
-            throw new Exception404("해당 영상들이 존재하지 않습니다");
-        }
-
         return pageContent;
     }
 
@@ -113,10 +108,6 @@ public class VideoService {
 
         Page<VideoHistory> pageContent = videoHistoryJPARepository.findHistoryVideo(id, pageable);
 
-        if(pageContent.getTotalPages() == 0){
-            throw new Exception404("해당 영상들이 존재하지 않습니다");
-        }
-
         // 각 Video에대해서 Interest 끌어오기
         List<VideoResponse.VideoAllResponseDTO> videoDTOList = pageContent.getContent().stream().map(
                 video -> {
@@ -133,19 +124,10 @@ public class VideoService {
         List<String> Interests = userInterests.stream()
                 .map(userInterest -> userInterest.getInterest().getCategory()).collect(Collectors.toList());
         Pageable pageable = PageRequest.of(0,4);
-        Page<Video> pageContent;
-        if(userInterests.size() == 0)
-        {
-            pageContent = videoJPARepository.findAll(pageable);
-        }
-        else
-        {
-            pageContent = videoJPARepository.findByVideoCategory(Interests ,pageable);
-        }
 
-        if(pageContent.getTotalPages() == 0){
-            throw new Exception404("해당 영상들이 존재하지 않습니다");
-        }
+        Page<Video> pageContent = userInterests.isEmpty()
+                ? videoJPARepository.findAll(pageable)
+                : videoJPARepository.findByVideoCategory(Interests, pageable);
 
         // 각 Video에대해서 Interest 끌어오기
         List<VideoResponse.VideoAllResponseDTO> videoDTOList = pageContent.getContent().stream().map(
@@ -157,6 +139,7 @@ public class VideoService {
         return videoDTOList;
     }
 
+    //백오피스용 관리자 영상 올리기
     public void createVideo(VideoRequest.CreateDTO createDTO, User user) {
         if ( user.getRole() != Role.ADMIN ) {
             throw new Exception401("관리자만 가능합니다.");

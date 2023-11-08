@@ -198,4 +198,22 @@ public class VideoTest extends RestDoc{
         resultActions.andExpect(jsonPath("$.status").value("error"));
     }
 
+    @Test
+    @WithUserDetails("test1@example.com")
+    @DisplayName("video 전체 조회 관심있는 영상")
+    void findIntestVideo() throws Exception {
+        // given
+
+        ResultActions resultActions = mvc.perform(
+                get("/videos/interest")
+        );
+
+        // console
+        String responseBody = resultActions.andReturn().getResponse().getContentAsString();
+        System.out.println("video 전체 조회 관심있는 영상 : "+responseBody);
+
+        // verify
+        resultActions.andExpect(jsonPath("$.status").value("success"));
+    }
+
 }
