@@ -32,11 +32,11 @@ public class VideoService {
     private final UserInterestJPARepository userInterestJPARepository;
     private final VideoHistoryJPARepository videoHistoryJPARepository;
 
-    private final int MAINVIDEOTOTAL = 8;
+    private final int MAINVIDEOTOTAL = 16;
     private final int MAINVIDEONUM = 4;
     private final int HISTORYVIDEONUM = 5;
 
-    public List<VideoResponse.VideoPageResponseDTO> findAllVideo(int page, int categoryId) {
+    public VideoResponse.VideoPageResponseDTO findAllVideo(int page, int categoryId) {
         Pageable pageable = PageRequest.of(page ,MAINVIDEOTOTAL);
 
         Page<Video> pageContent = getPageContentByCategoryId(categoryId, pageable);
@@ -49,42 +49,30 @@ public class VideoService {
                 }
         ).collect(Collectors.toList());
 
+        //랜덤으로 섞기
         Collections.shuffle(videoDTOList);
 
-        List<VideoResponse.VideoPageResponseDTO> videoPageResponseDTOS = IntStream.range(0, videoDTOList.size())
-                .boxed()
-                .collect(Collectors.groupingBy(index -> index / MAINVIDEONUM))
-                .entrySet()
-                .stream()
-                .map(entry -> {
-                    int pageNum = entry.getKey();
-                    List<VideoResponse.VideoAllResponseDTO> pageContents = entry.getValue()
-                            .stream()
-                            .map(videoDTOList::get)
-                            .collect(Collectors.toList());
-                    boolean isLastPage = (pageNum + 1) * MAINVIDEONUM >= videoDTOList.size();
-                    return new VideoResponse.VideoPageResponseDTO(pageNum, pageContents, isLastPage);
-                })
+        boolean isLastPage = pageContent.getNumberOfElements() < MAINVIDEOTOTAL;
+        List<VideoResponse.VideoAllResponseDTO> contents = videoDTOList.stream()
+                .limit(MAINVIDEONUM)
                 .collect(Collectors.toList());
+        VideoResponse.VideoPageResponseDTO videoPageResponseDTOs = new VideoResponse.VideoPageResponseDTO(page, contents, isLastPage);
 
-        return videoPageResponseDTOS;
+        return videoPageResponseDTOs;
     }
 
-    private Page<Video> getPageContentByCategoryId(int categoryId, Pageable pageable) {
-        if (categoryId == 0) {
-            Page<Video> pageContent = videoJPARepository.findAll(pageable);
-            if(pageContent.getTotalPages() == 0){
-                throw new Exception404("해당 영상들이 존재하지 않습니다");
-            }
-            return pageContent;
-        } else {
-            Page<Video> pageContent = videoJPARepository.findByCategoryId(categoryId, pageable);
-            if(pageContent.getTotalPages() == 0){
-                throw new Exception404("해당 영상들이 존재하지 않습니다");
-            }
-            return pageContent;
+    public Page<Video> getPageContentByCategoryId(int categoryId, Pageable pageable) throws Exception404 {
+        Page<Video> pageContent = (categoryId == 0) ?
+                videoJPARepository.findAll(pageable) :
+                videoJPARepository.findByCategoryId(categoryId, pageable);
+
+        if (pageContent.getTotalPages() == 0) {
+            throw new Exception404("해당 영상들이 존재하지 않습니다");
         }
+
+        return pageContent;
     }
+
 
     public VideoResponse.VideoResponseDTO findVideo(int id, CustomUserDetails customUserDetails) {
 
@@ -96,10 +84,17 @@ public class VideoService {
                 .orElseThrow(() -> new Exception404("해당 영상이 존재하지 않습니다.\n" + "id : " + id));
 
         video.addView();
+
         if(user != null)
         {
-            VideoHistory videoHistory = new VideoHistory(user, video);
-            videoHistoryJPARepository.save(videoHistory);
+            //최근 기록이 같은 영상일 경우 추가해서는 안됨.
+            Pageable recentfirstVideo = PageRequest.of(0, 1);
+            VideoHistory firstVideo = videoHistoryJPARepository.findHistoryVideo(user.getId(), recentfirstVideo).getContent().get(0);
+            if(firstVideo.getVideo().getId() != video.getId())
+            {
+                VideoHistory videoHistory = new VideoHistory(user, video);
+                videoHistoryJPARepository.save(videoHistory);
+            }
         }
 
         VideoInterest videoInterest = videoInterestJPARepository.findVideoInterestByVideoId(video.getId());

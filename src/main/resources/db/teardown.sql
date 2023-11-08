@@ -8,6 +8,7 @@ TRUNCATE TABLE connected_users;
 TRUNCATE TABLE videos;
 TRUNCATE TABLE video_interests;
 TRUNCATE TABLE subtitles;
+TRUNCATE TABLE video_histories;
 SET REFERENTIAL_INTEGRITY TRUE;
 
 -- user Table
@@ -104,3 +105,9 @@ INSERT INTO video_interests (created_at, video_id, interest_id) VALUES
 INSERT INTO subtitles (created_at, video_id, kor_start_time, kor_end_time, kor_subtitle_content, eng_start_time, eng_end_time, eng_subtitle_content) VALUES
 (NOW(), 1, '1', '2', '가', '12', '14', 'ffff'),
 (NOW(), 1, '4', '7', '나다라', '12', '14', 'ffff');
+
+INSERT INTO video_histories (created_at, user_id, video_id) VALUES
+(NOW(), 1, 1),
+(NOW(), 1, 2),
+(NOW(), 2, 1),
+(NOW(), 3, 2);

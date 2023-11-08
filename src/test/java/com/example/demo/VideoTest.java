@@ -26,6 +26,7 @@ import java.util.List;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
 @ActiveProfiles("test")
@@ -60,7 +61,7 @@ public class VideoTest extends RestDoc{
         // when
         ResultActions resultActions = mvc.perform(
                 get("/videos/main")
-                        .param("page", String.valueOf(1))
+                        .param("page", String.valueOf(0))
         );
 
         // console
@@ -89,6 +90,112 @@ public class VideoTest extends RestDoc{
 
         // verify
         resultActions.andExpect(jsonPath("$.status").value("success"));
+    }
+
+    @Test
+    @DisplayName("video 개인 조회 테스트")
+    void findVideoNoAuthTest() throws Exception {
+        // given
+        int videoId = 1;
+
+        // when
+        ResultActions resultActions = mvc.perform(
+                get("/videos/" + videoId)
+        );
+
+        // console
+        String responseBody = resultActions.andReturn().getResponse().getContentAsString();
+        System.out.println("video 개인 조회 인증 없이 테스트 : "+responseBody);
+
+        // verify
+        resultActions.andExpect(jsonPath("$.status").value("success"));
+    }
+
+    @Test
+    @WithUserDetails("test1@example.com")
+    @DisplayName("video 개인 조회 인증있이 테스트")
+    void findVideoAuthTest() throws Exception {
+        // given
+        int videoId = 1;
+
+        // when
+        ResultActions resultActions = mvc.perform(
+                get("/videos/" + videoId)
+        );
+
+        // console
+        String responseBody = resultActions.andReturn().getResponse().getContentAsString();
+        System.out.println("video 개인 조회 인증 있이 테스트 : "+responseBody);
+
+        // verify
+        resultActions.andExpect(jsonPath("$.status").value("success"));
+    }
+
+    @Test
+    @WithUserDetails("test1@example.com")
+    @DisplayName("video 개인 조회 인증있이 기록 확인 테스트")
+    void findHistoryTest() throws Exception {
+        // given
+        int videoId = 3;
+
+        mvc.perform(
+                get("/videos/" + videoId)
+        );
+
+        ResultActions resultActions = mvc.perform(
+                get("/videos/history")
+        );
+
+        // console
+        String responseBody = resultActions.andReturn().getResponse().getContentAsString();
+        System.out.println("video 개인 조회 인증있이 기록 확인 테스트 : "+responseBody);
+
+        // verify
+        resultActions.andExpect(jsonPath("$.status").value("success"));
+    }
+
+    @Test
+    @WithUserDetails("test1@example.com")
+    @DisplayName("video 개인 조회 인증있이 기록 확인 최근 영상 같을 경우 추가 X 테스트")
+    void findHistoryExceptionTest() throws Exception {
+        // given
+        int videoId = 1;
+
+        mvc.perform(
+                get("/videos/" + videoId)
+        );
+
+        ResultActions resultActions = mvc.perform(
+                get("/videos/history")
+        );
+
+        // console
+        String responseBody = resultActions.andReturn().getResponse().getContentAsString();
+        System.out.println("video 개인 조회 인증있이 기록 확인 최근 영상 같을 경우 추가 X 테스트 : "+responseBody);
+
+        // verify
+        resultActions.andExpect(jsonPath("$.status").value("success"));
+    }
+
+    @Test
+    @DisplayName("video 개인 조회 인증있이 기록 확인 테스트 인증이 없으니 error")
+    void findHistoryFailTest() throws Exception {
+        // given
+        int videoId = 1;
+
+        // when
+        mvc.perform(get("/videos/" + videoId));
+
+        ResultActions resultActions = mvc.perform(
+                get("/videos/history")
+        );
+
+        // console
+        String responseBody = resultActions.andReturn().getResponse().getContentAsString();
+        System.out.println("video 개인 조회 인증있이 기록 확인 테스트 인증이 없으니 error : "+responseBody);
+
+        // verify
+        resultActions.andExpect(jsonPath("$.status").value("error"));
     }
 
 }
