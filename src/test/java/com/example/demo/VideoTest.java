@@ -28,10 +28,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
 @SpringBootTest
-@AutoConfigureMockMvc
 @ActiveProfiles("test")
 @Sql("classpath:db/teardown.sql")
-@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class VideoTest extends RestDoc{
     @Autowired
     private InterestJPARepository interestJPARepository;
@@ -62,6 +60,7 @@ public class VideoTest extends RestDoc{
         // when
         ResultActions resultActions = mvc.perform(
                 get("/videos/main")
+                        .param("page", String.valueOf(1))
         );
 
         // console
@@ -79,7 +78,9 @@ public class VideoTest extends RestDoc{
 
         // when
         ResultActions resultActions = mvc.perform(
-                get("/videos/main").param("category", String.valueOf(1))
+                get("/videos/main")
+                        .param("page", String.valueOf(0))
+                        .param("category", String.valueOf(1))
         );
 
         // console
@@ -90,15 +91,4 @@ public class VideoTest extends RestDoc{
         resultActions.andExpect(jsonPath("$.status").value("success"));
     }
 
-
-    @Test
-    @WithUserDetails("test1@example.com")
-    @Order(3)
-    void findOmTest() throws Exception {
-        List<VideoResponse.VideoPageResponseDTO> videoFind = videoService.findAllVideo(0);
-
-        String responseBody = om.writeValueAsString(videoFind);
-
-        System.out.println("전체조회테스트 : " + responseBody);
-    }
 }

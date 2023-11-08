@@ -32,12 +32,12 @@ public class VideoService {
     private final UserInterestJPARepository userInterestJPARepository;
     private final VideoHistoryJPARepository videoHistoryJPARepository;
 
-    private final int MAINVIDEOTOTAL = 10;
+    private final int MAINVIDEOTOTAL = 8;
     private final int MAINVIDEONUM = 4;
     private final int HISTORYVIDEONUM = 5;
 
-    public List<VideoResponse.VideoPageResponseDTO> findAllVideo(int categoryId) {
-        Pageable pageable = PageRequest.of(0 ,MAINVIDEOTOTAL);
+    public List<VideoResponse.VideoPageResponseDTO> findAllVideo(int page, int categoryId) {
+        Pageable pageable = PageRequest.of(page ,MAINVIDEOTOTAL);
 
         Page<Video> pageContent = getPageContentByCategoryId(categoryId, pageable);
 
