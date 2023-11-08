@@ -32,7 +32,7 @@ public class VideoService {
     private final UserInterestJPARepository userInterestJPARepository;
     private final VideoHistoryJPARepository videoHistoryJPARepository;
 
-    private final int MAINVIDEOTOTAL = 100;
+    private final int MAINVIDEOTOTAL = 10;
     private final int MAINVIDEONUM = 4;
     private final int HISTORYVIDEONUM = 5;
 

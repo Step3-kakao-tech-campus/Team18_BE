@@ -31,8 +31,8 @@ public class VideoRestController {
 
     @GetMapping("/videos/main")
     @Operation(summary = "전체 영상 요청중 category로 필터링")
-    public ResponseEntity<?> getCategoryFilterVideo(@RequestParam(value = "category", defaultValue = "0") int id) {
-        List<VideoResponse.VideoPageResponseDTO> responseDTOs = videoService.findAllVideo(id);
+    public ResponseEntity<?> getCategoryFilterVideo(@RequestParam(value = "page", defaultValue = "0") int page, @RequestParam(value = "category", defaultValue = "0") int id) {
+        List<VideoResponse.VideoPageResponseDTO> responseDTOs = videoService.findAllVideo(page, id);
         return ResponseEntity.ok(ApiResponseBuilder.success(responseDTOs));
     }
 
