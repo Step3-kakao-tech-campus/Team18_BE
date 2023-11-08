@@ -20,6 +20,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 @Transactional
 @RequiredArgsConstructor
@@ -38,16 +39,7 @@ public class VideoService {
     public List<VideoResponse.VideoPageResponseDTO> findAllVideo(int categoryId) {
         Pageable pageable = PageRequest.of(0 ,MAINVIDEOTOTAL);
 
-        Page<Video> pageContent;
-        if(categoryId == 0)
-            pageContent = videoJPARepository.findAll(pageable);
-        else
-            pageContent = videoJPARepository.findByCategoryId(categoryId, pageable);
-
-
-        if(pageContent.getTotalPages() == 0){
-            throw new Exception404("해당 영상들이 존재하지 않습니다");
-        }
+        Page<Video> pageContent = getPageContentByCategoryId(categoryId, pageable);
 
         // 각 Video에대해서 Interest 끌어오기
         List<VideoResponse.VideoAllResponseDTO> videoDTOList = pageContent.getContent().stream().map(
@@ -59,26 +51,39 @@ public class VideoService {
 
         Collections.shuffle(videoDTOList);
 
-        List<VideoResponse.VideoPageResponseDTO> videoPageResponseDTOS = new ArrayList<>();
-        List<VideoResponse.VideoAllResponseDTO> tempGroup = new ArrayList<>();
-        int page = 0;
-        boolean finish = false;
-        for(int i = 0;i < videoDTOList.size();i++)
-        {
-            tempGroup.add(videoDTOList.get(i));
-            if ((i + 1) % MAINVIDEONUM == 0 || i == videoDTOList.size() - 1) {
-                if(i == videoDTOList.size() - 1)
-                    finish = true;
-                VideoResponse.VideoPageResponseDTO videoPageResponseDTO = new VideoResponse.VideoPageResponseDTO(
-                        page, tempGroup, finish
-                );
-                tempGroup = new ArrayList<>();
-                videoPageResponseDTOS.add(videoPageResponseDTO);
-                page++;
-            }
-        }
+        List<VideoResponse.VideoPageResponseDTO> videoPageResponseDTOS = IntStream.range(0, videoDTOList.size())
+                .boxed()
+                .collect(Collectors.groupingBy(index -> index / MAINVIDEONUM))
+                .entrySet()
+                .stream()
+                .map(entry -> {
+                    int pageNum = entry.getKey();
+                    List<VideoResponse.VideoAllResponseDTO> pageContents = entry.getValue()
+                            .stream()
+                            .map(videoDTOList::get)
+                            .collect(Collectors.toList());
+                    boolean isLastPage = (pageNum + 1) * MAINVIDEONUM >= videoDTOList.size();
+                    return new VideoResponse.VideoPageResponseDTO(pageNum, pageContents, isLastPage);
+                })
+                .collect(Collectors.toList());
 
         return videoPageResponseDTOS;
+    }
+
+    private Page<Video> getPageContentByCategoryId(int categoryId, Pageable pageable) {
+        if (categoryId == 0) {
+            Page<Video> pageContent = videoJPARepository.findAll(pageable);
+            if(pageContent.getTotalPages() == 0){
+                throw new Exception404("해당 영상들이 존재하지 않습니다");
+            }
+            return pageContent;
+        } else {
+            Page<Video> pageContent = videoJPARepository.findByCategoryId(categoryId, pageable);
+            if(pageContent.getTotalPages() == 0){
+                throw new Exception404("해당 영상들이 존재하지 않습니다");
+            }
+            return pageContent;
+        }
     }
 
     public VideoResponse.VideoResponseDTO findVideo(int id, CustomUserDetails customUserDetails) {
@@ -105,9 +110,7 @@ public class VideoService {
                 .map(rv -> videoInterestJPARepository.findVideoInterestByVideoId(rv.getId()))
                 .collect(Collectors.toList());
 
-        VideoResponse.VideoResponseDTO videoResponseDTO = new VideoResponse.VideoResponseDTO(video, videoInterest, videoSubtitles,recommendVideo,recommendVideoInterest);
-
-        return videoResponseDTO;
+        return new VideoResponse.VideoResponseDTO(video, videoInterest, videoSubtitles,recommendVideo,recommendVideoInterest);
     }
 
     public List<VideoResponse.VideoAllResponseDTO> findHistoryVideo(Integer page, int id) {
