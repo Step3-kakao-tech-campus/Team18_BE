@@ -9,6 +9,7 @@ import com.example.demo.user.userInterest.UserInterest;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -27,14 +28,14 @@ public class MentorPostResponse {
         private int postId;
         private String title;
         private String content;
-        private MentorPostStateEnum mentorPostStateEnum;
+        private MentorPostStateEnum postState;
         private WriterDTO writerDTO;
 
         public MentorPostAllDTO(MentorPost mentorPost, List<UserInterest> userInterests) {
             this.postId = mentorPost.getId();
             this.title = mentorPost.getTitle();
             this.content = mentorPost.getContent();
-            this.mentorPostStateEnum = mentorPost.getState();
+            this.postState = mentorPost.getState();
             WriterDTO writerDTO = new MentorPostAllDTO.WriterDTO(mentorPost.getWriter(), userInterests);
             this.writerDTO = writerDTO;
         }
@@ -78,31 +79,32 @@ public class MentorPostResponse {
         private int postId;
         private String title;
         private String content;
+        private MentorPostStateEnum postState;
         private WriterDTO writerDTO;
-        private MentorPostStateEnum mentorPostStateEnum;
-        private List<MenteeDTO> menteeDTOList;
+        private List<ConnectionDTO> connections;
 
         public MentorPostDTO(MentorPost mentorPost, List<UserInterest> mentorFavorites, List<NotConnectedRegisterUser> mentees, List<UserInterest> menteeInterest) {
             this.postId = mentorPost.getId();
             this.title = mentorPost.getTitle();
             this.content = mentorPost.getContent();
-            this.mentorPostStateEnum = mentorPost.getState();
+            this.postState = mentorPost.getState();
             MentorPostDTO.WriterDTO writerDTO = new MentorPostDTO.WriterDTO(mentorPost.getWriter(), mentorFavorites);
             this.writerDTO = writerDTO;
-            List<MentorPostDTO.MenteeDTO> menteeDTOList = mentees.stream()
+            List<ConnectionDTO> connectionDTOList = mentees.stream()
                     .map(mentee -> {
                         List<UserInterest> eachMenteeFavorite = menteeInterest.stream().filter(
                                 userInterest -> mentee.getMenteeUser().getId() == userInterest.getUser().getId()
                         ).collect(Collectors.toList());
 
-                        MentorPostDTO.MenteeDTO menteeDTO = new MentorPostDTO.MenteeDTO(mentee, eachMenteeFavorite);
-                        return menteeDTO;
+                        ConnectionDTO connectionDTO = new ConnectionDTO(mentee, eachMenteeFavorite);
+                        return connectionDTO;
                     })
                     .collect(Collectors.toList());
-            this.menteeDTOList = menteeDTOList;
+            this.connections = connectionDTOList;
         }
 
-        @Getter @Setter
+        @Getter
+        @Setter
         public static class WriterDTO {
             private int mentorId;
             private String profileImage;
@@ -123,28 +125,41 @@ public class MentorPostResponse {
             }
         }
 
-        @Getter @Setter
-        public static class MenteeDTO{
-            private int menteeId;
-            private String profileImage;
-            private String name;
-            private String country;
-            private Role role;
-            private int age;
+        @Getter
+        @Setter
+        public static class ConnectionDTO {
+            private int connectionId;
             private ContactStateEnum state;
-            private List<String> interests;
+            private MenteeDTO mentee;
 
-            public MenteeDTO(NotConnectedRegisterUser notConnectedRegisterUser, List<UserInterest> userInterests) {
-                this.menteeId = notConnectedRegisterUser.getId();
-                this.profileImage = notConnectedRegisterUser.getMenteeUser().getProfileImage();
-                this.name = notConnectedRegisterUser.getMenteeUser().getFirstName() + " " + notConnectedRegisterUser.getMenteeUser().getLastName();
-                this.country = notConnectedRegisterUser.getMenteeUser().getCountry();
-                this.role = notConnectedRegisterUser.getMenteeUser().getRole();
-                this.age = notConnectedRegisterUser.getMenteeUser().getAge();
+            public ConnectionDTO(NotConnectedRegisterUser notConnectedRegisterUser, List<UserInterest> userInterests) {
+                this.connectionId = notConnectedRegisterUser.getId();
                 this.state = notConnectedRegisterUser.getState();
-                this.interests = userInterests.stream()
-                        .map(userInterest -> userInterest.getInterest().getCategory())
-                        .collect(Collectors.toList());
+                this.mentee = new MenteeDTO(notConnectedRegisterUser.getMenteeUser(), userInterests);
+            }
+
+            @Getter
+            @Setter
+            public static class MenteeDTO {
+                private int menteeId;
+                private String profileImage;
+                private String name;
+                private String country;
+                private Role role;
+                private LocalDate birthDate;
+                private List<String> interests;
+
+                public MenteeDTO(User menteeUser, List<UserInterest> userInterests) {
+                    this.menteeId = menteeUser.getId();
+                    this.profileImage = menteeUser.getProfileImage();
+                    this.name = menteeUser.getFirstName() + " " + menteeUser.getLastName();
+                    this.country = menteeUser.getCountry();
+                    this.role = menteeUser.getRole();
+                    this.birthDate = menteeUser.getBirthDate();
+                    this.interests = userInterests.stream()
+                            .map(userInterest -> userInterest.getInterest().getCategory())
+                            .collect(Collectors.toList());
+                }
             }
         }
     }

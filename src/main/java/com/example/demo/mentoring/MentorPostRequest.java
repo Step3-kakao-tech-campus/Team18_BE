@@ -8,7 +8,7 @@ public class MentorPostRequest {
 
     @Getter
     @Setter
-    public static class CreateDTO {
+    public static class CreateMentorPostDTO {
         @NotNull
         private String title;
 
