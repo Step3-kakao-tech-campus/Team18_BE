@@ -3,9 +3,12 @@ package com.example.demo.user;
 import com.example.demo.config.auth.CustomUserDetails;
 import com.example.demo.config.jwt.JWTTokenProvider;
 import com.example.demo.config.utils.ApiResponseBuilder;
-import io.swagger.annotations.Api;
-import io.swagger.models.Response;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -23,7 +26,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.net.URLEncoder;
 
-@Api(tags = "User API")
+@Tag(name = "User API", description = "User API")
 @RequiredArgsConstructor
 @RestController
 public class UserRestController {
@@ -31,6 +34,10 @@ public class UserRestController {
     private final UserService userService;
 
     @Operation(summary = "이메일 중복 확인", description = "동일한 이메일이 존재하는지 확인한다.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "성공", content = @Content(schema = @Schema(implementation = ApiResponseBuilder.ApiResponse.class))),
+            @ApiResponse(responseCode = "400", description = "동일한 이메일이 존재합니다.", content = @Content(schema = @Schema(implementation = ApiResponseBuilder.ApiResponse.class)))
+    })
     @PostMapping(value = "/users/emailcheck")
     public ResponseEntity<?> emailCheck(@RequestBody @Valid UserRequest.EmailCheckDTO requestDTO, Errors errors) {
         userService.emailCheck(requestDTO);

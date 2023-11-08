@@ -2,7 +2,7 @@ package com.example.demo.refreshToken;
 
 import com.example.demo.config.jwt.JWTTokenProvider;
 import com.example.demo.config.utils.ApiResponseBuilder;
-import io.swagger.annotations.Api;
+//import io.swagger.annotations.Api;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.servlet.http.Cookie;
 import java.io.UnsupportedEncodingException;
 
-@Api(tags = "Token API")
+//@Api(tags = "Token API")
 @RequiredArgsConstructor
 @RestController
 public class TokenController {

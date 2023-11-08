@@ -2,7 +2,6 @@ package com.example.demo.video;
 
 import com.example.demo.config.auth.CustomUserDetails;
 import com.example.demo.config.utils.ApiResponseBuilder;
-import io.swagger.annotations.Api;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -14,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.List;
 
-@Api(tags = "Video API")
+//@Api(tags = "Video API")
 @RequiredArgsConstructor
 @RestController
 public class VideoRestController {

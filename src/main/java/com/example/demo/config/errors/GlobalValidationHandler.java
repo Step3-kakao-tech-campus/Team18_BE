@@ -39,7 +39,7 @@ public class GlobalValidationHandler {
         }
 
         if (!errorList.isEmpty()) {
-            throw new Exception400(errorList, null);
+            throw new Exception400(null, errorList);
         }
     }
 }

@@ -3,6 +3,8 @@ package com.example.demo.user;
 import com.example.demo.interest.Interest;
 import com.example.demo.refreshToken.TokenResponse;
 import com.example.demo.user.userInterest.UserInterest;
+//import io.swagger.annotations.ApiModel;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -11,6 +13,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class UserResponse {
+    @Schema(description = "로그인 응답 DTO")
     @Getter
     @Setter
     public static class LoginDTO {
@@ -32,6 +35,7 @@ public class UserResponse {
             private String country;
             private LocalDate birthDate;
             private String profileImage;
+            private String phone;
             private Role role;
             private List<String> categorylist;
 
@@ -43,6 +47,7 @@ public class UserResponse {
                 this.country = user.getCountry();
                 this.birthDate = user.getBirthDate();
                 this.profileImage = user.getProfileImage();
+                this.phone = user.getPhone();
                 this.role = user.getRole();
                 this.categorylist = userCategoryList;
             }
@@ -61,6 +66,7 @@ public class UserResponse {
         }
     }
 
+//    @ApiModel(value = "간단한 프로필 정보 응답 DTO")
     @Getter
     @Setter
     public static class SimpleProfileDTO {
@@ -79,6 +85,7 @@ public class UserResponse {
         }
     }
 
+//    @ApiModel(value = "프로필 정보 응답 DTO")
     @Getter
     @Setter
     public static class ProfileDTO {
@@ -90,6 +97,7 @@ public class UserResponse {
         private String introduction;
         private LocalDate birthDate;
         private String profileImage;
+        private String phone;
         private Role role;
         private List<String> categorylist;
 
@@ -102,6 +110,7 @@ public class UserResponse {
             this.introduction = user.getIntroduction();
             this.birthDate = user.getBirthDate();
             this.profileImage = user.getProfileImage();
+            this.phone = user.getPhone();
             this.role = user.getRole();
             this.categorylist = userCategoryList;
         }

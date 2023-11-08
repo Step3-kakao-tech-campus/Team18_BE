@@ -1,7 +1,7 @@
 package com.example.demo.mentoring.contact;
 
 import com.example.demo.mentoring.MentorPostStateEnum;
-import io.swagger.models.Contact;
+//import io.swagger.models.Contact;
 import lombok.Getter;
 
 import java.util.Collections;

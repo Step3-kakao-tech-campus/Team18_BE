@@ -20,7 +20,7 @@ public class ContactRestController {
     private final ContactService contactService;
 
     @GetMapping(value = "/contacts")
-    @Operation(summary = "contact 화면 조회", description = "멘토, 멘티 화면에 따라 적절한 화면을 보여준다.")
+//    @Operation(summary = "contact 화면 조회", description = "멘토, 멘티 화면에 따라 적절한 화면을 보여준다.")
     public ResponseEntity<?> findAllContacts(@AuthenticationPrincipal CustomUserDetails userDetails) {
         if ( userDetails.getUser().getRole() == Role.MENTEE ) {
             List<ContactResponse.ContactDashBoardMenteeDTO> responseDTO = contactService.findAllByMentee(userDetails.getUser());
@@ -32,7 +32,7 @@ public class ContactRestController {
 
     
     @GetMapping(value = "/contacts/postCounts")
-    @Operation(summary = "게시글의 갯수 조회", description = "멘토, 멘티 화면에 따라 contact, done 화면의 게시글 갯수를 보여준다.")
+//    @Operation(summary = "게시글의 갯수 조회", description = "멘토, 멘티 화면에 따라 contact, done 화면의 게시글 갯수를 보여준다.")
     public ResponseEntity<?> postCounts(@AuthenticationPrincipal CustomUserDetails userDetails) {
         // TO-DO : contact, done 옆 숫자를 띄우는 API 로직 만들기 ( 멘토, 멘티 나눠서 )
 
@@ -49,7 +49,7 @@ public class ContactRestController {
     }
 
     @PostMapping(value = "/contacts/accept")
-    @Operation(summary = "멘토링 신청 수락", description = "멘토링 신청을 수락한다.")
+//    @Operation(summary = "멘토링 신청 수락", description = "멘토링 신청을 수락한다.")
     public ResponseEntity<?> acceptContact(@RequestBody @Valid ContactRequest.ContactAcceptDTO contactAcceptDTO, Error errors, @AuthenticationPrincipal CustomUserDetails userDetails) {
         // TO-DO : 멘토링 신청 수락 API 로직 만들기
         contactService.acceptContact(contactAcceptDTO, userDetails.getUser());
@@ -57,7 +57,7 @@ public class ContactRestController {
     }
 
     @PatchMapping(value = "/contacts/refuse")
-    @Operation(summary = "멘토링 신청 거절", description = "멘토링 신청을 거절한다.")
+//    @Operation(summary = "멘토링 신청 거절", description = "멘토링 신청을 거절한다.")
     public ResponseEntity<?> refuseContact(@RequestBody @Valid ContactRequest.ContactRefuseDTO contactRefuseDTO, Error errors, @AuthenticationPrincipal CustomUserDetails userDetails) {
         // TO-DO : 멘토링 신청 거절 API 로직 만들기
         contactService.refuseContact(contactRefuseDTO, userDetails.getUser());
@@ -65,7 +65,7 @@ public class ContactRestController {
     }
 
     @PostMapping(value = "/contacts")
-    @Operation(summary = "멘티의 멘토링 신청", description = "멘토가 작성한 글을 보고, 멘티는 멘토링 신청을 할 수 있다.")
+//    @Operation(summary = "멘티의 멘토링 신청", description = "멘토가 작성한 글을 보고, 멘티는 멘토링 신청을 할 수 있다.")
     public ResponseEntity<?> createContact(@RequestBody @Valid ContactRequest.ContactCreateDTO contactCreateDTO, Error errors, @AuthenticationPrincipal CustomUserDetails userDetails) {
         // TO-DO : 멘토링 신청 API 로직 만들기
         contactService.createContact(contactCreateDTO, userDetails.getUser());
@@ -73,7 +73,7 @@ public class ContactRestController {
     }
 
     @DeleteMapping(value = "/contacts")
-    @Operation(summary = "멘티의 멘토링 신청 취소", description = "멘티는 신청한 멘토링을 취소할 수 있다.")
+//    @Operation(summary = "멘티의 멘토링 신청 취소", description = "멘티는 신청한 멘토링을 취소할 수 있다.")
     public ResponseEntity<?> deleteContact(@RequestHeader("contactId") List<Integer> contactId, Error errors, @AuthenticationPrincipal CustomUserDetails userDetails) {
         // TO-DO : 멘토링 신청 취소 API 로직 만들기
         contactService.deleteContact(contactId, userDetails.getUser());
