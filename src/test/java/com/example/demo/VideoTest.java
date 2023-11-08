@@ -4,7 +4,6 @@ import com.example.demo.config.auth.CustomUserDetails;
 import com.example.demo.config.errors.exception.Exception404;
 import com.example.demo.interest.Interest;
 import com.example.demo.interest.InterestJPARepository;
-import com.example.demo.mentoring.MentorPost;
 import com.example.demo.user.Role;
 import com.example.demo.user.User;
 import com.example.demo.user.UserJPARepository;
@@ -12,13 +11,13 @@ import com.example.demo.user.userInterest.UserInterest;
 import com.example.demo.user.userInterest.UserInterestJPARepository;
 import com.example.demo.video.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -58,7 +57,7 @@ public class VideoTest extends RestDoc{
                 .firstName("Jin")
                 .lastName("Seung")
                 .country("Korea")
-                .age(21)
+                .birthDate(LocalDate.of(1990, 1, 1))
                 .role(Role.MENTOR)
                 .phone("010-0000-0000")
                 .build();
@@ -292,6 +291,23 @@ public class VideoTest extends RestDoc{
         List<VideoResponse.VideoPageResponseDTO> videoFind = videoService.findAllVideo(0);
     }
 
+    @Test
+    @Order(2)
+    void HistoryTest() throws Exception{
+        User user2 = User.builder()
+                .email("anjfffffdal64@gmail.com")
+                .password("asdf1234!")
+                .firstName("Jin")
+                .lastName("Seung")
+                .country("Korea")
+                .birthDate(LocalDate.of(1990, 1, 1))
+                .role(Role.MENTOR)
+                .phone("010-0000-0000")
+                .build();
+
+        userJPARepository.save(user2);
+        //VideoResponse.VideoResponseDTO videoFind = videoService.findVideo(3,user2);
+    }
 
     @Test
     @Order(2)
@@ -316,7 +332,7 @@ public class VideoTest extends RestDoc{
                 .firstName("Jin")
                 .lastName("Seung")
                 .country("Korea")
-                .age(21)
+                .birthDate(LocalDate.of(1990, 1, 1))
                 .role(Role.ADMIN)
                 .phone("010-0000-0000")
                 .build();

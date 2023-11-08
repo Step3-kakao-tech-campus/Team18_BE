@@ -64,21 +64,21 @@ public class ContactService {
 
     // MentorPostDTO 생성 로직
     private ContactResponse.ContactDashboardMentorDTO createMentorPostDTO(MentorPost mentorPost, ContactResponse.ContactMentorDTO contactMentorDTO) {
-        List<ContactResponse.ContactMenteeDTO> contactMenteeDTOS = contactJPARepository.findAllByMentorPostId(mentorPost.getId())
+        List<ContactResponse.ConnectionDTO> connectionDTOS = contactJPARepository.findAllByMentorPostId(mentorPost.getId())
                 .stream()
                 .map(this::createMenteeDTO)
                 .collect(Collectors.toList());
 
-        return new ContactResponse.ContactDashboardMentorDTO(mentorPost, contactMentorDTO, contactMenteeDTOS);
+        return new ContactResponse.ContactDashboardMentorDTO(mentorPost, contactMentorDTO, connectionDTOS);
     }
 
     // 매핑 로직 분리 ( menteeDTO 생성 로직 )
-    private ContactResponse.ContactMenteeDTO createMenteeDTO(NotConnectedRegisterUser contactUser) {
+    private ContactResponse.ConnectionDTO createMenteeDTO(NotConnectedRegisterUser contactUser) {
 
         List<UserInterest> menteeInterests = userInterestJPARepository
                 .findAllById(contactUser.getMenteeUser().getId());
 
-        return new ContactResponse.ContactMenteeDTO(contactUser, menteeInterests);
+        return new ContactResponse.ConnectionDTO(contactUser, menteeInterests);
     }
 
     // contact, done 화면에서 게시글을 조회해서 갯수를 전달해주는 함수
@@ -119,7 +119,7 @@ public class ContactService {
         for ( ContactRequest.ContactAcceptDTO.AcceptMenteeDTO acceptMenteeDTO : contactAcceptDTO.getMentees() ) {
 
             // notConnectedRegisterUser 의 state 바꾸기 -> ACCEPT
-            NotConnectedRegisterUser notConnectedRegisterUser = contactJPARepository.findById(acceptMenteeDTO.getMenteeId())
+            NotConnectedRegisterUser notConnectedRegisterUser = contactJPARepository.findById(acceptMenteeDTO.getConnectionId())
                     .orElseThrow(() -> new Exception404("해당 사용자를 찾을 수 없습니다."));
 
             notConnectedRegisterUser.updateStatus(ContactStateEnum.ACCEPT);
@@ -143,7 +143,7 @@ public class ContactService {
         // notConnectedRegisterUser 의 state 바꾸기 -> REFUSE
         for ( ContactRequest.ContactRefuseDTO.RefuseMenteeDTO refuseMenteeDTO : contactRefuseDTO.getMentees() ) {
 
-            NotConnectedRegisterUser notConnectedRegisterUser = contactJPARepository.findById(refuseMenteeDTO.getMenteeId())
+            NotConnectedRegisterUser notConnectedRegisterUser = contactJPARepository.findById(refuseMenteeDTO.getConnectionId())
                     .orElseThrow(() -> new Exception404("해당 사용자를 찾을 수 없습니다."));
 
             notConnectedRegisterUser.updateStatus(ContactStateEnum.REFUSE);

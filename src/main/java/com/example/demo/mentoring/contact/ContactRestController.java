@@ -2,7 +2,6 @@ package com.example.demo.mentoring.contact;
 
 import com.example.demo.config.auth.CustomUserDetails;
 import com.example.demo.config.utils.ApiResponseBuilder;
-import com.example.demo.mentoring.done.DoneService;
 import com.example.demo.user.Role;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
@@ -75,9 +74,9 @@ public class ContactRestController {
 
     @DeleteMapping(value = "/contacts")
     @Operation(summary = "멘티의 멘토링 신청 취소", description = "멘티는 신청한 멘토링을 취소할 수 있다.")
-    public ResponseEntity<?> deleteContact(@RequestHeader("contactId") List<Integer> contactId, Error errors, @AuthenticationPrincipal CustomUserDetails userDetails) {
+    public ResponseEntity<?> deleteContact(@RequestParam("connectionId") List<Integer> connectionId, Error errors, @AuthenticationPrincipal CustomUserDetails userDetails) {
         // TO-DO : 멘토링 신청 취소 API 로직 만들기
-        contactService.deleteContact(contactId, userDetails.getUser());
+        contactService.deleteContact(connectionId, userDetails.getUser());
         return ResponseEntity.status(HttpStatus.OK).body(ApiResponseBuilder.successWithNoContent());
     }
 
