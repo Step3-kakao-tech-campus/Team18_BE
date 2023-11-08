@@ -49,9 +49,6 @@ public class UserRequest {
         @Pattern(regexp = "^\\d{2,3}-\\d{3,4}-\\d{4}$")
         private String phone;
 
-        // 프로필 이미지의 경우, 추후 변경 예정
-        private String profileImage;
-
         @NotNull(message = "역할을 선택해주세요.")
         private Role role;
 
@@ -59,7 +56,7 @@ public class UserRequest {
         @Size(min = 1, max = 3)
         private List<String> categoryList;
 
-        public User toEntity() {
+        public User toEntity(String profileImageURL) {
             return User.builder()
                     .firstName(firstName)
                     .lastName(lastName)
@@ -69,7 +66,7 @@ public class UserRequest {
                     .introduction(introduction)
                     .birthDate(birthDate)
                     .phone(phone)
-                    .profileImage(profileImage)
+                    .profileImage(profileImageURL)
                     .role(role)
                     .build();
         }
@@ -123,9 +120,6 @@ public class UserRequest {
         @Pattern(regexp = "^\\d{2,3}-\\d{3,4}-\\d{4}$")
         private String phone;
 
-        // 프로필 이미지의 경우, 추후 변경 예정
-        private String profileImage;
-
         @NotNull(message = "역할을 선택해주세요.")
         private Role role;
 
@@ -133,7 +127,7 @@ public class UserRequest {
         @Size(min = 1, max = 3)
         private List<String> categoryList;
 
-        public User toEntity() {
+        public User toEntity(String profileImageURL) {
             return User.builder()
                     .firstName(firstName)
                     .lastName(lastName)
@@ -142,7 +136,7 @@ public class UserRequest {
                     .introduction(introduction)
                     .birthDate(birthDate)
                     .phone(phone)
-                    .profileImage(profileImage)
+                    .profileImage(profileImageURL)
                     .role(role)
                     .build();
         }
