@@ -2,6 +2,7 @@ package com.example.demo.video;
 
 import com.example.demo.config.auth.CustomUserDetails;
 import com.example.demo.config.utils.ApiResponseBuilder;
+import com.example.demo.user.User;
 import io.swagger.annotations.Api;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
@@ -44,8 +45,8 @@ public class VideoRestController {
 
     @GetMapping("/videos/history")
     @Operation(summary = "영상 시청기록 요청")
-    public ResponseEntity<?> getVideoHistory(@RequestParam(value = "page", defaultValue = "0") Integer page, @AuthenticationPrincipal CustomUserDetails userDetails) {
-        List<VideoResponse.VideoAllResponseDTO> responseDTO = videoService.findHistoryVideo(page, userDetails.getUser().getId());
+    public ResponseEntity<?> getVideoHistory(@RequestParam(value = "page", defaultValue = "0") Integer page, User user) {
+        List<VideoResponse.VideoAllResponseDTO> responseDTO = videoService.findHistoryVideo(page, user.getId());
         return ResponseEntity.ok(ApiResponseBuilder.success(responseDTO));
     }
 
