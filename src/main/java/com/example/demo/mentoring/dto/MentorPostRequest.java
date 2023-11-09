@@ -12,7 +12,7 @@ public class MentorPostRequest {
     @Setter
     public static class CreateMentorPostDTO {
         @NotNull
-        @Size(max = 100, message = "100자를 초과하면 안됩니다.")
+        @Size(max = 50, message = "50자를 초과하면 안됩니다.")
         private String title;
 
         @Size(max = 300, message = "300자를 초과하면 안됩니다.")

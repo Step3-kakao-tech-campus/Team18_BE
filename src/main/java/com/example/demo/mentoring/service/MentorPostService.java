@@ -1,6 +1,7 @@
 package com.example.demo.mentoring.service;
 
 import com.example.demo.config.errors.exception.Exception401;
+import com.example.demo.config.errors.exception.Exception403;
 import com.example.demo.config.errors.exception.Exception500;
 import com.example.demo.config.errors.exception.Exception404;
 import com.example.demo.mentoring.domain.MentoringBoard;
@@ -21,6 +22,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Locale;
 import java.util.stream.Collectors;
@@ -38,7 +41,21 @@ public class MentorPostService {
     public void createMentorPost(MentorPostRequest.CreateMentorPostDTO createMentorPostDTO, User writer) {
         isMentor(writer);
 
+<<<<<<< HEAD:src/main/java/com/example/demo/mentoring/service/MentorPostService.java
         MentoringBoard mentoringBoard = new MentoringBoard( writer, createMentorPostDTO.getTitle(), createMentorPostDTO.getContent());
+=======
+        Pageable recentPostTime = PageRequest.of(0, 1);
+        Page<LocalDateTime> recentPostDate = mentorPostJPARepository.createdRecentPost(writer.getId(), recentPostTime);
+        if(recentPostDate != null && !recentPostDate.getContent().isEmpty())
+        {
+            Duration duration = Duration.between(recentPostDate.getContent().get(0), LocalDateTime.now());
+            if (duration.toMinutes() < 5) {
+                throw new Exception403("5분이내로 글을 작성 할 수 없습니다.");
+            }
+        }
+
+        MentorPost mentorPost = new MentorPost( writer, createMentorPostDTO.getTitle(), createMentorPostDTO.getContent());
+>>>>>>> origin/weekly:src/main/java/com/example/demo/mentoring/MentorPostService.java
 
         try {
             mentorPostJPARepository.save(mentoringBoard);

@@ -120,10 +120,12 @@ public class UserRequest {
     public static class ProfileUpdateDTO {
         @Schema(description = "이름", nullable = false, example = "Anna")
         @NotNull(message = "이름을 입력해주세요.")
+        @Size(max = 50, message = "50자 제한입니다.")
         private String firstName;
 
         @Schema(description = "성", nullable = false, example = "Lee")
         @NotNull(message = "성을 입력해주세요.")
+        @Size(max = 50, message = "50자 제한입니다.")
         private String lastName;
 
         @Schema(description = "비밀번호", nullable = false, example = "garden123!")
@@ -136,7 +138,11 @@ public class UserRequest {
         @NotNull(message = "국가를 선택해주세요.")
         private String country;
 
+<<<<<<< HEAD:src/main/java/com/example/demo/user/dto/UserRequest.java
         @Schema(description = "자기 소개", nullable = true, example = "Hello, My name is Anna Lee. I'm interested in Korean.")
+=======
+        @Size(max = 300, message = "300자 제한입니다.")
+>>>>>>> origin/weekly:src/main/java/com/example/demo/user/UserRequest.java
         private String introduction;
 
         @Schema(description = "생년월일", nullable = false, example = "2000-01-01")
