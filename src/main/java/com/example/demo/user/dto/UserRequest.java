@@ -138,11 +138,8 @@ public class UserRequest {
         @NotNull(message = "국가를 선택해주세요.")
         private String country;
 
-<<<<<<< HEAD:src/main/java/com/example/demo/user/dto/UserRequest.java
         @Schema(description = "자기 소개", nullable = true, example = "Hello, My name is Anna Lee. I'm interested in Korean.")
-=======
         @Size(max = 300, message = "300자 제한입니다.")
->>>>>>> origin/weekly:src/main/java/com/example/demo/user/UserRequest.java
         private String introduction;
 
         @Schema(description = "생년월일", nullable = false, example = "2000-01-01")

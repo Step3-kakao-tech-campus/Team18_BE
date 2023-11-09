@@ -41,9 +41,6 @@ public class MentorPostService {
     public void createMentorPost(MentorPostRequest.CreateMentorPostDTO createMentorPostDTO, User writer) {
         isMentor(writer);
 
-<<<<<<< HEAD:src/main/java/com/example/demo/mentoring/service/MentorPostService.java
-        MentoringBoard mentoringBoard = new MentoringBoard( writer, createMentorPostDTO.getTitle(), createMentorPostDTO.getContent());
-=======
         Pageable recentPostTime = PageRequest.of(0, 1);
         Page<LocalDateTime> recentPostDate = mentorPostJPARepository.createdRecentPost(writer.getId(), recentPostTime);
         if(recentPostDate != null && !recentPostDate.getContent().isEmpty())
@@ -55,7 +52,6 @@ public class MentorPostService {
         }
 
         MentorPost mentorPost = new MentorPost( writer, createMentorPostDTO.getTitle(), createMentorPostDTO.getContent());
->>>>>>> origin/weekly:src/main/java/com/example/demo/mentoring/MentorPostService.java
 
         try {
             mentorPostJPARepository.save(mentoringBoard);
