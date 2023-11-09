@@ -99,7 +99,6 @@ public class UserService {
 
     public UserResponse.ProfileDTO findProfile(Integer id, CustomUserDetails userDetails) {
         User user;
-        List<String> userCategoryList = new ArrayList<>();
 
         if (id == null) {
             user = userJPARepository.findById(userDetails.getUser().getId())
@@ -107,10 +106,11 @@ public class UserService {
         } else {
             user = userJPARepository.findById(id)
                     .orElseThrow(() -> new Exception404("해당 사용자가 존재하지 않습니다."));
-            userCategoryList = userInterestJPARepository.findAllById(user.getId()).stream()
-                    .map(interest -> interest.getInterest().getCategory())
-                    .collect(Collectors.toList());
         }
+        List<String> userCategoryList = userCategoryList = userInterestJPARepository.findAllById(user.getId()).stream()
+                .map(interest -> interest.getInterest().getCategory())
+                .collect(Collectors.toList());
+
         return new UserResponse.ProfileDTO(user, userCategoryList);
     }
 
