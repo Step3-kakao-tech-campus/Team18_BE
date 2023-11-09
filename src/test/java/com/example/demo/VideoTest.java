@@ -163,7 +163,7 @@ public class VideoTest extends RestDoc{
     @DisplayName("video 개인 조회 인증있이 기록 확인 최근 영상 같을 경우 추가 X 테스트")
     void findHistoryExceptionTest() throws Exception {
         // given
-        int videoId = 1;
+        int videoId = 2;
 
         mvc.perform(
                 get("/videos/" + videoId)
