@@ -74,7 +74,7 @@ public class DoneResponse {
             private List<String> favorites;
 
             public MenteeDTO(ConnectedUser connectedUser, List<UserInterest> userInterests) {
-                this.menteeId = connectedUser.getId();
+                this.menteeId = connectedUser.getMenteeUser().getId();
                 this.profileImage = connectedUser.getMenteeUser().getProfileImage();
                 this.name = connectedUser.getMenteeUser().getFirstName() + " " + connectedUser.getMenteeUser().getLastName();
                 this.country = connectedUser.getMenteeUser().getCountry();
