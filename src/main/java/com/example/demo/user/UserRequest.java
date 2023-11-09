@@ -98,9 +98,11 @@ public class UserRequest {
     @Setter
     public static class ProfileUpdateDTO {
         @NotNull(message = "이름을 입력해주세요.")
+        @Size(max = 50, message = "50자 제한입니다.")
         private String firstName;
 
         @NotNull(message = "성을 입력해주세요.")
+        @Size(max = 50, message = "50자 제한입니다.")
         private String lastName;
 
         @NotNull
@@ -111,6 +113,7 @@ public class UserRequest {
         @NotNull(message = "국가를 선택해주세요.")
         private String country;
 
+        @Size(max = 300, message = "300자 제한입니다.")
         private String introduction;
 
         @NotNull(message = "생년월일을 입력해주세요.")
