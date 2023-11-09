@@ -90,23 +90,28 @@ public class JWTTokenProvider {
     }
 
     public static boolean validateToken(String token) {
-        try {
+//        try {
             Jwts.parserBuilder()
                     .setSigningKey(SecretKey)
                     .build()
                     .parseClaimsJws(token);
             return true;
-        } catch (SignatureException e) {
-            System.out.println("Invalid JWT Signature.");
-        } catch (MalformedJwtException e) {
-            System.out.println("Invalid JWT Token.");
-        } catch (ExpiredJwtException e) {
-            System.out.println("Expired JWT Token.");
-        } catch (UnsupportedJwtException e) {
-            System.out.println("Unsupported JWT Token.");
-        } catch (IllegalArgumentException e) {
-            System.out.println("JWT claims string is empty.");
-        }
-        return false;
+//        } catch (SignatureException e) {
+//            System.out.println("Invalid JWT Signature.");
+////            throw new Exception401("유효하지 않은 JWT 토큰 서명입니다.");
+//        } catch (MalformedJwtException e) {
+//            System.out.println("Invalid JWT Token.");
+////            throw new Exception401("손상된 JWT 토큰입니다.");
+//        } catch (ExpiredJwtException e) {
+//            System.out.println("Expired JWT Token.");
+////            throw new Exception401("만료된 JWT Token입니다.");
+//        } catch (UnsupportedJwtException e) {
+//            System.out.println("Unsupported JWT Token.");
+////            throw new Exception401("지원하지 않는 JWT 토큰입니다.");
+//        } catch (IllegalArgumentException e) {
+//            System.out.println("JWT claims string is empty.");
+////            throw new Exception401("JWT 토큰 내의 정보가 없습니다.");
+//        }
+//        return false;
     }
 }
