@@ -1,6 +1,5 @@
-package com.example.demo.mentoringtest;
+package com.example.demo;
 
-import com.example.demo.RestDoc;
 import com.example.demo.config.errors.exception.Exception400;
 import com.example.demo.mentoring.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -22,7 +21,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @ActiveProfiles("test")
 @Sql("classpath:db/teardown.sql")
-public class MentoringTest2 extends RestDoc {
+public class MentoringTest extends RestDoc {
 
     @Autowired
     private ObjectMapper om;
