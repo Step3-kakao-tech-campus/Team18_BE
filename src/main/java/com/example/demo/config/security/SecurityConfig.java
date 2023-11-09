@@ -2,16 +2,12 @@ package com.example.demo.config.security;
 
 import com.example.demo.config.errors.exception.Exception401;
 import com.example.demo.config.errors.exception.Exception403;
-import com.example.demo.config.jwt.JWTAuthenticationFilter;
-import com.example.demo.config.jwt.JWTTokenProvider;
 import com.example.demo.config.utils.FilterResponseUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.ScopeMetadataResolver;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;

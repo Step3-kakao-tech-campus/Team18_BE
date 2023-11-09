@@ -2,12 +2,22 @@ package com.example.demo;
 
 import com.example.demo.interest.Interest;
 import com.example.demo.interest.InterestJPARepository;
-import com.example.demo.user.Role;
-import com.example.demo.user.User;
-import com.example.demo.user.UserJPARepository;
-import com.example.demo.user.userInterest.UserInterest;
-import com.example.demo.user.userInterest.UserInterestJPARepository;
-import com.example.demo.video.*;
+import com.example.demo.user.domain.Role;
+import com.example.demo.user.domain.User;
+import com.example.demo.user.repository.UserJPARepository;
+import com.example.demo.user.domain.UserInterest;
+import com.example.demo.user.repository.UserInterestJPARepository;
+import com.example.demo.video.domain.VideoSubtitle;
+import com.example.demo.video.domain.Video;
+import com.example.demo.video.domain.VideoHistory;
+import com.example.demo.video.domain.VideoInterest;
+import com.example.demo.video.dto.VideoRequest;
+import com.example.demo.video.dto.VideoResponse;
+import com.example.demo.video.repository.SubtitleJPARepository;
+import com.example.demo.video.repository.VideoHistoryJPARepository;
+import com.example.demo.video.repository.VideoInterestJPARepository;
+import com.example.demo.video.repository.VideoJPARepository;
+import com.example.demo.video.service.VideoService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -207,7 +217,7 @@ public class VideoTest extends RestDoc{
                 .interest(interest1)
                 .build();
 
-        Subtitle subtitle1 = Subtitle.builder()
+        VideoSubtitle videoSubtitle1 = VideoSubtitle.builder()
                 .video(video1)
                 .korStartTime("1")
                 .korEndTime("2")
@@ -217,7 +227,7 @@ public class VideoTest extends RestDoc{
                 .engSubtitleContent("ffff")
                 .build();
 
-        Subtitle subtitle2 = Subtitle.builder()
+        VideoSubtitle videoSubtitle2 = VideoSubtitle.builder()
                 .video(video1)
                 .korStartTime("4")
                 .korEndTime("7")
@@ -273,8 +283,8 @@ public class VideoTest extends RestDoc{
         videoInterestJPARepository.save(video7Interest3);
         videoInterestJPARepository.save(video8Interest3);
         videoInterestJPARepository.save(video9Interest1);
-        subtitleJPARepository.save(subtitle1);
-        subtitleJPARepository.save(subtitle2);
+        subtitleJPARepository.save(videoSubtitle1);
+        subtitleJPARepository.save(videoSubtitle2);
         userJPARepository.save(user);
         videoHistoryJPARepository.save(videoHistory1);
         videoHistoryJPARepository.save(videoHistory2);

@@ -1,6 +1,7 @@
 package com.example.demo.config.errors;
 
 import com.example.demo.config.errors.exception.Exception400;
+import com.example.demo.config.errors.exception.ValidationException;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
@@ -39,7 +40,7 @@ public class GlobalValidationHandler {
         }
 
         if (!errorList.isEmpty()) {
-            throw new Exception400(null, errorList);
+            throw new ValidationException(errorList);
         }
     }
 }

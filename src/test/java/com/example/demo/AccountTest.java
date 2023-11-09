@@ -1,9 +1,9 @@
 package com.example.demo;
 
 import com.example.demo.config.errors.exception.Exception404;
-import com.example.demo.user.Role;
-import com.example.demo.user.User;
-import com.example.demo.user.UserJPARepository;
+import com.example.demo.user.domain.Role;
+import com.example.demo.user.domain.User;
+import com.example.demo.user.repository.UserJPARepository;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

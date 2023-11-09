@@ -1,5 +1,6 @@
 package com.example.demo.config.utils;
 
+import com.example.demo.config.errors.ErrorCode;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -34,10 +35,10 @@ public class ApiResponseBuilder {
     }
 
     public static ApiResponse<?> fail(Map<String, String> errors) {
-        return new ApiResponse<>(FAIL_STATUS, null, errors);
+        return new ApiResponse<>(FAIL_STATUS, errors, null);
     }
 
-    public static ApiResponse<?> error(String message) {
-        return new ApiResponse<>(ERROR_STATUS, null, message);
+    public static ApiResponse<?> error(ErrorCode errorCode) {
+        return new ApiResponse<>(ERROR_STATUS, null, errorCode.getMessage());
     }
 }

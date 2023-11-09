@@ -9,33 +9,39 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
-    @ExceptionHandler(Exception400.class)
-    public ResponseEntity<?> badRequest(Exception400 exception) {
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(exception.body());
+    @ExceptionHandler(ValidationException.class)
+    public ResponseEntity<?> validationException(ValidationException e) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ApiResponseBuilder.fail(e.getErrorList()));
     }
 
-    @ExceptionHandler(Exception401.class)
-    public ResponseEntity<?> unAuthorized(Exception401 exception) {
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(exception.body());
+    @ExceptionHandler(DuplicateEmailException.class)
+    public ResponseEntity<?> duplicatedEmailException(DuplicateEmailException e) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ApiResponseBuilder.error(e.getErrorCode()));
     }
 
-    @ExceptionHandler(Exception403.class)
-    public ResponseEntity<?> forbidden(Exception403 exception) {
-        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(exception.body());
+    @ExceptionHandler(EmailNotMatchException.class)
+    public ResponseEntity<?> emailNotMatchException(EmailNotMatchException e) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ApiResponseBuilder.error(e.getErrorCode()));
     }
 
-    @ExceptionHandler(Exception404.class)
-    public ResponseEntity<?> notFound(Exception404 exception) {
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(exception.body());
+    @ExceptionHandler(PasswordNotMatchException.class)
+    public ResponseEntity<?> passwordNotMatchException(PasswordNotMatchException e) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ApiResponseBuilder.error(e.getErrorCode()));
     }
 
-    @ExceptionHandler(Exception500.class)
-    public ResponseEntity<?> serverError(Exception500 exception) {
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(exception.body());
+    @ExceptionHandler(InterestNotExistException.class)
+    public ResponseEntity<?> interestNotExistException(InterestNotExistException e) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ApiResponseBuilder.error(e.getErrorCode()));
     }
 
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<?> unknownError(Exception exception) {
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ApiResponseBuilder.error(exception.getMessage()));
+    @ExceptionHandler(UserNotExistException.class)
+    public ResponseEntity<?> userNotExistException(UserNotExistException e) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ApiResponseBuilder.error(e.getErrorCode()));
     }
+
+    @ExceptionHandler(JWTTokenException.class)
+    public ResponseEntity<?> jwtTokenException(JWTTokenException e) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ApiResponseBuilder.error(e.getErrorCode()));
+    }
+
 }
