@@ -38,9 +38,9 @@ public class UserRestController {
     }
 
     @Operation(summary = "회원가입", description = "회원가입")
-    @PostMapping(value = "/users/signup", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
-    public ResponseEntity<?> signup(@RequestPart @Valid UserRequest.SignUpDTO requestDTO, Errors errors, @RequestPart(required = false) MultipartFile file) throws IOException {
-        userService.signup(requestDTO, file);
+    @PostMapping(value = "/users/signup")
+    public ResponseEntity<?> signup(@RequestBody @Valid UserRequest.SignUpDTO requestDTO, Errors errors) throws IOException {
+        userService.signup(requestDTO);
         return ResponseEntity.status(HttpStatus.OK).body(ApiResponseBuilder.successWithNoContent());
     }
 

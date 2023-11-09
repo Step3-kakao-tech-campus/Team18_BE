@@ -47,15 +47,9 @@ public class UserService {
     }
 
     @Transactional
-    public void signup(UserRequest.SignUpDTO requestDTO, MultipartFile file) throws IOException {
-        String profileImageURL = null;
-
-        if (file != null) {
-            profileImageURL = s3Uploader.uploadFile(file);
-        }
-
+    public void signup(UserRequest.SignUpDTO requestDTO) {
         requestDTO.setPassword(passwordEncoder.encode(requestDTO.getPassword()));
-        User user = userJPARepository.save(requestDTO.toEntity(profileImageURL));
+        User user = userJPARepository.save(requestDTO.toEntity());
 
         List<UserInterest> userInterestList = new ArrayList<>();
         List<String> categoryList = requestDTO.getCategoryList();
@@ -131,12 +125,13 @@ public class UserService {
         User user = userJPARepository.findById(userDetails.getUser().getId())
                 .orElseThrow(() -> new Exception404("해당 사용자가 존재하지 않습니다."));
 
-        String newProfileImageURL = userDetails.getUser().getProfileImage();
+        String newProfileImageURL = user.getProfileImage();
         if (file != null) {
-            String profileImageURL = user.getProfileImage();
-            String key = profileImageURL.split("/")[3];
-            s3Uploader.deleteFile(key);
-
+            if (user.getProfileImage() != null) {
+                String profileImageURL = user.getProfileImage();
+                String key = profileImageURL.split("/")[3];
+                s3Uploader.deleteFile(key);
+            }
             newProfileImageURL = s3Uploader.uploadFile(file);
         }
         user = user.updateProfile(requestDTO.toEntity(newProfileImageURL));

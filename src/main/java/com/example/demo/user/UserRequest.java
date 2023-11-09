@@ -56,7 +56,7 @@ public class UserRequest {
         @Size(min = 1, max = 3)
         private List<String> categoryList;
 
-        public User toEntity(String profileImageURL) {
+        public User toEntity() {
             return User.builder()
                     .firstName(firstName)
                     .lastName(lastName)
@@ -66,7 +66,7 @@ public class UserRequest {
                     .introduction(introduction)
                     .birthDate(birthDate)
                     .phone(phone)
-                    .profileImage(profileImageURL)
+                    .profileImage(null)
                     .role(role)
                     .build();
         }
