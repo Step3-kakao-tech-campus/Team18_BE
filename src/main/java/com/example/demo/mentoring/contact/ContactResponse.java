@@ -28,14 +28,14 @@ public class ContactResponse {
     public static class ContactDashBoardMenteeDTO {
         private int postId;
         private String title;
-        private ContactMentorDTO mentor;
-        private int menteeId;
+        private ContactMentorDTO writerDTO;
+        private int connectionId;
 
-        public ContactDashBoardMenteeDTO(MentorPost mentorPost, ContactMentorDTO mentor, NotConnectedRegisterUser notConnectedRegisterUser) {
+        public ContactDashBoardMenteeDTO(MentorPost mentorPost, ContactMentorDTO writerDTO, NotConnectedRegisterUser notConnectedRegisterUser) {
             this.postId = mentorPost.getId();
             this.title = mentorPost.getTitle();
-            this.mentor = mentor;
-            this.menteeId = notConnectedRegisterUser.getId();
+            this.writerDTO = writerDTO;
+            this.connectionId = notConnectedRegisterUser.getId();
         }
     }
     /**
@@ -51,13 +51,13 @@ public class ContactResponse {
     public static class ContactDashboardMentorDTO {
         private int postId;
         private String title;
-        private ContactMentorDTO mentor;
-        private List<ContactMenteeDTO> mentees;
+        private ContactMentorDTO writerDTO;
+        private List<ConnectionDTO> mentees;
 
-        public ContactDashboardMentorDTO(MentorPost mentorPost, ContactMentorDTO mentor, List<ContactMenteeDTO> mentees) {
+        public ContactDashboardMentorDTO(MentorPost mentorPost, ContactMentorDTO writerDTO, List<ConnectionDTO> mentees) {
             this.postId = mentorPost.getId();
             this.title = mentorPost.getTitle();
-            this.mentor = mentor;
+            this.writerDTO = writerDTO;
             this.mentees = mentees;
         }
     }
@@ -85,34 +85,41 @@ public class ContactResponse {
         }
     }
     @Getter @Setter
-    public static class ContactMenteeDTO {
-        private int menteeId;
-        private String profileImage;
-        private String name;
-        private String country;
-        private LocalDate birthDate;
-        private Role role;
+    public static class ConnectionDTO {
+        private int connectionId;
         private ContactStateEnum state;
-        private List<String> favorites; // 고민할 부분 : 유저의 favorite List 를 어떻게 가져올 것 인가?
+        private MenteeDTO mentee;
 
-        /**
-         * 유저의 favorite List 를 가져오기 위해
-         * userInterest 를 입력으로 받음
-         * userInterest 의 userId 와 현재 신청한 멘티 ( notConnectedRegitserUser ) 의 id 값이 일치하는 경우
-         * 그럴 경우에만 tag 값들을 가져오기
-         * **/
-
-        public ContactMenteeDTO(NotConnectedRegisterUser notConnectedRegisterUser, List<UserInterest> userInterests) {
-            this.menteeId = notConnectedRegisterUser.getId();
-            this.profileImage = notConnectedRegisterUser.getMenteeUser().getProfileImage();
-            this.name = notConnectedRegisterUser.getMenteeUser().getFirstName() + " " + notConnectedRegisterUser.getMenteeUser().getLastName();
-            this.country = notConnectedRegisterUser.getMenteeUser().getCountry();
-            this.birthDate = notConnectedRegisterUser.getMenteeUser().getBirthDate();
-            this.role = notConnectedRegisterUser.getMenteeUser().getRole();
+        // ConnectionDTO 생성자
+        public ConnectionDTO(NotConnectedRegisterUser notConnectedRegisterUser, List<UserInterest> userInterests) {
+            this.connectionId = notConnectedRegisterUser.getId();
             this.state = notConnectedRegisterUser.getState();
-            this.favorites = userInterests.stream()
-                    .map(userInterest -> userInterest.getInterest().getCategory())
-                    .collect(Collectors.toList());
+            this.mentee = new MenteeDTO(notConnectedRegisterUser.getMenteeUser(), userInterests);
+        }
+
+        // MenteeDTO 내부 클래스
+        @Getter @Setter
+        public static class MenteeDTO {
+            private int menteeId;
+            private String profileImage;
+            private String name;
+            private String country;
+            private LocalDate birthDate;
+            private Role role;
+            private List<String> favorites;
+
+            // MenteeDTO 생성자
+            public MenteeDTO(User menteeUser, List<UserInterest> userInterests) {
+                this.menteeId = menteeUser.getId();
+                this.profileImage = menteeUser.getProfileImage();
+                this.name = menteeUser.getFirstName() + " " + menteeUser.getLastName();
+                this.country = menteeUser.getCountry();
+                this.birthDate = menteeUser.getBirthDate();
+                this.role = menteeUser.getRole();
+                this.favorites = userInterests.stream()
+                        .map(userInterest -> userInterest.getInterest().getCategory())
+                        .collect(Collectors.toList());
+            }
         }
     }
 }
