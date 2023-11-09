@@ -5,6 +5,10 @@ TRUNCATE TABLE mentor_posts;
 TRUNCATE TABLE user_interests;
 TRUNCATE TABLE not_connected_register_users;
 TRUNCATE TABLE connected_users;
+TRUNCATE TABLE videos;
+TRUNCATE TABLE video_interests;
+TRUNCATE TABLE subtitles;
+TRUNCATE TABLE video_histories;
 SET REFERENTIAL_INTEGRITY TRUE;
 
 -- user Table
@@ -70,3 +74,40 @@ INSERT INTO user_interests (created_at, user_id, interest_id) VALUES
    (NOW(), 5, 4),
    (NOW(), 5, 3),
    (NOW(), 5, 4);
+
+-- videos Table
+INSERT INTO videos (video_url, views, video_title_korean, video_title_eng, video_start_time, video_end_time, video_thumbnail_url, created_at) VALUES
+('https://www.youtube.com/watch?v=6lw4Cbk1IzA', 25, '첫번째 비디오', 'First page First Video', '23', '100', 'https://search.pstatic.net/common/?src=http%3A%2F%2Fimgnews.naver.net%2Fimage%2F016%2F2023%2F08%2F10%2F20230810000405_0_20230810112103061.jpg&type=sc960_832', NOW()),
+('https://www.youtube.com/watch?v=6lw4Cbk1IzA', 25, '두번째 비디오', 'Second page Second Video', '23', '100', 'https://search.pstatic.net/common/?src=http%3A%2F%2Fimgnews.naver.net%2Fimage%2F016%2F2023%2F08%2F10%2F20230810000405_0_20230810112103061.jpg&type=sc960_832', NOW()),
+('https://www.youtube.com/watch?v=6lw4Cbk1IzA', 25, '세번째 비디오', 'Third page Third Video', '23', '100', 'https://search.pstatic.net/common/?src=http%3A%2F%2Fimgnews.naver.net%2Fimage%2F016%2F2023%2F08%2F10%2F20230810000405_0_20230810112103061.jpg&type=sc960_832', NOW()),
+('https://www.youtube.com/watch?v=6lw4Cbk1IzA', 25, '네번째 비디오', 'Fourth page Fourth Video', '23', '100', 'https://search.pstatic.net/common/?src=http%3A%2F%2Fimgnews.naver.net%2Fimage%2F016%2F2023%2F08%2F10%2F20230810000405_0_20230810112103061.jpg&type=sc960_832', NOW()),
+('https://www.youtube.com/watch?v=6lw4Cbk1IzA', 25, '다섯번째 비디오', 'Fifth page Fifth Video', '23', '100', 'https://search.pstatic.net/common/?src=http%3A%2F%2Fimgnews.naver.net%2Fimage%2F016%2F2023%2F08%2F10%2F20230810000405_0_20230810112103061.jpg&type=sc960_832', NOW()),
+('https://www.youtube.com/watch?v=6lw4Cbk1IzA', 25, '여섯번째 비디오', 'Sixth page Sixth Video', '23', '100', 'https://search.pstatic.net/common/?src=http%3A%2F%2Fimgnews.naver.net%2Fimage%2F016%2F2023%2F08%2F10%2F20230810000405_0_20230810112103061.jpg&type=sc960_832', NOW()),
+('https://www.youtube.com/watch?v=6lw4Cbk1IzA', 25, '일곱번째 비디오', 'Seventh page Third Video', '23', '100', 'https://search.pstatic.net/common/?src=http%3A%2F%2Fimgnews.naver.net%2Fimage%2F016%2F2023%2F08%2F10%2F20230810000405_0_20230810112103061.jpg&type=sc960_832', NOW()),
+('https://www.youtube.com/watch?v=6lw4Cbk1IzA', 25, '여덟번째 비디오', 'Eigth page Fourth Video', '23', '100', 'https://search.pstatic.net/common/?src=http%3A%2F%2Fimgnews.naver.net%2Fimage%2F016%2F2023%2F08%2F10%2F20230810000405_0_20230810112103061.jpg&type=sc960_832', NOW()),
+('https://www.youtube.com/watch?v=6lw4Cbk1IzA', 25, '아홉번째 비디오', 'Ninth page Fifth Video', '23', '100', 'https://search.pstatic.net/common/?src=http%3A%2F%2Fimgnews.naver.net%2Fimage%2F016%2F2023%2F08%2F10%2F20230810000405_0_20230810112103061.jpg&type=sc960_832', NOW()),
+('https://www.youtube.com/watch?v=6lw4Cbk1IzA', 25, '열 비디오', 'Tenth page Sixth Video', '23', '100', 'https://search.pstatic.net/common/?src=http%3A%2F%2Fimgnews.naver.net%2Fimage%2F016%2F2023%2F08%2F10%2F20230810000405_0_20230810112103061.jpg&type=sc960_832', NOW());
+
+-- videoInterest Table
+INSERT INTO video_interests (created_at, video_id, interest_id) VALUES
+(NOW(), 1, 1),
+(NOW(), 2, 1),
+(NOW(), 3, 2),
+(NOW(), 4, 3),
+(NOW(), 5, 2),
+(NOW(), 6, 2),
+(NOW(), 7, 4),
+(NOW(), 8, 2),
+(NOW(), 9, 3),
+(NOW(), 10, 1);
+
+-- subtitle table
+INSERT INTO subtitles (created_at, video_id, kor_start_time, kor_end_time, kor_subtitle_content, eng_start_time, eng_end_time, eng_subtitle_content) VALUES
+(NOW(), 1, '1', '2', '가', '12', '14', 'ffff'),
+(NOW(), 1, '4', '7', '나다라', '12', '14', 'ffff');
+
+INSERT INTO video_histories (created_at, user_id, video_id) VALUES
+(NOW(), 1, 1),
+(NOW(), 1, 2),
+(NOW(), 2, 1),
+(NOW(), 3, 2);

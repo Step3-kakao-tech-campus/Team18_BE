@@ -31,14 +31,7 @@ public class MentorPostService {
     //mentorPost생성
     @Transactional
     public void createMentorPost(MentorPostRequest.CreateMentorPostDTO createMentorPostDTO, User writer) {
-        if ( writer.getRole() == Role.MENTEE ) {
-            throw new Exception401("해당 사용자는 멘티입니다.");
-        }
-
-        //글자수 확인
-        if(createMentorPostDTO.getContent().length() > 300){
-            throw new Exception404("글자수가 300자를 넘어갑니다.");
-        }
+        isMentor(writer);
 
         MentorPost mentorPost = new MentorPost( writer, createMentorPostDTO.getTitle(), createMentorPostDTO.getContent());
 
@@ -93,11 +86,6 @@ public class MentorPostService {
         MentorPost mentorPost = mentorPostJPARepository.findById(id).
                 orElseThrow(() -> new Exception404("해당 글이 존재하지 않습니다."));
 
-        //글자수 확인
-        if(createMentorPostDTO.getContent().length() > 300){
-            throw new Exception404("글자수가 300자를 넘어갑니다.");
-        }
-
         try {
             mentorPost.update(createMentorPostDTO.getTitle(), createMentorPostDTO.getContent());
         } catch (Exception e) {
@@ -106,7 +94,6 @@ public class MentorPostService {
     }
 
     public void deleteMentorPost(int id, User writer) {
-
         isMentor(writer);
 
         try {
