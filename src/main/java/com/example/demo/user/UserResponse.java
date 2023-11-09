@@ -1,8 +1,14 @@
 package com.example.demo.user;
 
+import com.example.demo.interest.Interest;
 import com.example.demo.refreshToken.TokenResponse;
+import com.example.demo.user.userInterest.UserInterest;
 import lombok.Getter;
 import lombok.Setter;
+
+import java.time.LocalDate;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class UserResponse {
     @Getter
@@ -11,8 +17,8 @@ public class UserResponse {
         private UserDetailDTO userDetailDTO;
         private JWTToken jwtToken;
 
-        public LoginDTO(User user, TokenResponse.TokenDTO token) {
-            this.userDetailDTO = new UserDetailDTO(user);
+        public LoginDTO(User user, List<String> userCategoryList, TokenResponse.TokenDTO token) {
+            this.userDetailDTO = new UserDetailDTO(user, userCategoryList);
             this.jwtToken = new JWTToken(token);
         }
 
@@ -24,17 +30,21 @@ public class UserResponse {
             private String firstName;
             private String lastName;
             private String country;
+            private LocalDate birthDate;
             private String profileImage;
             private Role role;
+            private List<String> categorylist;
 
-            public UserDetailDTO(User user) {
+            public UserDetailDTO(User user, List<String> userCategoryList) {
                 this.id = user.getId();
                 this.email = user.getEmail();
                 this.firstName = user.getFirstName();
                 this.lastName = user.getLastName();
                 this.country = user.getCountry();
+                this.birthDate = user.getBirthDate();
                 this.profileImage = user.getProfileImage();
                 this.role = user.getRole();
+                this.categorylist = userCategoryList;
             }
         }
 
@@ -53,27 +63,47 @@ public class UserResponse {
 
     @Getter
     @Setter
-    public static class ProfileDTO {
+    public static class SimpleProfileDTO {
         private int id;
         private String profileImage;
         private String firstName;
         private String lastName;
-        private String introduction;
-        private String country;
-        private String role;
-        private String phone;
         private String email;
 
-        public ProfileDTO(User user) {
+        public SimpleProfileDTO(User user) {
             this.id = user.getId();
             this.profileImage = user.getProfileImage();
             this.firstName = user.getFirstName();
             this.lastName = user.getLastName();
-            this.introduction = user.getIntroduction();
-            this.country = user.getCountry();
-            this.role = user.getRole().toString();
-            this.phone = user.getPhone();
             this.email = user.getEmail();
+        }
+    }
+
+    @Getter
+    @Setter
+    public static class ProfileDTO {
+        private int id;
+        private String email;
+        private String firstName;
+        private String lastName;
+        private String country;
+        private String introduction;
+        private LocalDate birthDate;
+        private String profileImage;
+        private Role role;
+        private List<String> categorylist;
+
+        public ProfileDTO(User user, List<String> userCategoryList) {
+            this.id = user.getId();
+            this.email = user.getEmail();
+            this.firstName = user.getFirstName();
+            this.lastName = user.getLastName();
+            this.country = user.getCountry();
+            this.introduction = user.getIntroduction();
+            this.birthDate = user.getBirthDate();
+            this.profileImage = user.getProfileImage();
+            this.role = user.getRole();
+            this.categorylist = userCategoryList;
         }
     }
 }

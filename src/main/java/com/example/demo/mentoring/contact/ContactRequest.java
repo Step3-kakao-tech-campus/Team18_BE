@@ -24,9 +24,9 @@ public class ContactRequest {
         @Getter @Setter @NoArgsConstructor
         public static class RefuseMenteeDTO {
             @NotNull
-            private int menteeId;
-            public RefuseMenteeDTO(int menteeId) {
-                this.menteeId = menteeId;
+            private int connectionId;
+            public RefuseMenteeDTO(int connectionId) {
+                this.connectionId = connectionId;
             }
         }
     }
@@ -39,9 +39,9 @@ public class ContactRequest {
         @Getter @Setter @NoArgsConstructor
         public static class AcceptMenteeDTO {
             @NotNull
-            private int menteeId;
-            public AcceptMenteeDTO(int menteeId) {
-                this.menteeId = menteeId;
+            private int connectionId;
+            public AcceptMenteeDTO(int connectionId) {
+                this.connectionId = connectionId;
             }
         }
     }

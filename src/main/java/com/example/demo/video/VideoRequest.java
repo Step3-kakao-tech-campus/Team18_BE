@@ -16,11 +16,17 @@ public class VideoRequest {
     @Getter
     @Setter
     public static class CreateDTO {
+        @NotNull
         private String videoUrl;
+        @NotNull
         private String videoTitleKorean;
+        @NotNull
         private String videoTitleEng;
+        @NotNull
         private String videoStartTime;
+        @NotNull
         private String videoEndTime;
+        @NotNull
         private String videoThumbnailUrl;
         private Interest videoInterest;
         private List<SubtitleCreateDTO> subtitleCreateDTOList;

@@ -23,7 +23,7 @@ public class Video extends BaseTime {
     @Id
     private int id;
 
-    @Column
+    @Column(nullable = false)
     private String videoUrl;
 
     @Column
