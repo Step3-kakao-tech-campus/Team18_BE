@@ -1,7 +1,10 @@
 package com.example.demo;
 
 import com.example.demo.config.errors.exception.Exception400;
-import com.example.demo.mentoring.*;
+import com.example.demo.mentoring.domain.MentoringBoard;
+import com.example.demo.mentoring.domain.MentorPostStateEnum;
+import com.example.demo.mentoring.dto.MentorPostRequest;
+import com.example.demo.mentoring.repository.MentorPostJPARepostiory;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -155,12 +158,12 @@ public class MentoringTest extends RestDoc {
         System.out.println("테스트 : "+responseBody);
 
         // pid 에 해당하는 게시글 조회
-        MentorPost mentorPost = mentorPostJPARepostiory.findById(pid).orElseThrow(
+        MentoringBoard mentoringBoard = mentorPostJPARepostiory.findById(pid).orElseThrow(
                 () -> new Exception400(null, "해당 게시글이 없습니다."));
 
         // 데이터 확인
-        System.out.println(mentorPost.getTitle());
-        System.out.println(mentorPost.getContent());
+        System.out.println(mentoringBoard.getTitle());
+        System.out.println(mentoringBoard.getContent());
 
         // 조회한 게시글의 제목과 내용이 일치하는지 확인
         resultActions.andExpect(jsonPath("$.status").value("success"));
@@ -184,11 +187,11 @@ public class MentoringTest extends RestDoc {
         System.out.println("테스트 : "+responseBody);
 
         // pid 에 해당하는 게시글 조회
-        MentorPost mentorPost = mentorPostJPARepostiory.findById(pid).orElse(null);
+        MentoringBoard mentoringBoard = mentorPostJPARepostiory.findById(pid).orElse(null);
 
         // 조회한 게시글의 제목과 내용이 일치하는지 확인
         resultActions.andExpect(jsonPath("$.status").value("success"));
-        assertNull(mentorPost);
+        assertNull(mentoringBoard);
     }
 
     @Test
@@ -217,14 +220,14 @@ public class MentoringTest extends RestDoc {
         System.out.println("테스트 : "+responseBody);
 
         // pid 에 해당하는 게시글 조회
-        MentorPost mentorPost = mentorPostJPARepostiory.findById(pid).orElseThrow(
+        MentoringBoard mentoringBoard = mentorPostJPARepostiory.findById(pid).orElseThrow(
                 () -> new Exception400(null, "해당 게시글이 없습니다."));
 
-        System.out.println(mentorPost.getState());
+        System.out.println(mentoringBoard.getState());
 
         // 조회한 게시글의 제목과 내용이 일치하는지 확인
         resultActions.andExpect(jsonPath("$.status").value("success"));
-        assertEquals(mentorPost.getState(), MentorPostStateEnum.DONE);
+        assertEquals(mentoringBoard.getState(), MentorPostStateEnum.DONE);
     }
 
     @Test
@@ -254,12 +257,12 @@ public class MentoringTest extends RestDoc {
         System.out.println("테스트 : "+responseBody);
 
         // pid 에 해당하는 게시글 조회
-        MentorPost mentorPost = mentorPostJPARepostiory.findById(pid).orElseThrow(
+        MentoringBoard mentoringBoard = mentorPostJPARepostiory.findById(pid).orElseThrow(
                 () -> new Exception400(null, "해당 게시글이 없습니다."));
 
         // 데이터 확인
-        System.out.println(mentorPost.getTitle());
-        System.out.println(mentorPost.getContent());
+        System.out.println(mentoringBoard.getTitle());
+        System.out.println(mentoringBoard.getContent());
 
         // 조회한 게시글의 제목과 내용이 일치하는지 확인
         resultActions.andExpect(jsonPath("$.status").value("error"));

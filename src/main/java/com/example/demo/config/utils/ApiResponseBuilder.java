@@ -1,5 +1,7 @@
 package com.example.demo.config.utils;
 
+import com.example.demo.config.errors.ErrorCode;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
@@ -16,9 +18,12 @@ public class ApiResponseBuilder {
     @Setter
     @AllArgsConstructor
     public static class ApiResponse<T> {
+        @Schema(description = "상태", nullable = false)
         private final String status;
+        @Schema(description = "성공 시, 응답 데이터", nullable = false)
         private final T data;
-        private final String message;
+        @Schema(description = "실패 시, 실패 메시지", nullable = false)
+        private final T message;
     }
 
     public static <T> ApiResponse<T> success(T data) {
@@ -29,11 +34,11 @@ public class ApiResponseBuilder {
         return new ApiResponse<>(SUCCESS_STATUS, null, null);
     }
 
-    public static ApiResponse<?> fail(Map<String, String> errors, String message) {
-        return new ApiResponse<>(FAIL_STATUS, errors, message);
+    public static ApiResponse<?> fail(Map<String, String> errors) {
+        return new ApiResponse<>(FAIL_STATUS, errors, null);
     }
 
-    public static ApiResponse<?> error(String message) {
-        return new ApiResponse<>(ERROR_STATUS, null, message);
+    public static ApiResponse<?> error(ErrorCode errorCode) {
+        return new ApiResponse<>(ERROR_STATUS, null, errorCode.getMessage());
     }
 }

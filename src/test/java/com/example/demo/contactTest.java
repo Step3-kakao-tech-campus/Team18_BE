@@ -1,9 +1,12 @@
 package com.example.demo;
 
 import com.example.demo.config.errors.exception.Exception404;
-import com.example.demo.mentoring.contact.*;
-import com.example.demo.mentoring.done.ConnectedUser;
-import com.example.demo.mentoring.done.DoneJPARepository;
+import com.example.demo.mentoring.domain.ConnectedUser;
+import com.example.demo.mentoring.domain.ContactStateEnum;
+import com.example.demo.mentoring.domain.NotConnectedRegisterUser;
+import com.example.demo.mentoring.repository.DoneJPARepository;
+import com.example.demo.mentoring.dto.ContactRequest;
+import com.example.demo.mentoring.repository.ContactJPARepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;

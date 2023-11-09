@@ -29,7 +29,7 @@ INSERT INTO interests (created_at, category) VALUES
   (NOW(), 'K-POP'),
   (NOW(), 'Sports');
 
--- mentorPost Table
+-- mentoringBoard Table
 INSERT INTO mentor_posts (created_at, writer_id, title, content, state) VALUES
       (NOW(), 1, 'Teaching Programming', 'I can teach you how to code.', 'ACTIVE'),
       (NOW(), 1, 'Art Workshop', 'Let''s create beautiful art together.', 'DONE'),

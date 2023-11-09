@@ -22,6 +22,7 @@ public abstract class BaseTime {
     @Column(nullable = false)
     private LocalDateTime createdAt;
 
+    @CreatedDate
     @LastModifiedDate
     private LocalDateTime updatedAt;
 

@@ -1,20 +1,35 @@
 package com.example.demo;
 
 import com.example.demo.config.auth.CustomUserDetails;
-import com.example.demo.config.errors.exception.Exception404;
 import com.example.demo.interest.Interest;
 import com.example.demo.interest.InterestJPARepository;
+<<<<<<< HEAD
+import com.example.demo.user.domain.Role;
+import com.example.demo.user.domain.User;
+import com.example.demo.user.repository.UserJPARepository;
+import com.example.demo.user.domain.UserInterest;
+import com.example.demo.user.repository.UserInterestJPARepository;
+import com.example.demo.video.domain.VideoSubtitle;
+import com.example.demo.video.domain.Video;
+import com.example.demo.video.domain.VideoHistory;
+import com.example.demo.video.domain.VideoInterest;
+import com.example.demo.video.dto.VideoRequest;
+import com.example.demo.video.repository.VideoSubtitleJPARepository;
+import com.example.demo.video.repository.VideoHistoryJPARepository;
+import com.example.demo.video.repository.VideoInterestJPARepository;
+import com.example.demo.video.repository.VideoJPARepository;
+import com.example.demo.video.service.VideoService;
+=======
 import com.example.demo.mentoring.MentorPostRequest;
 import com.example.demo.user.Role;
 import com.example.demo.user.User;
 import com.example.demo.user.UserJPARepository;
 import com.example.demo.user.userInterest.UserInterest;
 import com.example.demo.user.userInterest.UserInterestJPARepository;
-import com.example.demo.video.*;
+>>>>>>> 1fc6cdd0c8cccffc40ec26b1ac967c45ff9e3fe4
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithUserDetails;
@@ -30,7 +45,6 @@ import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuild
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.put;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
 @ActiveProfiles("test")
@@ -43,7 +57,7 @@ public class VideoTest extends RestDoc{
     @Autowired
     private VideoJPARepository videoJPARepository;
     @Autowired
-    private SubtitleJPARepository subtitleJPARepository;
+    private VideoSubtitleJPARepository videoSubtitleJPARepository;
     @Autowired
     private UserJPARepository userJPARepository;
     @Autowired
@@ -72,8 +86,228 @@ public class VideoTest extends RestDoc{
         String responseBody = resultActions.andReturn().getResponse().getContentAsString();
         System.out.println("video main 전체조회 테스트 : "+responseBody);
 
+<<<<<<< HEAD
+        Interest interest2 = Interest.builder()
+                .category("test_Interest_2")
+                .build();
+
+        Interest interest3 = Interest.builder()
+                .category("test_Interest_3")
+                .build();
+
+        Video video1 = Video.builder()
+                .videoUrl("https://www.youtube.com/watch?v=6lw4Cbk1IzA")
+                .views(25)
+                .videoTitleEng("First page First Video")
+                .videoTitleKorean("첫번째 비디오")
+                .videoStartTime("23")
+                .videoEndTime("100")
+                .videoThumbnailUrl( "https://search.pstatic.net/common/?src=http%3A%2F%2Fimgnews.naver.net%2Fimage%2F016%2F2023%2F08%2F10%2F20230810000405_0_20230810112103061.jpg&type=sc960_832")
+                .build();
+
+        Video video2 = Video.builder()
+                .videoUrl("https://www.youtube.com/watch?v=6lw4Cbk1IzA")
+                .views(25)
+                .videoTitleEng("Second page Second Video")
+                .videoTitleKorean("두번째 비디오")
+                .videoStartTime("23")
+                .videoEndTime("100")
+                .videoThumbnailUrl( "https://search.pstatic.net/common/?src=http%3A%2F%2Fimgnews.naver.net%2Fimage%2F016%2F2023%2F08%2F10%2F20230810000405_0_20230810112103061.jpg&type=sc960_832")
+                .build();
+
+        Video video3 = Video.builder()
+                .videoUrl("https://www.youtube.com/watch?v=6lw4Cbk1IzA")
+                .views(25)
+                .videoTitleEng("Third page Third Video")
+                .videoTitleKorean("세번쨰 비디오")
+                .videoStartTime("23")
+                .videoEndTime("100")
+                .videoThumbnailUrl( "https://search.pstatic.net/common/?src=http%3A%2F%2Fimgnews.naver.net%2Fimage%2F016%2F2023%2F08%2F10%2F20230810000405_0_20230810112103061.jpg&type=sc960_832")
+                .build();
+
+        Video video4 = Video.builder()
+                .videoUrl("https://www.youtube.com/watch?v=6lw4Cbk1IzA")
+                .views(25)
+                .videoTitleEng("Fourth page Fourth Video")
+                .videoTitleKorean("네번째 비디오")
+                .videoStartTime("23")
+                .videoEndTime("100")
+                .videoThumbnailUrl( "https://search.pstatic.net/common/?src=http%3A%2F%2Fimgnews.naver.net%2Fimage%2F016%2F2023%2F08%2F10%2F20230810000405_0_20230810112103061.jpg&type=sc960_832")
+                .build();
+
+        Video video5 = Video.builder()
+                .videoUrl("https://www.youtube.com/watch?v=6lw4Cbk1IzA")
+                .views(25)
+                .videoTitleEng("Fifth page Fifth Video")
+                .videoTitleKorean("다섯번쨰 비디오")
+                .videoStartTime("23")
+                .videoEndTime("100")
+                .videoThumbnailUrl( "https://search.pstatic.net/common/?src=http%3A%2F%2Fimgnews.naver.net%2Fimage%2F016%2F2023%2F08%2F10%2F20230810000405_0_20230810112103061.jpg&type=sc960_832")
+                .build();
+
+        Video video6 = Video.builder()
+                .videoUrl("https://www.youtube.com/watch?v=6lw4Cbk1IzA")
+                .views(25)
+                .videoTitleEng("Sixth page Sixth Video")
+                .videoTitleKorean("여섯번째 비디오")
+                .videoStartTime("23")
+                .videoEndTime("100")
+                .videoThumbnailUrl( "https://search.pstatic.net/common/?src=http%3A%2F%2Fimgnews.naver.net%2Fimage%2F016%2F2023%2F08%2F10%2F20230810000405_0_20230810112103061.jpg&type=sc960_832")
+                .build();
+
+        Video video7 = Video.builder()
+                .videoUrl("https://www.youtube.com/watch?v=6lw4Cbk1IzA")
+                .views(25)
+                .videoTitleEng("Sixth page Sixth Video")
+                .videoTitleKorean("여섯번째 비디오")
+                .videoStartTime("23")
+                .videoEndTime("100")
+                .videoThumbnailUrl( "https://search.pstatic.net/common/?src=http%3A%2F%2Fimgnews.naver.net%2Fimage%2F016%2F2023%2F08%2F10%2F20230810000405_0_20230810112103061.jpg&type=sc960_832")
+                .build();
+
+        Video video8 = Video.builder()
+                .videoUrl("https://www.youtube.com/watch?v=6lw4Cbk1IzA")
+                .views(25)
+                .videoTitleEng("Sixth page Sixth Video")
+                .videoTitleKorean("여섯번째 비디오")
+                .videoStartTime("23")
+                .videoEndTime("100")
+                .videoThumbnailUrl( "https://search.pstatic.net/common/?src=http%3A%2F%2Fimgnews.naver.net%2Fimage%2F016%2F2023%2F08%2F10%2F20230810000405_0_20230810112103061.jpg&type=sc960_832")
+                .build();
+
+        Video video9 = Video.builder()
+                .videoUrl("https://www.youtube.com/watch?v=6lw4Cbk1IzA")
+                .views(25)
+                .videoTitleEng("Sixth page Sixth Video")
+                .videoTitleKorean("여섯번째 비디오")
+                .videoStartTime("23")
+                .videoEndTime("100")
+                .videoThumbnailUrl( "https://search.pstatic.net/common/?src=http%3A%2F%2Fimgnews.naver.net%2Fimage%2F016%2F2023%2F08%2F10%2F20230810000405_0_20230810112103061.jpg&type=sc960_832")
+                .build();
+
+        VideoInterest video1Interest1 = VideoInterest.builder()
+                .video(video1)
+                .interest(interest1)
+                .build();
+
+        VideoInterest video2Interest1 = VideoInterest.builder()
+                .video(video2)
+                .interest(interest1)
+                .build();
+
+        VideoInterest video3Interest1 = VideoInterest.builder()
+                .video(video3)
+                .interest(interest1)
+                .build();
+
+        VideoInterest video4Interest2 = VideoInterest.builder()
+                .video(video4)
+                .interest(interest2)
+                .build();
+
+        VideoInterest video5Interest1 = VideoInterest.builder()
+                .video(video5)
+                .interest(interest1)
+                .build();
+
+        VideoInterest video6Interest2 = VideoInterest.builder()
+                .video(video6)
+                .interest(interest2)
+                .build();
+
+        VideoInterest video7Interest3 = VideoInterest.builder()
+                .video(video7)
+                .interest(interest3)
+                .build();
+
+        VideoInterest video8Interest3 = VideoInterest.builder()
+                .video(video8)
+                .interest(interest3)
+                .build();
+
+        VideoInterest video9Interest1 = VideoInterest.builder()
+                .video(video9)
+                .interest(interest1)
+                .build();
+
+        VideoSubtitle videoSubtitle1 = VideoSubtitle.builder()
+                .video(video1)
+                .korStartTime("1")
+                .korEndTime("2")
+                .korSubtitleContent("asdfasdf")
+                .engStartTime("12")
+                .engEndTime("12")
+                .engSubtitleContent("ffff")
+                .build();
+
+        VideoSubtitle videoSubtitle2 = VideoSubtitle.builder()
+                .video(video1)
+                .korStartTime("4")
+                .korEndTime("7")
+                .korSubtitleContent("aaaaasdfasdf")
+                .engStartTime("12")
+                .engEndTime("12")
+                .engSubtitleContent("ffff")
+                .build();
+
+        VideoHistory videoHistory1 = VideoHistory.builder()
+                .video(video1)
+                .user(user)
+                .build();
+
+        VideoHistory videoHistory2 = VideoHistory.builder()
+                .video(video5)
+                .user(user)
+                .build();
+
+        VideoHistory videoHistory3 = VideoHistory.builder()
+                .video(video3)
+                .user(user)
+                .build();
+
+        UserInterest userInterest1 = UserInterest.builder()
+                .user(user)
+                .interest(interest1)
+                .build();
+
+        UserInterest userInterest2 = UserInterest.builder()
+                .user(user)
+                .interest(interest3)
+                .build();
+
+        interestJPARepository.save(interest1);
+        interestJPARepository.save(interest2);
+        interestJPARepository.save(interest3);
+        videoJPARepository.save(video1);
+        videoJPARepository.save(video2);
+        videoJPARepository.save(video3);
+        videoJPARepository.save(video4);
+        videoJPARepository.save(video5);
+        videoJPARepository.save(video6);
+        videoJPARepository.save(video7);
+        videoJPARepository.save(video8);
+        videoJPARepository.save(video9);
+        videoInterestJPARepository.save(video1Interest1);
+        videoInterestJPARepository.save(video2Interest1);
+        videoInterestJPARepository.save(video3Interest1);
+        videoInterestJPARepository.save(video4Interest2);
+        videoInterestJPARepository.save(video5Interest1);
+        videoInterestJPARepository.save(video6Interest2);
+        videoInterestJPARepository.save(video7Interest3);
+        videoInterestJPARepository.save(video8Interest3);
+        videoInterestJPARepository.save(video9Interest1);
+        videoSubtitleJPARepository.save(videoSubtitle1);
+        videoSubtitleJPARepository.save(videoSubtitle2);
+        userJPARepository.save(user);
+        videoHistoryJPARepository.save(videoHistory1);
+        videoHistoryJPARepository.save(videoHistory2);
+        videoHistoryJPARepository.save(videoHistory3);
+        userInterestJPARepository.save(userInterest1);
+        userInterestJPARepository.save(userInterest2);
+=======
         // verify
         resultActions.andExpect(jsonPath("$.status").value("success"));
+>>>>>>> 1fc6cdd0c8cccffc40ec26b1ac967c45ff9e3fe4
     }
 
     @Test
