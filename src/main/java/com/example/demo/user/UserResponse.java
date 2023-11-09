@@ -94,7 +94,7 @@ public class UserResponse {
         private String profileImage;
         private String phone;
         private Role role;
-        private List<String> categorylist;
+        private List<String> categoryList;
 
         public ProfileDTO(User user, List<String> userCategoryList) {
             this.id = user.getId();
@@ -107,7 +107,7 @@ public class UserResponse {
             this.phone = user.getPhone();
             this.profileImage = user.getProfileImage();
             this.role = user.getRole();
-            this.categorylist = userCategoryList;
+            this.categoryList = userCategoryList;
         }
     }
 }
