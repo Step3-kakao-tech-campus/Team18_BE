@@ -267,7 +267,7 @@ public class MentoringTest2 extends RestDoc {
     }
 
     @Test
-    @WithUserDetails("test1@example.com")
+    @WithUserDetails("test7@example.com")
     @DisplayName("멘토가 게시글 생성할때 테스트")
     void MentoringPostTest() throws Exception {
         // requestDTO : title, content
@@ -294,7 +294,7 @@ public class MentoringTest2 extends RestDoc {
     }
 
     @Test
-    @WithUserDetails("test1@example.com")
+    @WithUserDetails("test7@example.com")
     @DisplayName("멘토가 게시글 생성할때 내용 301자 이상테스트")
     void MentoringPostFail301Test() throws Exception {
         String testString = "LLLLorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla facilisi. Sed non augue eget metus suscipit semper. Vestibulum id mi nec sapienLorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla facilisi. Sed non augue eget metus suscipit semper. Vestibulum id mi nec sapienmi nec sapiegg";
@@ -322,7 +322,7 @@ public class MentoringTest2 extends RestDoc {
     }
 
     @Test
-    @WithUserDetails("test1@example.com")
+    @WithUserDetails("test7@example.com")
     @DisplayName("멘토가 게시글 생성할때 내용 300자 이상테스트")
     void MentoringPostSuccess300Test() throws Exception {
         String testString = "LLLorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla facilisi. Sed non augue eget metus suscipit semper. Vestibulum id mi nec sapienLorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla facilisi. Sed non augue eget metus suscipit semper. Vestibulum id mi nec sapienmi nec sapiegg";
@@ -350,12 +350,11 @@ public class MentoringTest2 extends RestDoc {
     }
 
     @Test
-    @WithUserDetails("test1@example.com")
+    @WithUserDetails("test7@example.com")
     @DisplayName("멘토가 게시글 생성할때 제목 299자 테스트")
     void MentoringPostSuccess299Test() throws Exception {
         // requestDTO : title, content
         String testString = "LLorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla facilisi. Sed non augue eget metus suscipit semper. Vestibulum id mi nec sapienLorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla facilisi. Sed non augue eget metus suscipit semper. Vestibulum id mi nec sapienmi nec sapiegg";
-        System.out.println(testString.length());
         MentorPostRequest.CreateMentorPostDTO requestDTO = new MentorPostRequest.CreateMentorPostDTO();
         requestDTO.setTitle("제목post");
         requestDTO.setContent(testString);

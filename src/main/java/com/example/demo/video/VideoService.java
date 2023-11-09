@@ -83,10 +83,8 @@ public class VideoService {
         if(user != null)
         {
             //최근 기록이 같은 영상일 경우 추가해서는 안됨.
-            Pageable recentfirstVideo = PageRequest.of(0, 1);
-            VideoHistory firstVideo = videoHistoryJPARepository.findHistoryVideo(user.getId(), recentfirstVideo).getContent().get(0);
-            if(firstVideo.getVideo().getId() != video.getId())
-            {
+            Page<VideoHistory> recentVideos = videoHistoryJPARepository.findHistoryVideo(user.getId(), PageRequest.of(0, 1));
+            if (isNewVideoHistory(recentVideos, video)) {
                 VideoHistory videoHistory = new VideoHistory(user, video);
                 videoHistoryJPARepository.save(videoHistory);
             }
@@ -101,6 +99,12 @@ public class VideoService {
                 .collect(Collectors.toList());
 
         return new VideoResponse.VideoResponseDTO(video, videoInterest, videoSubtitles,recommendVideo,recommendVideoInterest);
+    }
+
+    private boolean isNewVideoHistory(Page<VideoHistory> recentVideos, Video currentVideo) {
+        return recentVideos != null &&
+                !recentVideos.getContent().isEmpty() &&
+                recentVideos.getContent().get(0).getVideo().getId() != currentVideo.getId();
     }
 
     public List<VideoResponse.VideoAllResponseDTO> findHistoryVideo(Integer page, int id) {
