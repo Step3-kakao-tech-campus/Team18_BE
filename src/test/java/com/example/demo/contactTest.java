@@ -1,9 +1,12 @@
 package com.example.demo;
 
 import com.example.demo.config.errors.exception.Exception404;
-import com.example.demo.mentoring.contact.*;
-import com.example.demo.mentoring.done.ConnectedUser;
-import com.example.demo.mentoring.done.DoneJPARepository;
+import com.example.demo.mentoring.domain.ConnectedUser;
+import com.example.demo.mentoring.domain.ContactStateEnum;
+import com.example.demo.mentoring.domain.NotConnectedRegisterUser;
+import com.example.demo.mentoring.repository.DoneJPARepository;
+import com.example.demo.mentoring.dto.ContactRequest;
+import com.example.demo.mentoring.repository.ContactJPARepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
@@ -18,6 +21,7 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
@@ -39,7 +43,7 @@ public class contactTest extends RestDoc {
     private DoneJPARepository doneJPARepository;
 
     @Test
-    @WithUserDetails("admin@example.com")
+    @WithUserDetails("test3@example.com")
     @DisplayName("멘티 기준 화면 조회 테스트 코드")
     void contactMenteeTest() throws Exception {
         // given
@@ -58,7 +62,7 @@ public class contactTest extends RestDoc {
     }
 
     @Test
-    @WithUserDetails("john@example.com")
+    @WithUserDetails("test1@example.com")
     @DisplayName("멘토 기준 화면 조회 테스트 코드")
     void contactMentorTest() throws Exception {
 
@@ -79,7 +83,7 @@ public class contactTest extends RestDoc {
     }
     
     @Test
-    @WithUserDetails("john@example.com")
+    @WithUserDetails("test1@example.com")
     @DisplayName("멘토 기준 게시글 갯수 조회 테스트 코드")
     void countTest() throws Exception {
 
@@ -97,7 +101,7 @@ public class contactTest extends RestDoc {
     }
 
     @Test
-    @WithUserDetails("admin@example.com")
+    @WithUserDetails("test3@example.com")
     @DisplayName("멘티 기준 게시글 조회 테스트 코드")
     void countByMenteeTest() throws Exception {
         // given
@@ -116,7 +120,7 @@ public class contactTest extends RestDoc {
     }
 
     @Test
-    @WithUserDetails("john@example.com")
+    @WithUserDetails("test1@example.com")
     @DisplayName("멘토 : 신청 거부 기능 테스트 코드")
     void contactRefuseTest() throws Exception {
         // given
@@ -155,7 +159,7 @@ public class contactTest extends RestDoc {
     }
 
     @Test
-    @WithUserDetails("john@example.com")
+    @WithUserDetails("test1@example.com")
     @DisplayName("멘토 : 신청 수락 테스트 코드")
     void contactAccpetTest() throws Exception {
         // given
@@ -202,7 +206,7 @@ public class contactTest extends RestDoc {
     }
 
     @Test
-    @WithUserDetails("jane@example.com")
+    @WithUserDetails("test4@example.com")
     @DisplayName("멘티 : 신청 생성 테스트 코드")
     void createTest() throws Exception {
         // given
@@ -238,15 +242,16 @@ public class contactTest extends RestDoc {
     }
 
     @Test
-    @WithUserDetails("admin@example.com")
+    @WithUserDetails("test3@example.com")
     @DisplayName("멘티 : 신청 취소 테스트 코드")
     void deleteTest() throws Exception {
         // given
+        List<Integer> connectionIds = Arrays.asList(1, 2); // 실제로 취소할 연결 ID 목록
 
         // when
         ResultActions result = mvc.perform(
                 MockMvcRequestBuilders.delete("/contacts")
-                        .header("contactId", 1,2)
+                        .param("connectionId", connectionIds.stream().map(String::valueOf).toArray(String[]::new)) // 정수 목록을 문자열 배열로 변환
                         .contentType(MediaType.APPLICATION_JSON)
         );
         String responseBody = result.andReturn().getResponse().getContentAsString();

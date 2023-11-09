@@ -1,28 +1,54 @@
 package com.example.demo;
 
+import com.example.demo.config.auth.CustomUserDetails;
 import com.example.demo.interest.Interest;
 import com.example.demo.interest.InterestJPARepository;
+<<<<<<< HEAD
+import com.example.demo.user.domain.Role;
+import com.example.demo.user.domain.User;
+import com.example.demo.user.repository.UserJPARepository;
+import com.example.demo.user.domain.UserInterest;
+import com.example.demo.user.repository.UserInterestJPARepository;
+import com.example.demo.video.domain.VideoSubtitle;
+import com.example.demo.video.domain.Video;
+import com.example.demo.video.domain.VideoHistory;
+import com.example.demo.video.domain.VideoInterest;
+import com.example.demo.video.dto.VideoRequest;
+import com.example.demo.video.repository.VideoSubtitleJPARepository;
+import com.example.demo.video.repository.VideoHistoryJPARepository;
+import com.example.demo.video.repository.VideoInterestJPARepository;
+import com.example.demo.video.repository.VideoJPARepository;
+import com.example.demo.video.service.VideoService;
+=======
+import com.example.demo.mentoring.MentorPostRequest;
 import com.example.demo.user.Role;
 import com.example.demo.user.User;
 import com.example.demo.user.UserJPARepository;
 import com.example.demo.user.userInterest.UserInterest;
 import com.example.demo.user.userInterest.UserInterestJPARepository;
-import com.example.demo.video.*;
+>>>>>>> 1fc6cdd0c8cccffc40ec26b1ac967c45ff9e3fe4
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.jdbc.Sql;
+import org.springframework.test.web.servlet.ResultActions;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.put;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+
 @SpringBootTest
-@AutoConfigureMockMvc
 @ActiveProfiles("test")
-@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+@Sql("classpath:db/teardown.sql")
 public class VideoTest extends RestDoc{
     @Autowired
     private InterestJPARepository interestJPARepository;
@@ -31,7 +57,7 @@ public class VideoTest extends RestDoc{
     @Autowired
     private VideoJPARepository videoJPARepository;
     @Autowired
-    private SubtitleJPARepository subtitleJPARepository;
+    private VideoSubtitleJPARepository videoSubtitleJPARepository;
     @Autowired
     private UserJPARepository userJPARepository;
     @Autowired
@@ -46,24 +72,21 @@ public class VideoTest extends RestDoc{
     private ObjectMapper om;
 
     @Test
-    @Order(1)
-    void save() {
+    @DisplayName("video main 전체조회 Category Default")
+    void findAllVideoCategoryDefaultTest() throws Exception {
+        // given
 
-        User user = User.builder()
-                .email("anjdal64@gmail.com")
-                .password("asdf1234!")
-                .firstName("Jin")
-                .lastName("Seung")
-                .country("Korea")
-                .birthDate(LocalDate.of(1990, 1, 1))
-                .role(Role.MENTOR)
-                .phone("010-0000-0000")
-                .build();
+        // when
+        ResultActions resultActions = mvc.perform(
+                get("/videos/main")
+                        .param("page", String.valueOf(0))
+        );
 
-        Interest interest1 = Interest.builder()
-                .category("test_Interest_1")
-                .build();
+        // console
+        String responseBody = resultActions.andReturn().getResponse().getContentAsString();
+        System.out.println("video main 전체조회 테스트 : "+responseBody);
 
+<<<<<<< HEAD
         Interest interest2 = Interest.builder()
                 .category("test_Interest_2")
                 .build();
@@ -207,7 +230,7 @@ public class VideoTest extends RestDoc{
                 .interest(interest1)
                 .build();
 
-        Subtitle subtitle1 = Subtitle.builder()
+        VideoSubtitle videoSubtitle1 = VideoSubtitle.builder()
                 .video(video1)
                 .korStartTime("1")
                 .korEndTime("2")
@@ -217,7 +240,7 @@ public class VideoTest extends RestDoc{
                 .engSubtitleContent("ffff")
                 .build();
 
-        Subtitle subtitle2 = Subtitle.builder()
+        VideoSubtitle videoSubtitle2 = VideoSubtitle.builder()
                 .video(video1)
                 .korStartTime("4")
                 .korEndTime("7")
@@ -273,64 +296,174 @@ public class VideoTest extends RestDoc{
         videoInterestJPARepository.save(video7Interest3);
         videoInterestJPARepository.save(video8Interest3);
         videoInterestJPARepository.save(video9Interest1);
-        subtitleJPARepository.save(subtitle1);
-        subtitleJPARepository.save(subtitle2);
+        videoSubtitleJPARepository.save(videoSubtitle1);
+        videoSubtitleJPARepository.save(videoSubtitle2);
         userJPARepository.save(user);
         videoHistoryJPARepository.save(videoHistory1);
         videoHistoryJPARepository.save(videoHistory2);
         videoHistoryJPARepository.save(videoHistory3);
         userInterestJPARepository.save(userInterest1);
         userInterestJPARepository.save(userInterest2);
+=======
+        // verify
+        resultActions.andExpect(jsonPath("$.status").value("success"));
+>>>>>>> 1fc6cdd0c8cccffc40ec26b1ac967c45ff9e3fe4
     }
 
     @Test
-    @Order(2)
-    void findAllTest() throws Exception{
-        List<VideoResponse.VideoPageResponseDTO> videoFind = videoService.findAllVideo(0);
+    @DisplayName("video main 전체조회 Category 1")
+    void findAllVideoCategoryTest() throws Exception {
+        // given
+
+        // when
+        ResultActions resultActions = mvc.perform(
+                get("/videos/main")
+                        .param("page", String.valueOf(0))
+                        .param("category", String.valueOf(1))
+        );
+
+        // console
+        String responseBody = resultActions.andReturn().getResponse().getContentAsString();
+        System.out.println("video main 전체조회 Category 1 테스트 : "+responseBody);
+
+        // verify
+        resultActions.andExpect(jsonPath("$.status").value("success"));
     }
 
     @Test
-    @Order(2)
-    void HistoryTest() throws Exception{
-        User user2 = User.builder()
-                .email("anjfffffdal64@gmail.com")
-                .password("asdf1234!")
-                .firstName("Jin")
-                .lastName("Seung")
-                .country("Korea")
-                .birthDate(LocalDate.of(1990, 1, 1))
-                .role(Role.MENTOR)
-                .phone("010-0000-0000")
-                .build();
+    @DisplayName("video 개인 조회 테스트")
+    void findVideoNoAuthTest() throws Exception {
+        // given
+        int videoId = 1;
 
-        userJPARepository.save(user2);
-        VideoResponse.VideoResponseDTO videoFind = videoService.findVideo(3,user2);
+        // when
+        ResultActions resultActions = mvc.perform(
+                get("/videos/" + videoId)
+        );
+
+        // console
+        String responseBody = resultActions.andReturn().getResponse().getContentAsString();
+        System.out.println("video 개인 조회 인증 없이 테스트 : "+responseBody);
+
+        // verify
+        resultActions.andExpect(jsonPath("$.status").value("success"));
     }
 
     @Test
-    @Order(2)
-    void findHistoryTest() throws Exception{
-        List<VideoResponse.VideoAllResponseDTO> videoFind = videoService.findHistoryVideo(0,1);
-        org.assertj.core.api.Assertions.assertThat(3)
-                .isEqualTo(videoFind.get(0).getVideoID());
+    @WithUserDetails("test1@example.com")
+    @DisplayName("video 개인 조회 인증있이 테스트")
+    void findVideoAuthTest() throws Exception {
+        // given
+        int videoId = 1;
+
+        // when
+        ResultActions resultActions = mvc.perform(
+                get("/videos/" + videoId)
+        );
+
+        // console
+        String responseBody = resultActions.andReturn().getResponse().getContentAsString();
+        System.out.println("video 개인 조회 인증 있이 테스트 : "+responseBody);
+
+        // verify
+        resultActions.andExpect(jsonPath("$.status").value("success"));
     }
 
     @Test
-    @Order(2)
-    void findUserCategoryTest() throws Exception{
-        List<VideoResponse.VideoAllResponseDTO> findUserCategory = videoService.findUserCategory(1);
+    @WithUserDetails("test1@example.com")
+    @DisplayName("video 개인 조회 인증있이 기록 확인 테스트")
+    void findHistoryTest() throws Exception {
+        // given
+        int videoId = 3;
+
+        mvc.perform(
+                get("/videos/" + videoId)
+        );
+
+        ResultActions resultActions = mvc.perform(
+                get("/videos/history")
+        );
+
+        // console
+        String responseBody = resultActions.andReturn().getResponse().getContentAsString();
+        System.out.println("video 개인 조회 인증있이 기록 확인 테스트 : "+responseBody);
+
+        // verify
+        resultActions.andExpect(jsonPath("$.status").value("success"));
     }
 
     @Test
-    @Order(2)
-    void videoPostTest() throws Exception{
+    @WithUserDetails("test1@example.com")
+    @DisplayName("video 개인 조회 인증있이 기록 확인 최근 영상 같을 경우 추가 X 테스트")
+    void findHistoryExceptionTest() throws Exception {
+        // given
+        int videoId = 1;
+
+        mvc.perform(
+                get("/videos/" + videoId)
+        );
+
+        ResultActions resultActions = mvc.perform(
+                get("/videos/history")
+        );
+
+        // console
+        String responseBody = resultActions.andReturn().getResponse().getContentAsString();
+        System.out.println("video 개인 조회 인증있이 기록 확인 최근 영상 같을 경우 추가 X 테스트 : "+responseBody);
+
+        // verify
+        resultActions.andExpect(jsonPath("$.status").value("success"));
+    }
+
+    @Test
+    @DisplayName("video 개인 조회 인증있이 기록 확인 테스트 인증이 없으니 error")
+    void findHistoryFailTest() throws Exception {
+        // given
+        int videoId = 1;
+
+        // when
+        mvc.perform(get("/videos/" + videoId));
+
+        ResultActions resultActions = mvc.perform(
+                get("/videos/history")
+        );
+
+        // console
+        String responseBody = resultActions.andReturn().getResponse().getContentAsString();
+        System.out.println("video 개인 조회 인증있이 기록 확인 테스트 인증이 없으니 error : "+responseBody);
+
+        // verify
+        resultActions.andExpect(jsonPath("$.status").value("error"));
+    }
+
+    @Test
+    @WithUserDetails("test1@example.com")
+    @DisplayName("video 전체 조회 관심있는 영상")
+    void findIntestVideo() throws Exception {
+        // given
+
+        ResultActions resultActions = mvc.perform(
+                get("/videos/interest")
+        );
+
+        // console
+        String responseBody = resultActions.andReturn().getResponse().getContentAsString();
+        System.out.println("video 전체 조회 관심있는 영상 : "+responseBody);
+
+        // verify
+        resultActions.andExpect(jsonPath("$.status").value("success"));
+    }
+
+    @Test
+    @DisplayName("post Unit Test")
+    void postVideoUnitTest() throws Exception{
         User user3 = User.builder()
                 .email("anjfffffffffdal64@gmail.com")
                 .password("asdf1234!")
                 .firstName("Jin")
                 .lastName("Seung")
                 .country("Korea")
-                .birthDate(LocalDate.of(1990, 1, 1))
+                .birthDate(LocalDate.now())
                 .role(Role.ADMIN)
                 .phone("010-0000-0000")
                 .build();
@@ -386,12 +519,40 @@ public class VideoTest extends RestDoc{
     }
 
     @Test
-    @Order(3)
-    void findOmTest() throws Exception {
-        List<VideoResponse.VideoPageResponseDTO> videoFind = videoService.findAllVideo(0);
+    @WithUserDetails("admin@example.com")
+    @DisplayName("postTest")
+    void postVideoTest() throws Exception {
+        // given
 
-        String responseBody = om.writeValueAsString(videoFind);
+        // requestDTO : title, content
+        Interest interest = interestJPARepository.findById(1).get();
 
-        System.out.println("전체조회테스트 : " + responseBody);
+        VideoRequest.CreateDTO requestDTO = new VideoRequest.CreateDTO();
+        requestDTO.setVideoTitleEng("posttest");
+        requestDTO.setVideoUrl("www.naver.com");
+        requestDTO.setVideoTitleKorean("한글");
+        requestDTO.setVideoStartTime("1");
+        requestDTO.setVideoEndTime("12");
+        requestDTO.setVideoThumbnailUrl("www.google.com");
+        requestDTO.setVideoInterest(interest);
+        requestDTO.setSubtitleCreateDTOList(null);
+
+        String requestBody = om.writeValueAsString(requestDTO);
+
+        System.out.println("테스트 : "+requestBody);
+
+        // when
+        ResultActions resultActions = mvc.perform(
+                post("/videos")
+                        .content(requestBody)
+                        .contentType(MediaType.APPLICATION_JSON)
+        );
+
+        String responseBody = resultActions.andReturn().getResponse().getContentAsString();
+        System.out.println("테스트 : "+responseBody);
+
+        // verify
+        resultActions.andExpect(jsonPath("$.status").value("error"));
     }
+
 }

@@ -2,7 +2,10 @@ package com.example.demo.mentoringtest;
 
 import com.example.demo.RestDoc;
 import com.example.demo.config.errors.exception.Exception400;
-import com.example.demo.mentoring.*;
+import com.example.demo.mentoring.domain.MentoringBoard;
+import com.example.demo.mentoring.domain.MentorPostStateEnum;
+import com.example.demo.mentoring.dto.MentorPostRequest;
+import com.example.demo.mentoring.repository.MentorPostJPARepostiory;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -37,7 +40,7 @@ public class MentoringTest2 extends RestDoc {
 
         // when
         ResultActions resultActions = mvc.perform(
-                get("/mentorings/post")
+                get("/mentorings")
         );
 
         // console
@@ -55,7 +58,7 @@ public class MentoringTest2 extends RestDoc {
 
         // when
         ResultActions resultActions = mvc.perform(
-                get("/mentorings/post")
+                get("/mentorings")
                         .param("category", "TITLE")
                         .param("search", "Teaching")
         );
@@ -75,7 +78,7 @@ public class MentoringTest2 extends RestDoc {
 
         // when
         ResultActions resultActions = mvc.perform(
-                get("/mentorings/post")
+                get("/mentorings")
                         .param("category", "WRITER")
                         .param("search", "John")
         );
@@ -95,7 +98,7 @@ public class MentoringTest2 extends RestDoc {
 
         // when
         ResultActions resultActions = mvc.perform(
-                get("/mentorings/post")
+                get("/mentorings")
                         .param("category", "INTEREST")
                         .param("search", "K-POP")
         );
@@ -116,7 +119,7 @@ public class MentoringTest2 extends RestDoc {
 
         // when
         ResultActions resultActions = mvc.perform(
-                get("/mentorings/post/" + id)
+                get("/mentorings/" + id)
         );
 
         // console
@@ -129,14 +132,14 @@ public class MentoringTest2 extends RestDoc {
     }
 
     @Test
-    @WithUserDetails("john@example.com")
+    @WithUserDetails("test1@example.com")
     @DisplayName("게시글 수정 테스트")
     void MentoringTestDetails() throws Exception {
         // given
         int pid = 1;
 
         // requestDTO : title, content
-        MentorPostRequest.CreateDTO requestDTO = new MentorPostRequest.CreateDTO();
+        MentorPostRequest.CreateMentorPostDTO requestDTO = new MentorPostRequest.CreateMentorPostDTO();
         requestDTO.setTitle("바뀐 제목111");
         requestDTO.setContent("바뀐 내용111");
 
@@ -146,7 +149,7 @@ public class MentoringTest2 extends RestDoc {
 
         // when
         ResultActions resultActions = mvc.perform(
-                put("/mentorings/post/" + pid)
+                put("/mentorings/" + pid)
                 .content(requestBody)
                 .contentType(MediaType.APPLICATION_JSON)
         );
@@ -156,12 +159,12 @@ public class MentoringTest2 extends RestDoc {
         System.out.println("테스트 : "+responseBody);
 
         // pid 에 해당하는 게시글 조회
-        MentorPost mentorPost = mentorPostJPARepostiory.findById(pid).orElseThrow(
+        MentoringBoard mentoringBoard = mentorPostJPARepostiory.findById(pid).orElseThrow(
                 () -> new Exception400(null, "해당 게시글이 없습니다."));
 
         // 데이터 확인
-        System.out.println(mentorPost.getTitle());
-        System.out.println(mentorPost.getContent());
+        System.out.println(mentoringBoard.getTitle());
+        System.out.println(mentoringBoard.getContent());
 
         // 조회한 게시글의 제목과 내용이 일치하는지 확인
         resultActions.andExpect(jsonPath("$.status").value("success"));
@@ -169,7 +172,7 @@ public class MentoringTest2 extends RestDoc {
     }
 
     @Test
-    @WithUserDetails("john@example.com")
+    @WithUserDetails("test1@example.com")
     @DisplayName("게시글 삭제 테스트 코드")
     void MentoringTestDelete() throws Exception {
         // given
@@ -177,7 +180,7 @@ public class MentoringTest2 extends RestDoc {
 
         // when
         ResultActions resultActions = mvc.perform(
-                delete("/mentorings/post/" + pid)
+                delete("/mentorings/" + pid)
         );
 
         // console
@@ -185,15 +188,15 @@ public class MentoringTest2 extends RestDoc {
         System.out.println("테스트 : "+responseBody);
 
         // pid 에 해당하는 게시글 조회
-        MentorPost mentorPost = mentorPostJPARepostiory.findById(pid).orElse(null);
+        MentoringBoard mentoringBoard = mentorPostJPARepostiory.findById(pid).orElse(null);
 
         // 조회한 게시글의 제목과 내용이 일치하는지 확인
         resultActions.andExpect(jsonPath("$.status").value("success"));
-        assertNull(mentorPost);
+        assertNull(mentoringBoard);
     }
 
     @Test
-    @WithUserDetails("john@example.com")
+    @WithUserDetails("test1@example.com")
     @DisplayName("게시글 Done 테스트 코드")
     void MentoringTestDone() throws Exception {
         // given
@@ -208,7 +211,7 @@ public class MentoringTest2 extends RestDoc {
 
         // when
         ResultActions resultActions = mvc.perform(
-                patch("/mentorings/post/" + pid + "/done")
+                patch("/mentorings/" + pid + "/done")
                 .content(requestBody)
                 .contentType(MediaType.APPLICATION_JSON)
         );
@@ -218,24 +221,24 @@ public class MentoringTest2 extends RestDoc {
         System.out.println("테스트 : "+responseBody);
 
         // pid 에 해당하는 게시글 조회
-        MentorPost mentorPost = mentorPostJPARepostiory.findById(pid).orElseThrow(
+        MentoringBoard mentoringBoard = mentorPostJPARepostiory.findById(pid).orElseThrow(
                 () -> new Exception400(null, "해당 게시글이 없습니다."));
 
-        System.out.println(mentorPost.getState());
+        System.out.println(mentoringBoard.getState());
 
         // 조회한 게시글의 제목과 내용이 일치하는지 확인
         resultActions.andExpect(jsonPath("$.status").value("success"));
-        assertEquals(mentorPost.getState(), MentorPostStateEnum.DONE);
+        assertEquals(mentoringBoard.getState(), MentorPostStateEnum.DONE);
     }
 
     @Test
-    @WithUserDetails("admin@example.com")
+    @WithUserDetails("test3@example.com")
     @DisplayName("멘티가 게시글을 수정하려고 하는 경우 테스트")
     void MentoringTest2() throws Exception {
         int pid = 1;
 
         // requestDTO : title, content
-        MentorPostRequest.CreateDTO requestDTO = new MentorPostRequest.CreateDTO();
+        MentorPostRequest.CreateMentorPostDTO requestDTO = new MentorPostRequest.CreateMentorPostDTO();
         requestDTO.setTitle("바뀐 제목111");
         requestDTO.setContent("바뀐 내용111");
 
@@ -245,7 +248,7 @@ public class MentoringTest2 extends RestDoc {
 
         // when
         ResultActions resultActions = mvc.perform(
-                put("/mentorings/post/" + pid)
+                put("/mentorings/" + pid)
                         .content(requestBody)
                         .contentType(MediaType.APPLICATION_JSON)
         );
@@ -255,15 +258,154 @@ public class MentoringTest2 extends RestDoc {
         System.out.println("테스트 : "+responseBody);
 
         // pid 에 해당하는 게시글 조회
-        MentorPost mentorPost = mentorPostJPARepostiory.findById(pid).orElseThrow(
+        MentoringBoard mentoringBoard = mentorPostJPARepostiory.findById(pid).orElseThrow(
                 () -> new Exception400(null, "해당 게시글이 없습니다."));
 
         // 데이터 확인
-        System.out.println(mentorPost.getTitle());
-        System.out.println(mentorPost.getContent());
+        System.out.println(mentoringBoard.getTitle());
+        System.out.println(mentoringBoard.getContent());
 
         // 조회한 게시글의 제목과 내용이 일치하는지 확인
         resultActions.andExpect(jsonPath("$.status").value("error"));
+    }
+
+    @Test
+    @WithUserDetails("test1@example.com")
+    @DisplayName("멘토가 게시글 생성할때 테스트")
+    void MentoringPostTest() throws Exception {
+        // requestDTO : title, content
+        MentorPostRequest.CreateMentorPostDTO requestDTO = new MentorPostRequest.CreateMentorPostDTO();
+        requestDTO.setTitle("제목post");
+        requestDTO.setContent("내용post");
+
+        String requestBody = om.writeValueAsString(requestDTO);
+
+        System.out.println("테스트 : "+requestBody);
+
+        // when
+        ResultActions resultActions = mvc.perform(
+                post("/mentorings")
+                        .content(requestBody)
+                        .contentType(MediaType.APPLICATION_JSON)
+        );
+
+        // console
+        String responseBody = resultActions.andReturn().getResponse().getContentAsString();
+        System.out.println("테스트 : "+responseBody);
+
+        resultActions.andExpect(jsonPath("$.status").value("success"));
+    }
+
+    @Test
+    @WithUserDetails("test1@example.com")
+    @DisplayName("멘토가 게시글 생성할때 내용 301자 이상테스트")
+    void MentoringPostFail301Test() throws Exception {
+        String testString = "LLLLorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla facilisi. Sed non augue eget metus suscipit semper. Vestibulum id mi nec sapienLorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla facilisi. Sed non augue eget metus suscipit semper. Vestibulum id mi nec sapienmi nec sapiegg";
+        //300자
+        // requestDTO : title, content
+        MentorPostRequest.CreateMentorPostDTO requestDTO = new MentorPostRequest.CreateMentorPostDTO();
+        requestDTO.setTitle("제목post");
+        requestDTO.setContent(testString);
+        String requestBody = om.writeValueAsString(requestDTO);
+
+        System.out.println("테스트 : "+requestBody);
+
+        // when
+        ResultActions resultActions = mvc.perform(
+                post("/mentorings")
+                        .content(requestBody)
+                        .contentType(MediaType.APPLICATION_JSON)
+        );
+
+        // console
+        String responseBody = resultActions.andReturn().getResponse().getContentAsString();
+        System.out.println("테스트 : "+responseBody);
+
+        resultActions.andExpect(jsonPath("$.status").value("fail"));
+    }
+
+    @Test
+    @WithUserDetails("test1@example.com")
+    @DisplayName("멘토가 게시글 생성할때 내용 300자 이상테스트")
+    void MentoringPostSuccess300Test() throws Exception {
+        String testString = "LLLorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla facilisi. Sed non augue eget metus suscipit semper. Vestibulum id mi nec sapienLorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla facilisi. Sed non augue eget metus suscipit semper. Vestibulum id mi nec sapienmi nec sapiegg";
+        //300자
+        // requestDTO : title, content
+        MentorPostRequest.CreateMentorPostDTO requestDTO = new MentorPostRequest.CreateMentorPostDTO();
+        requestDTO.setTitle("제목post");
+        requestDTO.setContent(testString);
+        String requestBody = om.writeValueAsString(requestDTO);
+
+        System.out.println("테스트 : "+requestBody);
+
+        // when
+        ResultActions resultActions = mvc.perform(
+                post("/mentorings")
+                        .content(requestBody)
+                        .contentType(MediaType.APPLICATION_JSON)
+        );
+
+        // console
+        String responseBody = resultActions.andReturn().getResponse().getContentAsString();
+        System.out.println("테스트 : "+responseBody);
+
+        resultActions.andExpect(jsonPath("$.status").value("success"));
+    }
+
+    @Test
+    @WithUserDetails("test1@example.com")
+    @DisplayName("멘토가 게시글 생성할때 제목 299자 테스트")
+    void MentoringPostSuccess299Test() throws Exception {
+        // requestDTO : title, content
+        String testString = "LLorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla facilisi. Sed non augue eget metus suscipit semper. Vestibulum id mi nec sapienLorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla facilisi. Sed non augue eget metus suscipit semper. Vestibulum id mi nec sapienmi nec sapiegg";
+        System.out.println(testString.length());
+        MentorPostRequest.CreateMentorPostDTO requestDTO = new MentorPostRequest.CreateMentorPostDTO();
+        requestDTO.setTitle("제목post");
+        requestDTO.setContent(testString);
+
+        String requestBody = om.writeValueAsString(requestDTO);
+
+        System.out.println("테스트 : "+requestBody);
+
+        // when
+        ResultActions resultActions = mvc.perform(
+                post("/mentorings")
+                        .content(requestBody)
+                        .contentType(MediaType.APPLICATION_JSON)
+        );
+
+        // console
+        String responseBody = resultActions.andReturn().getResponse().getContentAsString();
+        System.out.println("테스트 : "+responseBody);
+
+        resultActions.andExpect(jsonPath("$.status").value("success"));
+    }
+
+    @Test
+    @WithUserDetails("test1@example.com")
+    @DisplayName("멘토가 게시글 생성할때 제목 null 테스트")
+    void MentoringPostTitleNullTest() throws Exception {
+        // requestDTO : title, content
+        String testString = "LLorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla facilisi. Sed non augue eget metus suscipit semper. Vestibulum id mi nec sapienLorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla facilisi. Sed non augue eget metus suscipit semper. Vestibulum id mi nec sapienmi nec sapiegg";
+        MentorPostRequest.CreateMentorPostDTO requestDTO = new MentorPostRequest.CreateMentorPostDTO();
+        requestDTO.setContent(testString);
+
+        String requestBody = om.writeValueAsString(requestDTO);
+
+        System.out.println("테스트 : "+requestBody);
+
+        // when
+        ResultActions resultActions = mvc.perform(
+                post("/mentorings")
+                        .content(requestBody)
+                        .contentType(MediaType.APPLICATION_JSON)
+        );
+
+        // console
+        String responseBody = resultActions.andReturn().getResponse().getContentAsString();
+        System.out.println("테스트 : "+responseBody);
+
+        resultActions.andExpect(jsonPath("$.status").value("fail"));
     }
 
 }
