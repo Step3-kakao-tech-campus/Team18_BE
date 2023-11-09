@@ -49,6 +49,8 @@ public class UserRequest {
         @Pattern(regexp = "^\\d{2,3}-\\d{3,4}-\\d{4}$")
         private String phone;
 
+        private String profileImage;
+
         @NotNull(message = "역할을 선택해주세요.")
         private Role role;
 
@@ -66,7 +68,7 @@ public class UserRequest {
                     .introduction(introduction)
                     .birthDate(birthDate)
                     .phone(phone)
-                    .profileImage(null)
+                    .profileImage(profileImage)
                     .role(role)
                     .build();
         }
