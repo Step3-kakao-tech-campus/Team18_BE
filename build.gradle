@@ -72,6 +72,14 @@ tasks.named('asciidoctor') {
 	dependsOn test
 }
 
+task copyPrivate(type: Copy) {
+	copy {
+		from './Team18_BE_Private/private'
+		include "*.yml"
+		into 'src/main/resources'
+	}
+}
+
 jar {
 	enabled = false
 }
