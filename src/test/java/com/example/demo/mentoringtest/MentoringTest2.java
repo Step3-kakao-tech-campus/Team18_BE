@@ -289,8 +289,120 @@ public class MentoringTest2 extends RestDoc {
         // console
         String responseBody = resultActions.andReturn().getResponse().getContentAsString();
         System.out.println("테스트 : "+responseBody);
+
+        resultActions.andExpect(jsonPath("$.status").value("success"));
     }
 
+    @Test
+    @WithUserDetails("test1@example.com")
+    @DisplayName("멘토가 게시글 생성할때 내용 301자 이상테스트")
+    void MentoringPostFail301Test() throws Exception {
+        String testString = "LLLLorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla facilisi. Sed non augue eget metus suscipit semper. Vestibulum id mi nec sapienLorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla facilisi. Sed non augue eget metus suscipit semper. Vestibulum id mi nec sapienmi nec sapiegg";
+        //300자
+        // requestDTO : title, content
+        MentorPostRequest.CreateMentorPostDTO requestDTO = new MentorPostRequest.CreateMentorPostDTO();
+        requestDTO.setTitle("제목post");
+        requestDTO.setContent(testString);
+        String requestBody = om.writeValueAsString(requestDTO);
 
+        System.out.println("테스트 : "+requestBody);
+
+        // when
+        ResultActions resultActions = mvc.perform(
+                post("/mentorings")
+                        .content(requestBody)
+                        .contentType(MediaType.APPLICATION_JSON)
+        );
+
+        // console
+        String responseBody = resultActions.andReturn().getResponse().getContentAsString();
+        System.out.println("테스트 : "+responseBody);
+
+        resultActions.andExpect(jsonPath("$.status").value("fail"));
+    }
+
+    @Test
+    @WithUserDetails("test1@example.com")
+    @DisplayName("멘토가 게시글 생성할때 내용 300자 이상테스트")
+    void MentoringPostSuccess300Test() throws Exception {
+        String testString = "LLLorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla facilisi. Sed non augue eget metus suscipit semper. Vestibulum id mi nec sapienLorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla facilisi. Sed non augue eget metus suscipit semper. Vestibulum id mi nec sapienmi nec sapiegg";
+        //300자
+        // requestDTO : title, content
+        MentorPostRequest.CreateMentorPostDTO requestDTO = new MentorPostRequest.CreateMentorPostDTO();
+        requestDTO.setTitle("제목post");
+        requestDTO.setContent(testString);
+        String requestBody = om.writeValueAsString(requestDTO);
+
+        System.out.println("테스트 : "+requestBody);
+
+        // when
+        ResultActions resultActions = mvc.perform(
+                post("/mentorings")
+                        .content(requestBody)
+                        .contentType(MediaType.APPLICATION_JSON)
+        );
+
+        // console
+        String responseBody = resultActions.andReturn().getResponse().getContentAsString();
+        System.out.println("테스트 : "+responseBody);
+
+        resultActions.andExpect(jsonPath("$.status").value("success"));
+    }
+
+    @Test
+    @WithUserDetails("test1@example.com")
+    @DisplayName("멘토가 게시글 생성할때 제목 299자 테스트")
+    void MentoringPostSuccess299Test() throws Exception {
+        // requestDTO : title, content
+        String testString = "LLorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla facilisi. Sed non augue eget metus suscipit semper. Vestibulum id mi nec sapienLorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla facilisi. Sed non augue eget metus suscipit semper. Vestibulum id mi nec sapienmi nec sapiegg";
+        System.out.println(testString.length());
+        MentorPostRequest.CreateMentorPostDTO requestDTO = new MentorPostRequest.CreateMentorPostDTO();
+        requestDTO.setTitle("제목post");
+        requestDTO.setContent(testString);
+
+        String requestBody = om.writeValueAsString(requestDTO);
+
+        System.out.println("테스트 : "+requestBody);
+
+        // when
+        ResultActions resultActions = mvc.perform(
+                post("/mentorings")
+                        .content(requestBody)
+                        .contentType(MediaType.APPLICATION_JSON)
+        );
+
+        // console
+        String responseBody = resultActions.andReturn().getResponse().getContentAsString();
+        System.out.println("테스트 : "+responseBody);
+
+        resultActions.andExpect(jsonPath("$.status").value("success"));
+    }
+
+    @Test
+    @WithUserDetails("test1@example.com")
+    @DisplayName("멘토가 게시글 생성할때 제목 null 테스트")
+    void MentoringPostTitleNullTest() throws Exception {
+        // requestDTO : title, content
+        String testString = "LLorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla facilisi. Sed non augue eget metus suscipit semper. Vestibulum id mi nec sapienLorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla facilisi. Sed non augue eget metus suscipit semper. Vestibulum id mi nec sapienmi nec sapiegg";
+        MentorPostRequest.CreateMentorPostDTO requestDTO = new MentorPostRequest.CreateMentorPostDTO();
+        requestDTO.setContent(testString);
+
+        String requestBody = om.writeValueAsString(requestDTO);
+
+        System.out.println("테스트 : "+requestBody);
+
+        // when
+        ResultActions resultActions = mvc.perform(
+                post("/mentorings")
+                        .content(requestBody)
+                        .contentType(MediaType.APPLICATION_JSON)
+        );
+
+        // console
+        String responseBody = resultActions.andReturn().getResponse().getContentAsString();
+        System.out.println("테스트 : "+responseBody);
+
+        resultActions.andExpect(jsonPath("$.status").value("fail"));
+    }
 
 }
