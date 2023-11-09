@@ -4,6 +4,7 @@ import com.example.demo.config.auth.CustomUserDetails;
 import com.example.demo.config.errors.exception.Exception404;
 import com.example.demo.interest.Interest;
 import com.example.demo.interest.InterestJPARepository;
+import com.example.demo.mentoring.MentorPostRequest;
 import com.example.demo.user.Role;
 import com.example.demo.user.User;
 import com.example.demo.user.UserJPARepository;
@@ -15,6 +16,7 @@ import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
@@ -24,6 +26,8 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.put;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -214,6 +218,107 @@ public class VideoTest extends RestDoc{
 
         // verify
         resultActions.andExpect(jsonPath("$.status").value("success"));
+    }
+
+    @Test
+    @DisplayName("post Unit Test")
+    void postVideoUnitTest() throws Exception{
+        User user3 = User.builder()
+                .email("anjfffffffffdal64@gmail.com")
+                .password("asdf1234!")
+                .firstName("Jin")
+                .lastName("Seung")
+                .country("Korea")
+                .birthDate(LocalDate.now())
+                .role(Role.ADMIN)
+                .phone("010-0000-0000")
+                .build();
+
+        Interest interest4 = Interest.builder()
+                .category("test_Interest_4")
+                .build();
+
+        interestJPARepository.save(interest4);
+
+        VideoRequest.CreateDTO createDTO = getCreateDTO();
+        createDTO.setVideoInterest(interest4);
+
+        videoService.createVideo(createDTO, user3);
+    }
+
+    private static VideoRequest.CreateDTO getCreateDTO() {
+        VideoRequest.CreateDTO createDTO = new VideoRequest.CreateDTO();
+        List<VideoRequest.CreateDTO.SubtitleCreateDTO> subtitleCreateDTOs = getSubtitleCreateDTOS();
+
+        createDTO.setVideoUrl("www.naver.com");
+        createDTO.setVideoStartTime("0");
+        createDTO.setVideoEndTime("15");
+        createDTO.setVideoTitleKorean("네이버");
+        createDTO.setVideoTitleEng("naver");
+        createDTO.setVideoThumbnailUrl("alsjflsdjfsakl.com");
+        createDTO.setSubtitleCreateDTOList(subtitleCreateDTOs);
+        return createDTO;
+    }
+
+    private static List<VideoRequest.CreateDTO.SubtitleCreateDTO> getSubtitleCreateDTOS() {
+        VideoRequest.CreateDTO.SubtitleCreateDTO subDTO1 = new VideoRequest.CreateDTO.SubtitleCreateDTO();
+        VideoRequest.CreateDTO.SubtitleCreateDTO subDTO2 = new VideoRequest.CreateDTO.SubtitleCreateDTO();
+
+        subDTO1.setKorStartTime("1");
+        subDTO1.setKorEndTime("3");
+        subDTO1.setKorSubtitleContent("한글");
+        subDTO1.setEngStartTime("1");
+        subDTO1.setEngEndTime("4");
+        subDTO1.setEngSubtitleContent("sdfasdfsd");
+
+        subDTO2.setKorStartTime("1");
+        subDTO2.setKorEndTime("3");
+        subDTO2.setKorSubtitleContent("한글");
+        subDTO2.setEngStartTime("1");
+        subDTO2.setEngEndTime("4");
+        subDTO2.setEngSubtitleContent("sdfasdfsd");
+
+        List<VideoRequest.CreateDTO.SubtitleCreateDTO> subtitleCreateDTOs = new ArrayList<>();
+        subtitleCreateDTOs.add(subDTO1);
+        subtitleCreateDTOs.add(subDTO2);
+        return subtitleCreateDTOs;
+    }
+
+    @Test
+    @WithUserDetails("admin@example.com")
+    @DisplayName("postTest")
+    void postVideoTest() throws Exception {
+        // given
+
+        // requestDTO : title, content
+        Interest interest = interestJPARepository.findById(1).get();
+
+        VideoRequest.CreateDTO requestDTO = new VideoRequest.CreateDTO();
+        requestDTO.setVideoTitleEng("posttest");
+        requestDTO.setVideoUrl("www.naver.com");
+        requestDTO.setVideoTitleKorean("한글");
+        requestDTO.setVideoStartTime("1");
+        requestDTO.setVideoEndTime("12");
+        requestDTO.setVideoThumbnailUrl("www.google.com");
+        requestDTO.setVideoInterest(interest);
+        requestDTO.setSubtitleCreateDTOList(null);
+
+        String requestBody = om.writeValueAsString(requestDTO);
+
+        System.out.println("테스트 : "+requestBody);
+
+        // when
+        ResultActions resultActions = mvc.perform(
+                post("/videos")
+                        .content(requestBody)
+                        .contentType(MediaType.APPLICATION_JSON)
+        );
+
+        String responseBody = resultActions.andReturn().getResponse().getContentAsString();
+        System.out.println("테스트 : "+responseBody);
+
+        // verify
+        resultActions.andExpect(jsonPath("$.status").value("error"));
     }
 
 }

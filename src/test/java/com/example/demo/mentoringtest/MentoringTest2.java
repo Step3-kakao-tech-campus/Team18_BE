@@ -266,4 +266,31 @@ public class MentoringTest2 extends RestDoc {
         resultActions.andExpect(jsonPath("$.status").value("error"));
     }
 
+    @Test
+    @WithUserDetails("test1@example.com")
+    @DisplayName("멘토가 게시글 생성할때 테스트")
+    void MentoringPostTest() throws Exception {
+        // requestDTO : title, content
+        MentorPostRequest.CreateMentorPostDTO requestDTO = new MentorPostRequest.CreateMentorPostDTO();
+        requestDTO.setTitle("제목post");
+        requestDTO.setContent("내용post");
+
+        String requestBody = om.writeValueAsString(requestDTO);
+
+        System.out.println("테스트 : "+requestBody);
+
+        // when
+        ResultActions resultActions = mvc.perform(
+                post("/mentorings")
+                        .content(requestBody)
+                        .contentType(MediaType.APPLICATION_JSON)
+        );
+
+        // console
+        String responseBody = resultActions.andReturn().getResponse().getContentAsString();
+        System.out.println("테스트 : "+responseBody);
+    }
+
+
+
 }
