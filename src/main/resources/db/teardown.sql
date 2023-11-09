@@ -19,7 +19,8 @@ INSERT INTO users (created_at, first_name, last_name, email, password, country, 
   (NOW(), 'Jane', 'Smith', 'test4@example.com', '{bcrypt}$2a$10$8H0OT8wgtALJkig6fmypi.Y7jzI5Y7W9PGgRKqnVeS2cLWGifwHF2', 'Canada', 'I love coding.', '1993-01-01', 'profile.jpg', 'MENTEE', '010-0000-0000'),
   (NOW(), 'Adccczczmin', 'qwdasd', 'test5@example.com', '{bcrypt}$2a$10$8H0OT8wgtALJkig6fmypi.Y7jzI5Y7W9PGgRKqnVeS2cLWGifwHF2', 'USA', 'I am the qwdad.', '1988-01-01', 'admin.jpg', 'MENTEE', '010-0000-0000'),
   (NOW(), 'adadad', 'adaddddd', 'test6@example.com', '{bcrypt}$2a$10$8H0OT8wgtALJkig6fmypi.Y7jzI5Y7W9PGgRKqnVeS2cLWGifwHF2', 'USA', 'I am the adadad.', '1988-01-01', 'admin.jpg', 'MENTEE', '010-0000-0000'),
-  (NOW(), 'admin', 'admin', 'admin@example.com', '{bcrypt}$2a$10$8H0OT8wgtALJkig6fmypi.Y7jzI5Y7W9PGgRKqnVeS2cLWGifwHF2', 'USA', 'I am the admin.', '1988-01-01', 'admin.jpg', 'ADMIN', '010-0000-0000');
+  (NOW(), 'admin', 'admin', 'admin@example.com', '{bcrypt}$2a$10$8H0OT8wgtALJkig6fmypi.Y7jzI5Y7W9PGgRKqnVeS2cLWGifwHF2', 'USA', 'I am the admin.', '1988-01-01', 'admin.jpg', 'ADMIN', '010-0000-0000'),
+  (NOW(), 'qwer', 'qwer', 'test7@example.com', '{bcrypt}$2a$10$8H0OT8wgtALJkig6fmypi.Y7jzI5Y7W9PGgRKqnVeS2cLWGifwHF2', 'USA', 'I am the qwer.', '1988-01-01', 'admin.jpg', 'ADMIN', '010-0000-0000');
 
 -- interst Table
 INSERT INTO interests (created_at, category) VALUES

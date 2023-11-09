@@ -1,4 +1,4 @@
-package com.example.demo.config.utils;
+package com.example.demo.config.jwt;
 
 import com.example.demo.config.errors.exception.Exception401;
 import com.example.demo.config.errors.exception.Exception403;

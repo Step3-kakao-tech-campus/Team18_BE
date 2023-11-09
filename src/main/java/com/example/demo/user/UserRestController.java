@@ -38,9 +38,9 @@ public class UserRestController {
     }
 
     @Operation(summary = "회원가입", description = "회원가입")
-    @PostMapping(value = "/users/signup", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
-    public ResponseEntity<?> signup(@RequestPart @Valid UserRequest.SignUpDTO requestDTO, Errors errors, @RequestPart MultipartFile file) throws IOException {
-        userService.signup(requestDTO, file);
+    @PostMapping(value = "/users/signup")
+    public ResponseEntity<?> signup(@RequestBody @Valid UserRequest.SignUpDTO requestDTO, Errors errors) throws IOException {
+        userService.signup(requestDTO);
         return ResponseEntity.status(HttpStatus.OK).body(ApiResponseBuilder.successWithNoContent());
     }
 
@@ -87,7 +87,7 @@ public class UserRestController {
 
     @Operation(summary = "마이 페이지 프로필 수정", description = "마이 페이지에서 프로필 수정")
     @PutMapping(value = "/profiles", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
-    public ResponseEntity<?> profileUpdate(@RequestPart @Valid UserRequest.ProfileUpdateDTO requestDTO, Errors errors, @RequestPart MultipartFile file, @AuthenticationPrincipal CustomUserDetails userDetails) throws IOException {
+    public ResponseEntity<?> profileUpdate(@RequestPart @Valid UserRequest.ProfileUpdateDTO requestDTO, Errors errors, @RequestPart(required = false) MultipartFile file, @AuthenticationPrincipal CustomUserDetails userDetails) throws IOException {
         UserResponse.ProfileDTO responseDTO = userService.updateProfile(userDetails, requestDTO, file);
         return ResponseEntity.status(HttpStatus.OK).body(ApiResponseBuilder.success(responseDTO));
     }

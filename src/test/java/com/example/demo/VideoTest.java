@@ -163,7 +163,7 @@ public class VideoTest extends RestDoc{
     @DisplayName("video 개인 조회 인증있이 기록 확인 최근 영상 같을 경우 추가 X 테스트")
     void findHistoryExceptionTest() throws Exception {
         // given
-        int videoId = 1;
+        int videoId = 2;
 
         mvc.perform(
                 get("/videos/" + videoId)
@@ -180,6 +180,25 @@ public class VideoTest extends RestDoc{
         // verify
         resultActions.andExpect(jsonPath("$.status").value("success"));
     }
+
+    @Test
+    @WithUserDetails("test5@example.com")
+    @DisplayName("video 개인 조회 인증있이 기록 확인 최근 영상 없을시 테스트")
+    void findHistoryNoHistoryExceptionTest() throws Exception {
+        // given
+
+        ResultActions resultActions = mvc.perform(
+                get("/videos/history")
+        );
+
+        // console
+        String responseBody = resultActions.andReturn().getResponse().getContentAsString();
+        System.out.println("video 개인 조회 인증있이 기록 확인 최근 영상 없을시 테스트 : "+responseBody);
+
+        // verify
+        resultActions.andExpect(jsonPath("$.status").value("success"));
+    }
+
 
     @Test
     @DisplayName("video 개인 조회 인증있이 기록 확인 테스트 인증이 없으니 error")

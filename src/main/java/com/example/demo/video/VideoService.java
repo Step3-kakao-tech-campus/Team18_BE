@@ -15,6 +15,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -34,7 +35,7 @@ public class VideoService {
 
     private final int MAINVIDEOTOTAL = 16;
     private final int MAINVIDEONUM = 4;
-    private final int HISTORYVIDEONUM = 5;
+    private final int HISTORYVIDEONUM = 10;
 
     public VideoResponse.VideoPageResponseDTO findAllVideo(int page, int categoryId) {
         Pageable pageable = PageRequest.of(page ,MAINVIDEOTOTAL);
@@ -83,12 +84,17 @@ public class VideoService {
         if(user != null)
         {
             //최근 기록이 같은 영상일 경우 추가해서는 안됨.
-            Pageable recentfirstVideo = PageRequest.of(0, 1);
-            VideoHistory firstVideo = videoHistoryJPARepository.findHistoryVideo(user.getId(), recentfirstVideo).getContent().get(0);
-            if(firstVideo.getVideo().getId() != video.getId())
-            {
-                VideoHistory videoHistory = new VideoHistory(user, video);
-                videoHistoryJPARepository.save(videoHistory);
+            Page<VideoHistory> recentVideos = videoHistoryJPARepository.findHistoryVideo(user.getId(), PageRequest.of(0, 10));
+            if (isNewVideoHistory(recentVideos, video)) {
+                VideoHistory fixVideoHistory = videoHistoryJPARepository.findByVideoId(user.getId(), video.getId()).orElse(null);
+                if (fixVideoHistory == null) {
+                    //아닐 경우 최근 본 영상으로 새로 추가
+                    VideoHistory videoHistory = new VideoHistory(user, video);
+                    videoHistoryJPARepository.save(videoHistory);
+                } else {
+                    fixVideoHistory.setCreatedAt(LocalDateTime.now());
+                    videoHistoryJPARepository.save(fixVideoHistory);
+                }
             }
         }
 
@@ -103,8 +109,14 @@ public class VideoService {
         return new VideoResponse.VideoResponseDTO(video, videoInterest, videoSubtitles,recommendVideo,recommendVideoInterest);
     }
 
-    public List<VideoResponse.VideoAllResponseDTO> findHistoryVideo(Integer page, int id) {
-        Pageable pageable = PageRequest.of(page,HISTORYVIDEONUM);
+    private boolean isNewVideoHistory(Page<VideoHistory> recentVideos, Video currentVideo) {
+        return recentVideos != null &&
+                !recentVideos.getContent().isEmpty() &&
+                recentVideos.getContent().get(0).getVideo().getId() != currentVideo.getId();
+    }
+
+    public List<VideoResponse.VideoAllResponseDTO> findHistoryVideo(int id) {
+        Pageable pageable = PageRequest.of(0,HISTORYVIDEONUM);
 
         Page<VideoHistory> pageContent = videoHistoryJPARepository.findHistoryVideo(id, pageable);
 
@@ -112,7 +124,6 @@ public class VideoService {
         List<VideoResponse.VideoAllResponseDTO> videoDTOList = pageContent.getContent().stream().map(
                 video -> {
                     VideoInterest videoInterest = videoInterestJPARepository.findVideoInterestByVideoId(video.getVideo().getId());
-
                     return new VideoResponse.VideoAllResponseDTO(video.getVideo(), videoInterest);
                 }
         ).collect(Collectors.toList());
