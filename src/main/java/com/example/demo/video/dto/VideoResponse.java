@@ -3,6 +3,7 @@ package com.example.demo.video.dto;
 import com.example.demo.video.domain.VideoInterest;
 import com.example.demo.video.domain.VideoSubtitle;
 import com.example.demo.video.domain.Video;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -11,46 +12,32 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 public class VideoResponse {
-    private static int recommendVideoNum = 3;
     @Getter
     @Setter
-    public static class VideoPageResponseDTO{
-        private int page;
-        private List<VideoAllResponseDTO> videoAllResponseDTO;
-        private boolean last;
-
-        public VideoPageResponseDTO(int page, List<VideoAllResponseDTO> videoAllResponseDTO, boolean last){
-            this.page = page;
-            this.videoAllResponseDTO = videoAllResponseDTO;
-            this.last = last;
-        }
-    }
-
-
-    @Getter
-    @Setter
-    public static class VideoAllResponseDTO {
-        private int videoID;
+    public static class VideoHistoryDTO {
+        private int id;
         private String videoUrl;
         private String videoTitleKorean;
         private String videoTitleEng;
-        private String interests;
-        private long views;
-        private String videoThumbnailUrl;
+        private String videoIntroduction;
         private String videoStartTime;
         private String videoEndTime;
+        private long viewCount;
+        private String videoThumbnailUrl;
+        private List<String> categoryList;
 
-        public VideoAllResponseDTO(Video video, VideoInterest videoInterest)
-        {
-            this.videoID = video.getId();
+        public VideoHistoryDTO(Video video, List<VideoInterest> videoInterestList) {
             this.videoUrl = video.getVideoUrl();
-            this.videoTitleKorean = video.getVideoTitleKorean();
+            this.videoTitleKorean = video.getVideoTitleEng();
             this.videoTitleEng = video.getVideoTitleEng();
-            this.interests = videoInterest.getInterest().getCategory();
-            this.views = video.getViews();
-            this.videoThumbnailUrl = video.getVideoThumbnailUrl();
+            this.videoIntroduction = video.getVideoIntroduction();
             this.videoStartTime = video.getVideoStartTime();
             this.videoEndTime = video.getVideoEndTime();
+            this.viewCount = video.getViewCount();
+            this.videoThumbnailUrl = video.getVideoThumbnailUrl();
+            this.categoryList = videoInterestList.stream()
+                    .map(videoInterest -> videoInterest.getInterest().getCategory())
+                    .collect(Collectors.toList());
         }
     }
 
@@ -65,6 +52,7 @@ public class VideoResponse {
         private String endTime;
         private List<SubtitleDTO> subtitles;
         private List<RelatedVideoDTO> recommendVideos;
+
         public VideoResponseDTO(Video video, VideoInterest videoInterest, List<VideoSubtitle> videoSubtitles, List<Video> recommendVideos, List<VideoInterest> recommendInterest)
         {
             this.videoID = video.getId();
@@ -123,6 +111,22 @@ public class VideoResponse {
             }
         }
     }
+
+
+//    private static int recommendVideoNum = 3;
+//    @Getter
+//    @Setter
+//    public static class VideoPageResponseDTO{
+//        private int page;
+//        private List<VideoAllResponseDTO> videoAllResponseDTO;
+//        private boolean last;
+//
+//        public VideoPageResponseDTO(int page, List<VideoAllResponseDTO> videoAllResponseDTO, boolean last){
+//            this.page = page;
+//            this.videoAllResponseDTO = videoAllResponseDTO;
+//            this.last = last;
+//        }
+//    }
 
 
 

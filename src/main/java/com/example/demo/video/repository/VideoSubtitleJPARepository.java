@@ -7,7 +7,7 @@ import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
-public interface SubtitleJPARepository extends JpaRepository<VideoSubtitle, Integer> {
+public interface VideoSubtitleJPARepository extends JpaRepository<VideoSubtitle, Integer> {
     @Query("select m from VideoSubtitle m where m.video.id = :video")
     List<VideoSubtitle> findSubtitleByVideoId(@Param("video") int video);
 }
