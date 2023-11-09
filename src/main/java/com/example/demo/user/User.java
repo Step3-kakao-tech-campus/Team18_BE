@@ -77,9 +77,12 @@ public class User extends BaseTime {
     public User updateProfile(User user) {
         this.firstName = user.getFirstName();
         this.lastName = user.getLastName();
-        this.email = user.getEmail();
         this.password = user.getPassword();
         this.country = user.getCountry();
+        this.introduction = user.getIntroduction();
+        this.birthDate = user.getBirthDate();
+        this.profileImage = user.getProfileImage();
+        this.phone = user.getPhone();
         this.role = user.getRole();
         return user;
     }

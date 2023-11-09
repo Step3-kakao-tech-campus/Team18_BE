@@ -134,28 +134,36 @@ public class UserService {
             }
             newProfileImageURL = s3Uploader.uploadFile(file);
         }
-        user = user.updateProfile(requestDTO.toEntity(newProfileImageURL));
 
-        List<String> userCategoryList = userInterestJPARepository.findAllById(user.getId()).stream()
-                .map(interest -> interest.getInterest().getCategory())
+        requestDTO.setPassword(passwordEncoder.encode(requestDTO.getPassword()));
+        User newUser = requestDTO.toEntity(newProfileImageURL);
+
+        List<Integer> userInterestIdList = userInterestJPARepository.findAllById(user.getId()).stream()
+                .map(userInterest -> userInterest.getInterest().getId())
                 .collect(Collectors.toList());
-        List<String> newUserCategoryList = requestDTO.getCategoryList();
+        List<Integer> newUserInterestIdList = requestDTO.getCategoryList().stream()
+                .map(category -> interestJPARepository.findByCategory(category)
+                        .orElseThrow(() -> new Exception400(null,"해당 관심사가 없습니다.")))
+                .map(interest -> interest.getId())
+                .collect(Collectors.toList());
 
-        for (String newUserCategory : newUserCategoryList) {
-            if (!userCategoryList.contains(newUserCategory)) {
-                Interest interest = interestJPARepository.findByCategory(newUserCategory)
+        for (Integer userInterestId : userInterestIdList) {
+            if (!newUserInterestIdList.contains(userInterestId)) {
+                userInterestJPARepository.deleteByUserAndInterest(user.getId(), userInterestId);
+            }
+        }
+
+        for (Integer newUserInterestId : newUserInterestIdList) {
+            if (!userInterestIdList.contains(newUserInterestId)) {
+                Interest interest = interestJPARepository.findById(newUserInterestId)
                         .orElseThrow(() -> new Exception400(null, "해당 관심사가 존재하지 않습니다."));
-                UserInterest newUserInterest = UserInterest.builder().user(user).interest(interest).build();
+                UserInterest newUserInterest = UserInterest.builder().user(newUser).interest(interest).build();
                 userInterestJPARepository.save(newUserInterest);
             }
         }
 
-        for (String userCategory: userCategoryList) {
-            if (!newUserCategoryList.contains(userCategory)) {
-                 userInterestJPARepository.deleteByUserAndInterest(user.getId(), userCategory);
-            }
-        }
+        user.updateProfile(newUser);
 
-        return new UserResponse.ProfileDTO(user, userCategoryList);
+        return new UserResponse.ProfileDTO(user, requestDTO.getCategoryList());
     }
 }
