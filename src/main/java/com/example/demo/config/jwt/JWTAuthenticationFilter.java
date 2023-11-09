@@ -2,6 +2,10 @@ package com.example.demo.config.jwt;
 
 import com.example.demo.user.User;
 import com.example.demo.config.auth.CustomUserDetails;
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.MalformedJwtException;
+import io.jsonwebtoken.UnsupportedJwtException;
+import io.jsonwebtoken.security.SignatureException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -41,10 +45,23 @@ public class JWTAuthenticationFilter extends BasicAuthenticationFilter {
         }
 
         String extractedJwtAccessToken = jwtAccessToken.replace(JWTTokenProvider.Token_Prefix, "");
-        if (jwtTokenProvider.validateToken(extractedJwtAccessToken)) {
-            Authentication authentication = jwtTokenProvider.getAuthentication(extractedJwtAccessToken);
-            SecurityContextHolder.getContext().setAuthentication(authentication);
+        try {
+            if (jwtTokenProvider.validateToken(extractedJwtAccessToken)) {
+                Authentication authentication = jwtTokenProvider.getAuthentication(extractedJwtAccessToken);
+                SecurityContextHolder.getContext().setAuthentication(authentication);
+            }
+        } catch (SignatureException e) {
+            request.setAttribute("exception", "유효하지 않은 JWT 토큰 서명입니다.");
+        } catch (MalformedJwtException e) {
+            request.setAttribute("exception", "손상된 JWT 토큰입니다.");
+        } catch (ExpiredJwtException e) {
+            request.setAttribute("exception", "만료된 JWT 토큰입니다.");
+        } catch (UnsupportedJwtException e) {
+            request.setAttribute("exception", "지원하지 않는 JWT 토큰입니다.");
+        } catch (IllegalArgumentException e) {
+            request.setAttribute("excepiton","JWT 토큰 내에 정보가 없습니다.");
         }
+
         chain.doFilter(request, response);
     }
 }

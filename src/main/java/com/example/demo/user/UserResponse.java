@@ -26,11 +26,12 @@ public class UserResponse {
         @Setter
         public class UserDetailDTO {
             private int id;
-            private String email;
             private String firstName;
             private String lastName;
+            private String email;
             private String country;
             private LocalDate birthDate;
+            private String phone;
             private String profileImage;
             private Role role;
             private List<String> categorylist;
@@ -42,6 +43,7 @@ public class UserResponse {
                 this.lastName = user.getLastName();
                 this.country = user.getCountry();
                 this.birthDate = user.getBirthDate();
+                this.phone = user.getPhone();
                 this.profileImage = user.getProfileImage();
                 this.role = user.getRole();
                 this.categorylist = userCategoryList;
@@ -90,8 +92,9 @@ public class UserResponse {
         private String introduction;
         private LocalDate birthDate;
         private String profileImage;
+        private String phone;
         private Role role;
-        private List<String> categorylist;
+        private List<String> categoryList;
 
         public ProfileDTO(User user, List<String> userCategoryList) {
             this.id = user.getId();
@@ -101,9 +104,10 @@ public class UserResponse {
             this.country = user.getCountry();
             this.introduction = user.getIntroduction();
             this.birthDate = user.getBirthDate();
+            this.phone = user.getPhone();
             this.profileImage = user.getProfileImage();
             this.role = user.getRole();
-            this.categorylist = userCategoryList;
+            this.categoryList = userCategoryList;
         }
     }
 }

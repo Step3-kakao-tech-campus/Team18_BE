@@ -47,12 +47,9 @@ public class UserService {
     }
 
     @Transactional
-    public void signup(UserRequest.SignUpDTO requestDTO, MultipartFile file) throws IOException {
-        String profileImageURL = s3Uploader.uploadFile(file);
-        System.out.println(profileImageURL);
-
+    public void signup(UserRequest.SignUpDTO requestDTO) {
         requestDTO.setPassword(passwordEncoder.encode(requestDTO.getPassword()));
-        User user = userJPARepository.save(requestDTO.toEntity(profileImageURL));
+        User user = userJPARepository.save(requestDTO.toEntity());
 
         List<UserInterest> userInterestList = new ArrayList<>();
         List<String> categoryList = requestDTO.getCategoryList();
@@ -99,7 +96,6 @@ public class UserService {
 
     public UserResponse.ProfileDTO findProfile(Integer id, CustomUserDetails userDetails) {
         User user;
-        List<String> userCategoryList = new ArrayList<>();
 
         if (id == null) {
             user = userJPARepository.findById(userDetails.getUser().getId())
@@ -107,10 +103,11 @@ public class UserService {
         } else {
             user = userJPARepository.findById(id)
                     .orElseThrow(() -> new Exception404("해당 사용자가 존재하지 않습니다."));
-            userCategoryList = userInterestJPARepository.findAllById(user.getId()).stream()
-                    .map(interest -> interest.getInterest().getCategory())
-                    .collect(Collectors.toList());
         }
+        List<String> userCategoryList = userCategoryList = userInterestJPARepository.findAllById(user.getId()).stream()
+                .map(interest -> interest.getInterest().getCategory())
+                .collect(Collectors.toList());
+
         return new UserResponse.ProfileDTO(user, userCategoryList);
     }
 
@@ -128,11 +125,15 @@ public class UserService {
         User user = userJPARepository.findById(userDetails.getUser().getId())
                 .orElseThrow(() -> new Exception404("해당 사용자가 존재하지 않습니다."));
 
-        String profileImageURL = user.getProfileImage();
-        String key = profileImageURL.split("/")[3];
-        s3Uploader.deleteFile(key);
-
-        String newProfileImageURL = s3Uploader.uploadFile(file);
+        String newProfileImageURL = user.getProfileImage();
+        if (file != null) {
+            if (user.getProfileImage() != null) {
+                String profileImageURL = user.getProfileImage();
+                String key = profileImageURL.split("/")[3];
+                s3Uploader.deleteFile(key);
+            }
+            newProfileImageURL = s3Uploader.uploadFile(file);
+        }
         user = user.updateProfile(requestDTO.toEntity(newProfileImageURL));
 
         List<String> userCategoryList = userInterestJPARepository.findAllById(user.getId()).stream()

@@ -49,6 +49,8 @@ public class UserRequest {
         @Pattern(regexp = "^\\d{2,3}-\\d{3,4}-\\d{4}$")
         private String phone;
 
+        private String profileImage;
+
         @NotNull(message = "역할을 선택해주세요.")
         private Role role;
 
@@ -56,7 +58,7 @@ public class UserRequest {
         @Size(min = 1, max = 3)
         private List<String> categoryList;
 
-        public User toEntity(String profileImageURL) {
+        public User toEntity() {
             return User.builder()
                     .firstName(firstName)
                     .lastName(lastName)
@@ -66,7 +68,7 @@ public class UserRequest {
                     .introduction(introduction)
                     .birthDate(birthDate)
                     .phone(phone)
-                    .profileImage(profileImageURL)
+                    .profileImage(profileImage)
                     .role(role)
                     .build();
         }
