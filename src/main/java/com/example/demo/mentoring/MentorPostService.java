@@ -35,11 +35,6 @@ public class MentorPostService {
             throw new Exception401("해당 사용자는 멘티입니다.");
         }
 
-        //글자수 확인
-        if(createMentorPostDTO.getContent().length() > 300){
-            throw new Exception404("글자수가 300자를 넘어갑니다.");
-        }
-
         MentorPost mentorPost = new MentorPost( writer, createMentorPostDTO.getTitle(), createMentorPostDTO.getContent());
 
         try {
