@@ -26,10 +26,10 @@ public class User extends BaseTime {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 50)
     private String firstName;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 50)
     private String lastName;
 
     @Column(length = 100, nullable = false, unique = true)
@@ -41,7 +41,7 @@ public class User extends BaseTime {
     @Column(nullable = false)
     private String country;
 
-    @Column
+    @Column(length = 300)
     private String introduction;
 
     @Column(nullable = false)
