@@ -85,17 +85,26 @@ public class VideoService {
         {
             //최근 기록이 같은 영상일 경우 추가해서는 안됨.
             Page<VideoHistory> recentVideos = videoHistoryJPARepository.findHistoryVideo(user.getId(), PageRequest.of(0, 10));
-            if (isNewVideoHistory(recentVideos, video)) {
-                VideoHistory fixVideoHistory = videoHistoryJPARepository.findByVideoId(user.getId(), video.getId()).orElse(null);
-                if (fixVideoHistory == null) {
-                    //아닐 경우 최근 본 영상으로 새로 추가
-                    VideoHistory videoHistory = new VideoHistory(user, video);
-                    videoHistoryJPARepository.save(videoHistory);
-                } else {
-                    fixVideoHistory.setCreatedAt(LocalDateTime.now());
-                    videoHistoryJPARepository.save(fixVideoHistory);
+
+            // 시청한 영상이 없는 경우
+            if ( recentVideos.isEmpty() ) {
+                VideoHistory videoHistory = new VideoHistory(user, video);
+                videoHistoryJPARepository.save(videoHistory);
+            }
+            else {
+                if (isNewVideoHistory(recentVideos, video)) {
+                    VideoHistory fixVideoHistory = videoHistoryJPARepository.findByVideoId(user.getId(), video.getId()).orElse(null);
+                    if (fixVideoHistory == null) {
+                        //아닐 경우 최근 본 영상으로 새로 추가
+                        VideoHistory videoHistory = new VideoHistory(user, video);
+                        videoHistoryJPARepository.save(videoHistory);
+                    } else {
+                        fixVideoHistory.setCreatedAt(LocalDateTime.now());
+                        videoHistoryJPARepository.save(fixVideoHistory);
+                    }
                 }
             }
+
         }
 
         VideoInterest videoInterest = videoInterestJPARepository.findVideoInterestByVideoId(video.getId());
