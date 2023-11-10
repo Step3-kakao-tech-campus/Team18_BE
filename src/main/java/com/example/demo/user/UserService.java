@@ -125,19 +125,6 @@ public class UserService {
         User user = userJPARepository.findById(userDetails.getUser().getId())
                 .orElseThrow(() -> new Exception404("해당 사용자가 존재하지 않습니다."));
 
-        String newProfileImageURL = user.getProfileImage();
-        if (file != null) {
-            if (user.getProfileImage() != null) {
-                String profileImageURL = user.getProfileImage();
-                String key = profileImageURL.split("/")[3];
-                s3Uploader.deleteFile(key);
-            }
-            newProfileImageURL = s3Uploader.uploadFile(file);
-        }
-
-        requestDTO.setPassword(passwordEncoder.encode(requestDTO.getPassword()));
-        User newUser = requestDTO.toEntity(newProfileImageURL);
-
         List<Integer> userInterestIdList = userInterestJPARepository.findAllById(user.getId()).stream()
                 .map(userInterest -> userInterest.getInterest().getId())
                 .collect(Collectors.toList());
@@ -153,6 +140,19 @@ public class UserService {
             }
         }
 
+        String newProfileImageURL = user.getProfileImage();
+        if (file != null) {
+            if (user.getProfileImage() != null) {
+                String profileImageURL = user.getProfileImage();
+                String key = profileImageURL.split("/")[3];
+                s3Uploader.deleteFile(key);
+            }
+            newProfileImageURL = s3Uploader.uploadFile(file);
+        }
+
+        requestDTO.setPassword(passwordEncoder.encode(requestDTO.getPassword()));
+        user.updateProfile(requestDTO.toEntity(newProfileImageURL));
+
         for (Integer newUserInterestId : newUserInterestIdList) {
             if (!userInterestIdList.contains(newUserInterestId)) {
                 Interest interest = interestJPARepository.findById(newUserInterestId)
@@ -161,8 +161,6 @@ public class UserService {
                 userInterestJPARepository.save(newUserInterest);
             }
         }
-
-        user.updateProfile(newUser);
 
         return new UserResponse.ProfileDTO(user, requestDTO.getCategoryList());
     }
