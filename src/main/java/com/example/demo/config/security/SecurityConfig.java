@@ -9,6 +9,7 @@ import com.example.demo.config.jwt.FilterResponseUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -64,10 +65,6 @@ public class SecurityConfig {
         httpSecurity.apply(new CustomSecurityFilterManager());
 
         // 8. 인증 실패 처리
-//        httpSecurity.exceptionHandling().authenticationEntryPoint((request, response, authException) -> {
-//            FilterResponseUtils.unAuthorized(response, new Exception401("로그인이 필요합니다."));
-//        });
-
         httpSecurity.exceptionHandling().authenticationEntryPoint(new JWTAuthenticationEntryPoint());
 
         // 9. 권한 실패 처리
@@ -77,8 +74,10 @@ public class SecurityConfig {
 
         // 11. 인증, 권한 필터 설정
         httpSecurity.authorizeRequests(
-                authorize -> authorize.antMatchers("/profiles", "/profiles/simple", "/users/passwordcheck").authenticated()
+                authorize -> authorize
+                        .antMatchers("/users/passwordcheck", "/profiles/**", "/videos/interest", "/videos/history", "/mentorings/**", "/contacts/**").authenticated()
                         .antMatchers("/admin/**").access("hasRole('ADMIN')")
+                        .antMatchers(HttpMethod.GET, "/profiles/{id}", "/mentorings/**").permitAll()
                         .anyRequest().permitAll()
         );
 

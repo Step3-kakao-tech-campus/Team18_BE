@@ -55,13 +55,6 @@ public class UserRestController {
         refreshToken = URLEncoder.encode(refreshToken, "utf-8");
 
         httpServletResponse.addHeader(JWTTokenProvider.Header, accessToken);
-//        Cookie cookie = new Cookie("RefreshToken", refreshToken);
-//        cookie.setHttpOnly(true);
-//        cookie.setSecure(true);
-//        cookie.setPath("/");
-//        cookie.setMaxAge(60 * 60 * 24 * 7);
-//        httpServletResponse.addCookie(cookie);
-
         ResponseCookie cookie = ResponseCookie.from("RefreshToken", refreshToken)
                 .path("/")
                 .secure(true)
