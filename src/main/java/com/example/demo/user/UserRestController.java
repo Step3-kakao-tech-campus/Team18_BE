@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.Errors;
@@ -54,12 +55,21 @@ public class UserRestController {
         refreshToken = URLEncoder.encode(refreshToken, "utf-8");
 
         httpServletResponse.addHeader(JWTTokenProvider.Header, accessToken);
-        Cookie cookie = new Cookie("RefreshToken", refreshToken);
-        cookie.setHttpOnly(true);
-        cookie.setSecure(true);
-        cookie.setPath("/");
-        cookie.setMaxAge(60 * 60 * 24 * 7);
-        httpServletResponse.addCookie(cookie);
+//        Cookie cookie = new Cookie("RefreshToken", refreshToken);
+//        cookie.setHttpOnly(true);
+//        cookie.setSecure(true);
+//        cookie.setPath("/");
+//        cookie.setMaxAge(60 * 60 * 24 * 7);
+//        httpServletResponse.addCookie(cookie);
+
+        ResponseCookie cookie = ResponseCookie.from("RefreshToken", refreshToken)
+                .path("/")
+                .secure(true)
+                .sameSite("None")
+                .httpOnly(true)
+                .maxAge(60 * 60 * 24 * 7)
+                .build();
+        httpServletResponse.setHeader("Set-Cookie", cookie.toString());
 
         return ResponseEntity.status(HttpStatus.OK).body(ApiResponseBuilder.success(responseDTO.getUserDetailDTO()));
     }
