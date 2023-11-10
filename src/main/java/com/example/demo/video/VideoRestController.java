@@ -45,7 +45,7 @@ public class VideoRestController {
 
     @GetMapping("/videos/history")
     @Operation(summary = "영상 시청기록 요청")
-    public ResponseEntity<?> getVideoHistory(@AuthenticationPrincipal  CustomUserDetails userDetails) {
+    public ResponseEntity<?> getVideoHistory(@AuthenticationPrincipal CustomUserDetails userDetails) {
         List<VideoResponse.VideoAllResponseDTO> responseDTO = videoService.findHistoryVideo(userDetails.getUser().getId());
         return ResponseEntity.ok(ApiResponseBuilder.success(responseDTO));
     }
