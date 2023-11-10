@@ -157,7 +157,7 @@ public class UserService {
             if (!userInterestIdList.contains(newUserInterestId)) {
                 Interest interest = interestJPARepository.findById(newUserInterestId)
                         .orElseThrow(() -> new Exception400(null, "해당 관심사가 존재하지 않습니다."));
-                UserInterest newUserInterest = UserInterest.builder().user(newUser).interest(interest).build();
+                UserInterest newUserInterest = UserInterest.builder().user(user).interest(interest).build();
                 userInterestJPARepository.save(newUserInterest);
             }
         }
