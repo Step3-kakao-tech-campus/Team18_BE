@@ -140,6 +140,15 @@ public class UserService {
             }
         }
 
+        for (Integer newUserInterestId : newUserInterestIdList) {
+            if (!userInterestIdList.contains(newUserInterestId)) {
+                Interest interest = interestJPARepository.findById(newUserInterestId)
+                        .orElseThrow(() -> new Exception400(null, "해당 관심사가 존재하지 않습니다."));
+                UserInterest newUserInterest = UserInterest.builder().user(user).interest(interest).build();
+                userInterestJPARepository.save(newUserInterest);
+            }
+        }
+
         String newProfileImageURL = user.getProfileImage();
         if (file != null) {
             if (user.getProfileImage() != null) {
@@ -152,15 +161,6 @@ public class UserService {
 
         requestDTO.setPassword(passwordEncoder.encode(requestDTO.getPassword()));
         user.updateProfile(requestDTO.toEntity(newProfileImageURL));
-
-        for (Integer newUserInterestId : newUserInterestIdList) {
-            if (!userInterestIdList.contains(newUserInterestId)) {
-                Interest interest = interestJPARepository.findById(newUserInterestId)
-                        .orElseThrow(() -> new Exception400(null, "해당 관심사가 존재하지 않습니다."));
-                UserInterest newUserInterest = UserInterest.builder().user(user).interest(interest).build();
-                userInterestJPARepository.save(newUserInterest);
-            }
-        }
 
         return new UserResponse.ProfileDTO(user, requestDTO.getCategoryList());
     }
