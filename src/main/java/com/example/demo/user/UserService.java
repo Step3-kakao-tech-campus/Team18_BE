@@ -104,7 +104,7 @@ public class UserService {
             user = userJPARepository.findById(id)
                     .orElseThrow(() -> new Exception404("해당 사용자가 존재하지 않습니다."));
         }
-        List<String> userCategoryList = userCategoryList = userInterestJPARepository.findAllById(user.getId()).stream()
+        List<String> userCategoryList = userInterestJPARepository.findAllById(user.getId()).stream()
                 .map(interest -> interest.getInterest().getCategory())
                 .collect(Collectors.toList());
 
