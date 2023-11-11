@@ -116,19 +116,6 @@ public class MentorPostService {
         }
     }
 
-    //생성 시간까지 조회하는 test service 코드 입니다
-    public List<MentorPostResponse.MentorPostAllWithTimeStampDTO> findAllMentorPostWithTimeStamp() {
-        List<MentorPost> pageContent = mentorPostJPARepository.findAll();
-        //List<MentorPost> mentorPostList = mentorPostJPARepostiory.findAll();
-        List<MentorPostResponse.MentorPostAllWithTimeStampDTO> mentorPostDTOList = pageContent.stream().map(
-                mentorPost -> {
-                    List<UserInterest> writerInterests = userInterestJPARepository.findAllById(mentorPost.getWriter().getId());
-                    return new MentorPostResponse.MentorPostAllWithTimeStampDTO(mentorPost,writerInterests);
-                }
-        ).collect(Collectors.toList());
-        return mentorPostDTOList;
-    }
-
     public void changeMentorPostStatus(MentorPostRequest.StateDTO stateDTO, int id, User writer) {
 
         isMentor(writer);
@@ -145,7 +132,7 @@ public class MentorPostService {
 
     private void isMentor(User writer) {
         if ( writer.getRole() == Role.MENTEE ) {
-            throw new Exception401("해당 사용자는 멘티입니다.");
+            throw new Exception401("권한이 없습니다");
         }
     }
 }
