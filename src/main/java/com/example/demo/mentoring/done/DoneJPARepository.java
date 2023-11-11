@@ -16,5 +16,5 @@ public interface DoneJPARepository extends JpaRepository<ConnectedUser, Integer>
 
     @Query("SELECT cu FROM ConnectedUser cu WHERE cu.mentorPost.id = :id")
     List<ConnectedUser> findAllByMentorPostId(int id);
-    
+
 }
