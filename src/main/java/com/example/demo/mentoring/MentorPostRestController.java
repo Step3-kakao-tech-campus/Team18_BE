@@ -15,6 +15,7 @@ import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
+@RequestMapping("/api")
 public class MentorPostRestController {
     private final MentorPostService mentorPostService;
 

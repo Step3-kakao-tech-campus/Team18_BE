@@ -47,7 +47,7 @@ public class contactTest extends RestDoc {
 
         // when
         ResultActions resultActions = mvc.perform(
-                get("/contacts")
+                get("/api/contacts")
         );
 
         // console
@@ -67,7 +67,7 @@ public class contactTest extends RestDoc {
 
         // when
         ResultActions resultActions = mvc.perform(
-                get("/contacts")
+                get("/api/contacts")
         );
 
         // console
@@ -86,7 +86,7 @@ public class contactTest extends RestDoc {
 
         // when
         ResultActions resultActions = mvc.perform(
-                get("/contacts/postCounts")
+                get("/api/contacts/postCounts")
         );
 
         // console
@@ -105,7 +105,7 @@ public class contactTest extends RestDoc {
 
         // when
         ResultActions resultActions = mvc.perform(
-                get("/contacts/postCounts")
+                get("/api/contacts/postCounts")
         );
 
         // console
@@ -134,7 +134,7 @@ public class contactTest extends RestDoc {
 
         // when
         ResultActions result = mvc.perform(
-                MockMvcRequestBuilders.patch("/contacts/refuse")
+                MockMvcRequestBuilders.patch("/api/contacts/refuse")
                         .content(requestBody)
                         .contentType(MediaType.APPLICATION_JSON)
         );
@@ -171,7 +171,7 @@ public class contactTest extends RestDoc {
 
         // when
         ResultActions result = mvc.perform(
-                MockMvcRequestBuilders.post("/contacts/accept")
+                MockMvcRequestBuilders.post("/api/contacts/accept")
                         .content(requestBody)
                         .contentType(MediaType.APPLICATION_JSON)
         );
@@ -214,7 +214,7 @@ public class contactTest extends RestDoc {
 
         // when
         ResultActions result = mvc.perform(
-                MockMvcRequestBuilders.post("/contacts")
+                MockMvcRequestBuilders.post("/api/contacts")
                         .content(requestBody)
                         .contentType(MediaType.APPLICATION_JSON)
         );
@@ -242,7 +242,7 @@ public class contactTest extends RestDoc {
 
         // when
         ResultActions result = mvc.perform(
-                MockMvcRequestBuilders.delete("/contacts")
+                MockMvcRequestBuilders.delete("/api/contacts")
                         .param("connectionId", connectionIds.stream().map(String::valueOf).toArray(String[]::new)) // 정수 목록을 문자열 배열로 변환
                         .contentType(MediaType.APPLICATION_JSON)
         );
