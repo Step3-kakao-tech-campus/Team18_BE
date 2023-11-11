@@ -18,31 +18,11 @@ public class ContactRequest {
 
     @Getter @Setter
     public static class ContactRefuseDTO {
-        private int mentorPostId;
-        private int mentorId;
-        private List<RefuseMenteeDTO> mentees;
-        @Getter @Setter @NoArgsConstructor
-        public static class RefuseMenteeDTO {
-            @NotNull
-            private int connectionId;
-            public RefuseMenteeDTO(int connectionId) {
-                this.connectionId = connectionId;
-            }
-        }
+        private int connectionId;
     }
 
     @Getter @Setter
     public static class ContactAcceptDTO {
-        private int mentorPostId;
-        private int mentorId;
-        private List<AcceptMenteeDTO> mentees;
-        @Getter @Setter @NoArgsConstructor
-        public static class AcceptMenteeDTO {
-            @NotNull
-            private int connectionId;
-            public AcceptMenteeDTO(int connectionId) {
-                this.connectionId = connectionId;
-            }
-        }
+        private int connectionId;
     }
 }
