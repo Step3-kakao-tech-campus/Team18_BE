@@ -121,14 +121,12 @@ public class contactTest extends RestDoc {
     @DisplayName("멘토 : 신청 거부 기능 테스트 코드")
     void contactRefuseTest() throws Exception {
         // given
-        ContactRequest.ContactRefuseDTO requestDTOs = new ContactRequest.ContactRefuseDTO();
-        requestDTOs.setMentorPostId(1);
-        requestDTOs.setMentorId(1);
+        List<ContactRequest.ContactRefuseDTO> requestDTOs = new ArrayList<>();
 
-        List<ContactRequest.ContactRefuseDTO.RefuseMenteeDTO> refuseMenteeDTOS = new ArrayList<>();
-        refuseMenteeDTOS.add(new ContactRequest.ContactRefuseDTO.RefuseMenteeDTO(1));
+        ContactRequest.ContactRefuseDTO requestDTO = new ContactRequest.ContactRefuseDTO();
+        requestDTO.setConnectionId(1);
 
-        requestDTOs.setMentees(refuseMenteeDTOS);
+        requestDTOs.add(requestDTO);
 
         String requestBody = om.writeValueAsString(requestDTOs);
 
@@ -160,15 +158,12 @@ public class contactTest extends RestDoc {
     @DisplayName("멘토 : 신청 수락 테스트 코드")
     void contactAccpetTest() throws Exception {
         // given
-        ContactRequest.ContactAcceptDTO requestDTOs = new ContactRequest.ContactAcceptDTO();
+        List<ContactRequest.ContactRefuseDTO> requestDTOs = new ArrayList<>();
 
-        requestDTOs.setMentorPostId(1);
-        requestDTOs.setMentorId(1);
+        ContactRequest.ContactRefuseDTO requestDTO = new ContactRequest.ContactRefuseDTO();
+        requestDTO.setConnectionId(1);
 
-        List<ContactRequest.ContactAcceptDTO.AcceptMenteeDTO> acceptMenteeDTOS = new ArrayList<>();
-        acceptMenteeDTOS.add(new ContactRequest.ContactAcceptDTO.AcceptMenteeDTO(1));
-
-        requestDTOs.setMentees(acceptMenteeDTOS);
+        requestDTOs.add(requestDTO);
 
         String requestBody = om.writeValueAsString(requestDTOs);
 
