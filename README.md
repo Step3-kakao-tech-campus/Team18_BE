@@ -28,7 +28,7 @@
 - `Java 11`
 - **IDE** : IntelliJ
 - **Framework** : Springboot(2.7.6)
-- **Database** : Oracle DB
+- **Database** : Maria DB
 - **ORM** : JPA
 
 ### 🎈 인스턴스 주소
