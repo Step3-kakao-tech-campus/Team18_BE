@@ -1,14 +1,11 @@
 package com.example.demo.mentoring;
 
 import com.example.demo.config.utils.BaseTime;
-import com.example.demo.config.utils.StateConverter;
-import com.example.demo.config.utils.StateEnum;
 import com.example.demo.user.User;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 
@@ -28,15 +25,15 @@ public class MentorPost extends BaseTime {
     @ManyToOne(fetch = FetchType.LAZY)
     private User writer;
 
-    @Column(nullable = false)
+    @Column(length = 100, nullable = false)
     private String title;
 
     @Column(length = 300)
     private String content;
 
-    @Convert(converter = StateConverter.class)
+    @Convert(converter = MentorPostStateConverter.class)
     @Column(name = "state", nullable = false)
-    private StateEnum state = StateEnum.ACTIVE;
+    private MentorPostStateEnum state = MentorPostStateEnum.ACTIVE;
 
     @Builder
     public MentorPost(User writer, String title, String content){
@@ -51,8 +48,8 @@ public class MentorPost extends BaseTime {
         this.content = content;
     }
 
-    public void changeStatus(StateEnum stateEnum)
+    public void changeStatus(MentorPostStateEnum mentorPostStateEnum)
     {
-        this.state = stateEnum;
+        this.state = mentorPostStateEnum;
     }
 }

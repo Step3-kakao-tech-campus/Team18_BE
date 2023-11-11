@@ -10,7 +10,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.context.ActiveProfiles;
@@ -19,6 +18,7 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
@@ -40,9 +40,28 @@ public class contactTest extends RestDoc {
     private DoneJPARepository doneJPARepository;
 
     @Test
-    @WithUserDetails("john@example.com")
-    @DisplayName("contact - mentor")
-    void contactTest() throws Exception {
+    @WithUserDetails("test3@example.com")
+    @DisplayName("멘티 기준 화면 조회 테스트 코드")
+    void contactMenteeTest() throws Exception {
+        // given
+
+        // when
+        ResultActions resultActions = mvc.perform(
+                get("/contacts")
+        );
+
+        // console
+        String responseBody = resultActions.andReturn().getResponse().getContentAsString();
+        System.out.println("테스트 : "+responseBody);
+
+        // verify
+        resultActions.andExpect(jsonPath("$.status").value("success"));
+    }
+
+    @Test
+    @WithUserDetails("test1@example.com")
+    @DisplayName("멘토 기준 화면 조회 테스트 코드")
+    void contactMentorTest() throws Exception {
 
         // given
 
@@ -59,10 +78,10 @@ public class contactTest extends RestDoc {
         resultActions.andExpect(jsonPath("$.status").value("success"));
 
     }
-
+    
     @Test
-    @WithUserDetails("john@example.com")
-    @DisplayName("contact, done - count")
+    @WithUserDetails("test1@example.com")
+    @DisplayName("멘토 기준 게시글 갯수 조회 테스트 코드")
     void countTest() throws Exception {
 
         // when
@@ -79,18 +98,35 @@ public class contactTest extends RestDoc {
     }
 
     @Test
-    @WithUserDetails("john@example.com")
-    @DisplayName("contact - Accept - Test")
-    void contactAccpetTest() throws Exception {
+    @WithUserDetails("test3@example.com")
+    @DisplayName("멘티 기준 게시글 조회 테스트 코드")
+    void countByMenteeTest() throws Exception {
         // given
-        ContactRequest.AcceptDTO requestDTOs = new ContactRequest.AcceptDTO();
 
-        requestDTOs.setMentorPostId(1);
+        // when
+        ResultActions resultActions = mvc.perform(
+                get("/contacts/postCounts")
+        );
 
-        List<ContactRequest.AcceptDTO.MentorAndMenteeDTO> mentorAndMenteeDTOs = new ArrayList<>();
-        mentorAndMenteeDTOs.add(new ContactRequest.AcceptDTO.MentorAndMenteeDTO(1, 3));
+        // console
+        String responseBody = resultActions.andReturn().getResponse().getContentAsString();
+        System.out.println("테스트 : "+responseBody);
 
-        requestDTOs.setMentorsAndMentees(mentorAndMenteeDTOs);
+        // verify
+        resultActions.andExpect(jsonPath("$.status").value("success"));
+    }
+
+    @Test
+    @WithUserDetails("test1@example.com")
+    @DisplayName("멘토 : 신청 거부 기능 테스트 코드")
+    void contactRefuseTest() throws Exception {
+        // given
+        List<ContactRequest.ContactRefuseDTO> requestDTOs = new ArrayList<>();
+
+        ContactRequest.ContactRefuseDTO requestDTO = new ContactRequest.ContactRefuseDTO();
+        requestDTO.setConnectionId(1);
+
+        requestDTOs.add(requestDTO);
 
         String requestBody = om.writeValueAsString(requestDTOs);
 
@@ -98,7 +134,7 @@ public class contactTest extends RestDoc {
 
         // when
         ResultActions result = mvc.perform(
-                MockMvcRequestBuilders.post("/contacts/1/accept")
+                MockMvcRequestBuilders.patch("/contacts/refuse")
                         .content(requestBody)
                         .contentType(MediaType.APPLICATION_JSON)
         );
@@ -106,7 +142,44 @@ public class contactTest extends RestDoc {
         System.out.println("테스트 : "+responseBody);
 
         // 테스트가 잘 됐는지 ( 값이 잘 바뀌는지 확인 )
-        NotConnectedRegisterUser notConnectedRegisterUser = contactJPARepository.findByMentorPostIdAndMenteeUserId(1, 3)
+        NotConnectedRegisterUser notConnectedRegisterUser = contactJPARepository.findById(1)
+                .orElseThrow(() -> new Exception404("해당 사용자를 찾을 수 없습니다."));
+
+        System.out.println("state 확인 : " + notConnectedRegisterUser.getState());
+        // then
+        // verify
+        result.andExpect(jsonPath("$.status").value("success")); // 성공 테스트 확인
+        // 값이 잘 들어가는지 확인
+        Assertions.assertThat(notConnectedRegisterUser.getState()).isEqualTo(ContactStateEnum.REFUSE);
+    }
+
+    @Test
+    @WithUserDetails("test1@example.com")
+    @DisplayName("멘토 : 신청 수락 테스트 코드")
+    void contactAccpetTest() throws Exception {
+        // given
+        List<ContactRequest.ContactRefuseDTO> requestDTOs = new ArrayList<>();
+
+        ContactRequest.ContactRefuseDTO requestDTO = new ContactRequest.ContactRefuseDTO();
+        requestDTO.setConnectionId(1);
+
+        requestDTOs.add(requestDTO);
+
+        String requestBody = om.writeValueAsString(requestDTOs);
+
+        System.out.println("테스트 : "+requestBody);
+
+        // when
+        ResultActions result = mvc.perform(
+                MockMvcRequestBuilders.post("/contacts/accept")
+                        .content(requestBody)
+                        .contentType(MediaType.APPLICATION_JSON)
+        );
+        String responseBody = result.andReturn().getResponse().getContentAsString();
+        System.out.println("테스트 : "+responseBody);
+
+        // 테스트가 잘 됐는지 ( 값이 잘 바뀌는지 확인 )
+        NotConnectedRegisterUser notConnectedRegisterUser = contactJPARepository.findById(1)
                 .orElseThrow(() -> new Exception404("해당 사용자를 찾을 수 없습니다."));
 
         System.out.println("state 확인 : " + notConnectedRegisterUser.getState());
@@ -120,7 +193,63 @@ public class contactTest extends RestDoc {
         // verify
         result.andExpect(jsonPath("$.status").value("success")); // 성공 테스트 확인
         // 값이 잘 들어가는지 확인
-        Assertions.assertThat(notConnectedRegisterUser.getState()).isEqualTo(NotConnectedRegisterUser.State.ACCEPT);
+        Assertions.assertThat(notConnectedRegisterUser.getState()).isEqualTo(ContactStateEnum.ACCEPT);
         Assertions.assertThat(connectedUser.getId()).isEqualTo(4);
+    }
+
+    @Test
+    @WithUserDetails("test4@example.com")
+    @DisplayName("멘티 : 신청 생성 테스트 코드")
+    void createTest() throws Exception {
+        // given
+        ContactRequest.ContactCreateDTO contactCreateDTO = new ContactRequest.ContactCreateDTO();
+        // mentor, mentorPost, mentee id 지정
+        contactCreateDTO.setMentorPostId(3);
+        contactCreateDTO.setMentorId(2);
+        contactCreateDTO.setMenteeId(4);
+
+        String requestBody = om.writeValueAsString(contactCreateDTO);
+
+        System.out.println("테스트 requestBody : "+requestBody);
+
+        // when
+        ResultActions result = mvc.perform(
+                MockMvcRequestBuilders.post("/contacts")
+                        .content(requestBody)
+                        .contentType(MediaType.APPLICATION_JSON)
+        );
+        String responseBody = result.andReturn().getResponse().getContentAsString();
+        System.out.println("테스트 responseBody : "+responseBody);
+
+        // 테스트가 잘 됐는지 ( 값이 잘 바뀌는지 확인 )
+        NotConnectedRegisterUser notConnectedRegisterUser = contactJPARepository.findById(5)
+                .orElseThrow(() -> new Exception404("해당 사용자를 찾을 수 없습니다."));
+
+        // then
+        // verify
+        result.andExpect(jsonPath("$.status").value("success")); // 성공 테스트 확인
+        // 값이 잘 들어가는지 확인
+        Assertions.assertThat(notConnectedRegisterUser.getState()).isEqualTo(ContactStateEnum.AWAIT);
+
+    }
+
+    @Test
+    @WithUserDetails("test3@example.com")
+    @DisplayName("멘티 : 신청 취소 테스트 코드")
+    void deleteTest() throws Exception {
+        // given
+        List<Integer> connectionIds = Arrays.asList(1, 2); // 실제로 취소할 연결 ID 목록
+
+        // when
+        ResultActions result = mvc.perform(
+                MockMvcRequestBuilders.delete("/contacts")
+                        .param("connectionId", connectionIds.stream().map(String::valueOf).toArray(String[]::new)) // 정수 목록을 문자열 배열로 변환
+                        .contentType(MediaType.APPLICATION_JSON)
+        );
+        String responseBody = result.andReturn().getResponse().getContentAsString();
+        System.out.println("테스트 responseBody : "+responseBody);
+
+        // then
+        result.andExpect(jsonPath("$.status").value("success")); // 성공 테스트 확인
     }
 }

@@ -2,10 +2,14 @@ package com.example.demo.config.security;
 
 import com.example.demo.config.errors.exception.Exception401;
 import com.example.demo.config.errors.exception.Exception403;
+import com.example.demo.config.jwt.JWTAuthenticationEntryPoint;
 import com.example.demo.config.jwt.JWTAuthenticationFilter;
-import com.example.demo.config.utils.FilterResponseUtils;
+import com.example.demo.config.jwt.JWTTokenProvider;
+import com.example.demo.config.jwt.FilterResponseUtils;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -18,7 +22,11 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 @Configuration
+@RequiredArgsConstructor
 public class SecurityConfig {
+
+    private final JWTTokenProvider jwtTokenProvider;
+
     @Bean
     public PasswordEncoder passwordEncoder() {
         return PasswordEncoderFactories.createDelegatingPasswordEncoder();
@@ -28,15 +36,15 @@ public class SecurityConfig {
         @Override
         public void configure(HttpSecurity builder) throws Exception {
             AuthenticationManager authenticationManager = builder.getSharedObject(AuthenticationManager.class);
-            builder.addFilter(new JWTAuthenticationFilter(authenticationManager));
+            builder.addFilter(new JWTAuthenticationFilter(authenticationManager, jwtTokenProvider));
             super.configure(builder);
         }
     }
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
-        // 1. CSRF 해제
-        httpSecurity.csrf().disable(); // postman 접근해야 함!! - CSR 할때!!
+        // 1. CSRF 비활성화
+        httpSecurity.csrf().disable();
 
         // 2. iframe 거부
         httpSecurity.headers().frameOptions().sameOrigin();
@@ -44,32 +52,36 @@ public class SecurityConfig {
         // 3. cors 재설정
         httpSecurity.cors().configurationSource(configurationSource());
 
-        // 4. jSessionId 사용 거부 (5번을 설정하면 jsessionId가 거부되기 때문에 4번은 사실 필요 없다)
+        // 4. 세션 비활성화
         httpSecurity.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
-        // 5. form 로긴 해제 (UsernamePasswordAuthenticationFilter 비활성화)
+        // 5. form 로그인 비활성화
         httpSecurity.formLogin().disable();
 
-        // 6. 로그인 인증창이 뜨지 않게 비활성화
+        // 6. 기존의 HTTP 로그인 방식 비활성화 -> Token 방식
         httpSecurity.httpBasic().disable();
 
         // 7. 커스텀 필터 적용 (시큐리티 필터 교환)
         httpSecurity.apply(new CustomSecurityFilterManager());
 
         // 8. 인증 실패 처리
-        httpSecurity.exceptionHandling().authenticationEntryPoint((request, response, authException) -> {
-            FilterResponseUtils.unAuthorized(response, new Exception401("인증되지 않았습니다"));
-        });
+        httpSecurity.exceptionHandling().authenticationEntryPoint(new JWTAuthenticationEntryPoint());
 
         // 9. 권한 실패 처리
         httpSecurity.exceptionHandling().accessDeniedHandler((request, response, accessDeniedException) -> {
-            FilterResponseUtils.forbidden(response, new Exception403("권한이 없습니다"));
+            FilterResponseUtils.forbidden(response, new Exception403("접근 권한이 없습니다."));
         });
 
         // 11. 인증, 권한 필터 설정
         httpSecurity.authorizeRequests(
-                authorize -> authorize.antMatchers("/albums/**", "/photos/**").authenticated()
-                        .antMatchers("/admin/**").access("hasRole('ROLE_ADMIN')")
+                authorize -> authorize
+                        .antMatchers("/users/passwordcheck", "/profiles", "/profiles/simple", "/videos/interest", "/videos/history", "/contacts/**").authenticated()
+                        .antMatchers("/admin/**").access("hasRole('ADMIN')")
+                        .antMatchers("/videos").access("hasRole('ADMIN')")
+                        .antMatchers(HttpMethod.POST, "/mentorings").authenticated()
+                        .antMatchers(HttpMethod.PUT, "/mentorings/{id}").authenticated()
+                        .antMatchers(HttpMethod.DELETE, "/mentorings/{id}").authenticated()
+                        .antMatchers(HttpMethod.PATCH, "/mentorings/{id}/done").authenticated()
                         .anyRequest().permitAll()
         );
 
@@ -82,7 +94,7 @@ public class SecurityConfig {
         configuration.addAllowedMethod("*"); // GET, POST, PUT, DELETE (Javascript 요청 허용)
         configuration.addAllowedOriginPattern("*"); // 모든 IP 주소 허용 (프론트 앤드 IP만 허용 react)
         configuration.setAllowCredentials(true); // 클라이언트에서 쿠키 요청 허용
-        configuration.addExposedHeader("Authorization"); // 옛날에는 디폴트 였다. 지금은 아닙니다.
+        configuration.addExposedHeader("Authorization");
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);

@@ -1,6 +1,7 @@
 package com.example.demo.mentoring.contact;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.validation.constraints.NotNull;
@@ -9,20 +10,19 @@ import java.util.List;
 public class ContactRequest {
 
     @Getter @Setter
-    public static class AcceptDTO {
+    public static class ContactCreateDTO {
         private int mentorPostId;
-        private List<MentorAndMenteeDTO> mentorsAndMentees;
-        @Getter @Setter
-        public static class MentorAndMenteeDTO {
-            @NotNull
-            private int mentorId;
-            @NotNull
-            private int menteeId;
+        private int mentorId;
+        private int menteeId;
+    }
 
-            public MentorAndMenteeDTO(int mentorId, int menteeId) {
-                this.mentorId = mentorId;
-                this.menteeId = menteeId;
-            }
-        }
+    @Getter @Setter
+    public static class ContactRefuseDTO {
+        private int connectionId;
+    }
+
+    @Getter @Setter
+    public static class ContactAcceptDTO {
+        private int connectionId;
     }
 }

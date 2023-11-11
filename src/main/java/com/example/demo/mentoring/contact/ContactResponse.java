@@ -7,32 +7,35 @@ import com.example.demo.user.userInterest.UserInterest;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class ContactResponse {
 
     @Getter @Setter
-    public static class postCountDTO {
+    public static class PostCountDTO {
         private int contactCount;
         private int doneCount;
 
-        public postCountDTO(int contactCount, int doneCount) {
+        public PostCountDTO(int contactCount, int doneCount) {
             this.contactCount = contactCount;
             this.doneCount = doneCount;
         }
     }
 
     @Getter @Setter
-    public static class MenteeContactDTO {
+    public static class ContactDashBoardMenteeDTO {
         private int postId;
         private String title;
-        private MentorDTO mentor;
+        private ContactMentorDTO writerDTO;
+        private int connectionId;
 
-        public MenteeContactDTO(MentorPost mentorPost, MentorDTO mentor) {
+        public ContactDashBoardMenteeDTO(MentorPost mentorPost, ContactMentorDTO writerDTO, NotConnectedRegisterUser notConnectedRegisterUser) {
             this.postId = mentorPost.getId();
             this.title = mentorPost.getTitle();
-            this.mentor = mentor;
+            this.writerDTO = writerDTO;
+            this.connectionId = notConnectedRegisterUser.getId();
         }
     }
     /**
@@ -45,73 +48,78 @@ public class ContactResponse {
      *
      * **/
     @Getter @Setter
-    public static class MentorPostDTO {
+    public static class ContactDashboardMentorDTO {
         private int postId;
         private String title;
-        private MentorDTO mentor;
-        private List<MenteeDTO> mentees;
+        private ContactMentorDTO writerDTO;
+        private List<ConnectionDTO> mentees;
 
-        public MentorPostDTO(MentorPost mentorPost, MentorDTO mentor, List<MenteeDTO> mentees) {
+        public ContactDashboardMentorDTO(MentorPost mentorPost, ContactMentorDTO writerDTO, List<ConnectionDTO> mentees) {
             this.postId = mentorPost.getId();
             this.title = mentorPost.getTitle();
-            this.mentor = mentor;
+            this.writerDTO = writerDTO;
             this.mentees = mentees;
         }
     }
 
-        @Getter @Setter
-        public static class MentorDTO {
-            private int mentorId;
-            private String profileImage;
-            private String name;
-            private String country;
-            private int age;
-            private Role role;
-            private List<String> favorites;
+    @Getter @Setter
+    public static class ContactMentorDTO {
+        private int mentorId;
+        private String profileImage;
+        private String name;
+        private String country;
+        private LocalDate birthDate;
+        private Role role;
+        private List<String> favorites;
 
-            public MentorDTO(User user, List<UserInterest> userInterests) {
-                this.mentorId = user.getId();
-                this.profileImage = user.getProfileImage();
-                this.name = user.getFirstName() + " " + user.getLastName();
-                this.country = user.getCountry();
-                this.age = user.getAge();
-                this.role = user.getRole();
-                this.favorites = userInterests.stream()
-                        .filter(userInterest -> userInterest.getUser().getId() == user.getId())
-                        .map(userInterest -> userInterest.getInterest().getCategory())
-                        .collect(Collectors.toList());
-            }
+        public ContactMentorDTO(User mentor, List<UserInterest> userInterests) {
+            this.mentorId = mentor.getId();
+            this.profileImage = mentor.getProfileImage();
+            this.name = mentor.getFirstName() + " " + mentor.getLastName();
+            this.country = mentor.getCountry();
+            this.birthDate = mentor.getBirthDate();
+            this.role = mentor.getRole();
+            this.favorites = userInterests.stream()
+                    .map(userInterest -> userInterest.getInterest().getCategory())
+                    .collect(Collectors.toList());
         }
+    }
+    @Getter @Setter
+    public static class ConnectionDTO {
+        private int connectionId;
+        private ContactStateEnum state;
+        private MenteeDTO mentee;
+
+        // ConnectionDTO 생성자
+        public ConnectionDTO(NotConnectedRegisterUser notConnectedRegisterUser, List<UserInterest> userInterests) {
+            this.connectionId = notConnectedRegisterUser.getId();
+            this.state = notConnectedRegisterUser.getState();
+            this.mentee = new MenteeDTO(notConnectedRegisterUser.getMenteeUser(), userInterests);
+        }
+
+        // MenteeDTO 내부 클래스
         @Getter @Setter
         public static class MenteeDTO {
             private int menteeId;
             private String profileImage;
             private String name;
             private String country;
-            private int age;
+            private LocalDate birthDate;
             private Role role;
-            private NotConnectedRegisterUser.State state;
-            private List<String> favorites; // 고민할 부분 : 유저의 favorite List 를 어떻게 가져올 것 인가?
+            private List<String> favorites;
 
-            /**
-             * 유저의 favorite List 를 가져오기 위해
-             * userInterest 를 입력으로 받음
-             * userInterest 의 userId 와 현재 신청한 멘티 ( notConnectedRegitserUser ) 의 id 값이 일치하는 경우
-             * 그럴 경우에만 tag 값들을 가져오기
-             * **/
-
-            public MenteeDTO(NotConnectedRegisterUser notConnectedRegisterUser, List<UserInterest> userInterests) {
-                this.menteeId = notConnectedRegisterUser.getMenteeUser().getId();
-                this.profileImage = notConnectedRegisterUser.getMenteeUser().getProfileImage();
-                this.name = notConnectedRegisterUser.getMenteeUser().getFirstName() + " " + notConnectedRegisterUser.getMenteeUser().getLastName();
-                this.country = notConnectedRegisterUser.getMenteeUser().getCountry();
-                this.age = notConnectedRegisterUser.getMenteeUser().getAge();
-                this.role = notConnectedRegisterUser.getMenteeUser().getRole();
-                this.state = notConnectedRegisterUser.getState();
+            // MenteeDTO 생성자
+            public MenteeDTO(User menteeUser, List<UserInterest> userInterests) {
+                this.menteeId = menteeUser.getId();
+                this.profileImage = menteeUser.getProfileImage();
+                this.name = menteeUser.getFirstName() + " " + menteeUser.getLastName();
+                this.country = menteeUser.getCountry();
+                this.birthDate = menteeUser.getBirthDate();
+                this.role = menteeUser.getRole();
                 this.favorites = userInterests.stream()
-                        .filter(userInterest -> userInterest.getUser().getId() == notConnectedRegisterUser.getMenteeUser().getId())
                         .map(userInterest -> userInterest.getInterest().getCategory())
                         .collect(Collectors.toList());
             }
         }
+    }
 }

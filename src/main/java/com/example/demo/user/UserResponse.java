@@ -1,40 +1,83 @@
 package com.example.demo.user;
 
+import com.example.demo.interest.Interest;
+import com.example.demo.refreshToken.TokenResponse;
+import com.example.demo.user.userInterest.UserInterest;
 import lombok.Getter;
 import lombok.Setter;
+
+import java.time.LocalDate;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class UserResponse {
     @Getter
     @Setter
     public static class LoginDTO {
         private UserDetailDTO userDetailDTO;
-        private String JWTToken;
+        private JWTToken jwtToken;
 
-        public LoginDTO(User user, String JWTToken) {
-            this.userDetailDTO = new UserDetailDTO(user);
-            this.JWTToken = JWTToken;
+        public LoginDTO(User user, List<String> userCategoryList, TokenResponse.TokenDTO token) {
+            this.userDetailDTO = new UserDetailDTO(user, userCategoryList);
+            this.jwtToken = new JWTToken(token);
         }
 
         @Getter
         @Setter
         public class UserDetailDTO {
             private int id;
-            private String email;
             private String firstName;
             private String lastName;
+            private String email;
             private String country;
+            private LocalDate birthDate;
+            private String phone;
             private String profileImage;
             private Role role;
+            private List<String> categorylist;
 
-            public UserDetailDTO(User user) {
+            public UserDetailDTO(User user, List<String> userCategoryList) {
                 this.id = user.getId();
                 this.email = user.getEmail();
                 this.firstName = user.getFirstName();
                 this.lastName = user.getLastName();
                 this.country = user.getCountry();
+                this.birthDate = user.getBirthDate();
+                this.phone = user.getPhone();
                 this.profileImage = user.getProfileImage();
                 this.role = user.getRole();
+                this.categorylist = userCategoryList;
             }
+        }
+
+        @Getter
+        @Setter
+        public class JWTToken {
+            private String accessToken;
+            private String refreshToken;
+
+            public JWTToken(TokenResponse.TokenDTO token) {
+                this.accessToken = token.getAccessToken();
+                this.refreshToken = token.getRefreshToken();
+            }
+        }
+    }
+
+    @Getter
+    @Setter
+    public static class SimpleProfileDTO {
+        private int id;
+        private String profileImage;
+        private String firstName;
+        private String lastName;
+        private String email;
+
+        public SimpleProfileDTO(User user) {
+            this.id = user.getId();
+            this.profileImage = user.getProfileImage();
+            this.firstName = user.getFirstName();
+            this.lastName = user.getLastName();
+            this.email = user.getEmail();
         }
     }
 
@@ -42,25 +85,29 @@ public class UserResponse {
     @Setter
     public static class ProfileDTO {
         private int id;
-        private String profileImage;
+        private String email;
         private String firstName;
         private String lastName;
-        private String introduction;
         private String country;
-        private String role;
+        private String introduction;
+        private LocalDate birthDate;
+        private String profileImage;
         private String phone;
-        private String email;
+        private Role role;
+        private List<String> categoryList;
 
-        public ProfileDTO(User user) {
+        public ProfileDTO(User user, List<String> userCategoryList) {
             this.id = user.getId();
-            this.profileImage = user.getProfileImage();
+            this.email = user.getEmail();
             this.firstName = user.getFirstName();
             this.lastName = user.getLastName();
-            this.introduction = user.getIntroduction();
             this.country = user.getCountry();
-            this.role = user.getRole().toString();
+            this.introduction = user.getIntroduction();
+            this.birthDate = user.getBirthDate();
             this.phone = user.getPhone();
-            this.email = user.getEmail();
+            this.profileImage = user.getProfileImage();
+            this.role = user.getRole();
+            this.categoryList = userCategoryList;
         }
     }
 }

@@ -2,6 +2,7 @@ package com.example.demo.mentoring.contact;
 
 import com.example.demo.config.utils.BaseTime;
 import com.example.demo.mentoring.MentorPost;
+import com.example.demo.mentoring.MentorPostStateConverter;
 import com.example.demo.user.User;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -16,7 +17,7 @@ import javax.persistence.*;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 @Where(clause = "deleted_at IS NULL")
-@SQLDelete(sql = "UPDATE not_connected_register_users SET deleted_at = CURRENT_TIMESTAMP, isDeleted = TRUE where id = ?")
+@SQLDelete(sql = "UPDATE not_connected_register_users SET deleted_at = CURRENT_TIMESTAMP, is_deleted = TRUE where id = ?")
 @Table(name = "not_connected_register_users")
 public class NotConnectedRegisterUser extends BaseTime {
 
@@ -30,20 +31,16 @@ public class NotConnectedRegisterUser extends BaseTime {
     @ManyToOne(fetch = FetchType.LAZY)
     private User menteeUser;
 
-    @Column(nullable = false)
-    @Enumerated(value = EnumType.STRING)
-    private State state;
+    @Convert(converter = ContactStateConverter.class)
+    @Column(name = "state", nullable = false)
+    private ContactStateEnum state;
 
-    public void updateStatus(State state) {
+    public void updateStatus(ContactStateEnum state) {
         this.state = state;
     }
 
-    public enum State {
-        ACCEPT, REFUSE, AWAIT
-    }
-
     @Builder
-    public NotConnectedRegisterUser(MentorPost mentorPost, User menteeUser, State state) {
+    public NotConnectedRegisterUser(MentorPost mentorPost, User menteeUser, ContactStateEnum state) {
         this.mentorPost = mentorPost;
         this.menteeUser = menteeUser;
         this.state = state;

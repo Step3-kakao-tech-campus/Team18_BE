@@ -1,9 +1,7 @@
 package com.example.demo.config.errors.exception;
 
-import com.example.demo.config.utils.ApiUtils;
+import com.example.demo.config.utils.ApiResponseBuilder;
 import lombok.Getter;
-import org.springframework.http.HttpStatus;
-import org.springframework.validation.BindingResult;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -14,16 +12,11 @@ public class Exception400 extends RuntimeException {
 
     public Exception400(Map<String, String> errors, String message) {
         super(message);
-        this.errors = errors;
+        this.errors = (errors != null) ? errors : null;
     }
 
-    public Exception400(String message) {
-        super(message);
-        errors = null;
-    }
-
-    public ApiUtils.ApiResponse<?> body(){
-        return ApiUtils.fail(errors, getMessage());
+    public ApiResponseBuilder.ApiResponse<?> body(){
+        return ApiResponseBuilder.fail(errors, getMessage());
     }
 }
 
