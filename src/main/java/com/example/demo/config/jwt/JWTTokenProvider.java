@@ -30,13 +30,17 @@ public class JWTTokenProvider {
 
     public static final String Token_Prefix = "Bearer ";
 
-    @Value("${jwt.secret}")
-    public static String SecretKey;
+    private final String SecretKey;
+
     public static final int AccessTokenValidTime = 1000 * 60 * 5; // 5분
     public static final int RefreshTokenValidTime = 1000 * 60 * 60 * 24 * 7; // 1주일
 
     private final CustomUserDetailService userDetailService;
 
+    public JwtTokenProvider(@Value("${jwt.secret}") String secretKey) {
+        this.SecretKey = secretKey;
+    }
+    
     public static TokenResponse.TokenDTO createToken(User user, List<String> userCategoryList) {
         String accessToken = createAccessToken(user, userCategoryList);
         String refreshToken = createRefreshToken(user);
