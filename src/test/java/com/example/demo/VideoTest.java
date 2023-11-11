@@ -198,7 +198,7 @@ public class VideoTest extends RestDoc{
         mvc.perform(get("/api/videos/" + videoId));
 
         ResultActions resultActions = mvc.perform(
-                get("/videos/history")
+                get("/api/videos/history")
         );
 
         // console
