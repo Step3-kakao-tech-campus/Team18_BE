@@ -177,14 +177,14 @@ public class ContactService {
     private void isMentor(User mentor) {
         // 예외 처리
         if ( mentor.getRole() != Role.MENTOR ) {
-            throw new Exception401("해당 사용자는 멘토가 아닙니다.");
+            throw new Exception401("권한이 없습니다.");
         }
     }
 
     // 멘티 인증을 위한 메소드
     private void isMentee(User mentee) {
         if ( mentee.getRole() != Role.MENTEE ) {
-            throw new Exception401("해당 사용자는 멘티가 아닙니다.");
+            throw new Exception401("권한이 없습니다.");
         }
     }
 }

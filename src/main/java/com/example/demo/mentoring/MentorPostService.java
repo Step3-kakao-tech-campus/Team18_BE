@@ -48,11 +48,7 @@ public class MentorPostService {
 
         MentorPost mentorPost = new MentorPost( writer, createMentorPostDTO.getTitle(), createMentorPostDTO.getContent());
 
-        try {
-            mentorPostJPARepository.save(mentorPost);
-        } catch (Exception e) {
-            throw new Exception500("unknown server error");
-        }
+        mentorPostJPARepository.save(mentorPost);
 
         return new MentorPostResponse.MentorPostIdDTO(mentorPost);
     }
@@ -99,34 +95,14 @@ public class MentorPostService {
         MentorPost mentorPost = mentorPostJPARepository.findById(id).
                 orElseThrow(() -> new Exception404("해당 글이 존재하지 않습니다."));
 
-        try {
-            mentorPost.update(createMentorPostDTO.getTitle(), createMentorPostDTO.getContent());
-        } catch (Exception e) {
-            throw new Exception500("unknown server error");
-        }
+        mentorPost.update(createMentorPostDTO.getTitle(), createMentorPostDTO.getContent());
+
     }
 
     public void deleteMentorPost(int id, User writer) {
         isMentor(writer);
 
-        try {
-            mentorPostJPARepository.deleteById(id);
-        } catch (Exception e) {
-            throw new Exception500("unknown server error");
-        }
-    }
-
-    //생성 시간까지 조회하는 test service 코드 입니다
-    public List<MentorPostResponse.MentorPostAllWithTimeStampDTO> findAllMentorPostWithTimeStamp() {
-        List<MentorPost> pageContent = mentorPostJPARepository.findAll();
-        //List<MentorPost> mentorPostList = mentorPostJPARepostiory.findAll();
-        List<MentorPostResponse.MentorPostAllWithTimeStampDTO> mentorPostDTOList = pageContent.stream().map(
-                mentorPost -> {
-                    List<UserInterest> writerInterests = userInterestJPARepository.findAllById(mentorPost.getWriter().getId());
-                    return new MentorPostResponse.MentorPostAllWithTimeStampDTO(mentorPost,writerInterests);
-                }
-        ).collect(Collectors.toList());
-        return mentorPostDTOList;
+        mentorPostJPARepository.deleteById(id);
     }
 
     public void changeMentorPostStatus(MentorPostRequest.StateDTO stateDTO, int id, User writer) {
@@ -134,18 +110,14 @@ public class MentorPostService {
         isMentor(writer);
 
         MentorPost mentorPost = mentorPostJPARepository.findById(id)
-                .orElseThrow(() -> new Exception404("해당 글이 존재하지 않습니다."));;
+                .orElseThrow(() -> new Exception404("해당 글이 존재하지 않습니다."));
 
-        try {
-            mentorPost.changeStatus(stateDTO.getMentorPostStateEnum());
-        } catch (Exception e) {
-            throw new Exception500("unknown server error");
-        }
+        mentorPost.changeStatus(stateDTO.getMentorPostStateEnum());
     }
 
     private void isMentor(User writer) {
         if ( writer.getRole() == Role.MENTEE ) {
-            throw new Exception401("해당 사용자는 멘티입니다.");
+            throw new Exception401("권한이 없습니다");
         }
     }
 }

@@ -12,6 +12,7 @@ import com.example.demo.user.userInterest.UserInterestJPARepository;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.SignatureException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
@@ -24,10 +25,13 @@ import java.util.Optional;
 @Component
 public class JWTTokenProvider {
 
-    public static final String Header = "Authorization";
+    @Value("${jwt.header}")
+    public static String Header;
+
     public static final String Token_Prefix = "Bearer ";
 
-    public static final String SecretKey = "a2FrYW8tdGVjaC1jYW1wdXMtcHJvamVjdC1nYXJkZW4tc3ByaW5nLXNlY3VyaXR5LWp3dC10b2tlbi1zZWNyZXQta2V5";
+    @Value("${jwt.secret}")
+    public static String SecretKey;
     public static final int AccessTokenValidTime = 1000 * 60 * 5; // 5분
     public static final int RefreshTokenValidTime = 1000 * 60 * 60 * 24 * 7; // 1주일
 
@@ -90,28 +94,10 @@ public class JWTTokenProvider {
     }
 
     public static boolean validateToken(String token) {
-//        try {
             Jwts.parserBuilder()
                     .setSigningKey(SecretKey)
                     .build()
                     .parseClaimsJws(token);
             return true;
-//        } catch (SignatureException e) {
-//            System.out.println("Invalid JWT Signature.");
-////            throw new Exception401("유효하지 않은 JWT 토큰 서명입니다.");
-//        } catch (MalformedJwtException e) {
-//            System.out.println("Invalid JWT Token.");
-////            throw new Exception401("손상된 JWT 토큰입니다.");
-//        } catch (ExpiredJwtException e) {
-//            System.out.println("Expired JWT Token.");
-////            throw new Exception401("만료된 JWT Token입니다.");
-//        } catch (UnsupportedJwtException e) {
-//            System.out.println("Unsupported JWT Token.");
-////            throw new Exception401("지원하지 않는 JWT 토큰입니다.");
-//        } catch (IllegalArgumentException e) {
-//            System.out.println("JWT claims string is empty.");
-////            throw new Exception401("JWT 토큰 내의 정보가 없습니다.");
-//        }
-//        return false;
     }
 }
