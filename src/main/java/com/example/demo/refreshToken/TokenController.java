@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.servlet.http.Cookie;
 import java.io.UnsupportedEncodingException;
@@ -18,6 +19,7 @@ import java.io.UnsupportedEncodingException;
 @Api(tags = "Token API")
 @RequiredArgsConstructor
 @RestController
+@RequestMapping("/api")
 public class TokenController {
 
     private final TokenService tokenService;
