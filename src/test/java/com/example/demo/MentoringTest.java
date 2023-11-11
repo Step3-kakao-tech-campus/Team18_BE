@@ -36,7 +36,7 @@ public class MentoringTest extends RestDoc {
 
         // when
         ResultActions resultActions = mvc.perform(
-                get("/mentorings")
+                get("/api/mentorings")
         );
 
         // console
@@ -54,7 +54,7 @@ public class MentoringTest extends RestDoc {
 
         // when
         ResultActions resultActions = mvc.perform(
-                get("/mentorings")
+                get("/api/mentorings")
                         .param("category", "TITLE")
                         .param("search", "Teaching")
         );
@@ -74,7 +74,7 @@ public class MentoringTest extends RestDoc {
 
         // when
         ResultActions resultActions = mvc.perform(
-                get("/mentorings")
+                get("/api/mentorings")
                         .param("category", "WRITER")
                         .param("search", "John")
         );
@@ -94,7 +94,7 @@ public class MentoringTest extends RestDoc {
 
         // when
         ResultActions resultActions = mvc.perform(
-                get("/mentorings")
+                get("/api/mentorings")
                         .param("category", "INTEREST")
                         .param("search", "K-POP")
         );
@@ -115,7 +115,7 @@ public class MentoringTest extends RestDoc {
 
         // when
         ResultActions resultActions = mvc.perform(
-                get("/mentorings/" + id)
+                get("/api/mentorings/" + id)
         );
 
         // console
@@ -145,7 +145,7 @@ public class MentoringTest extends RestDoc {
 
         // when
         ResultActions resultActions = mvc.perform(
-                put("/mentorings/" + pid)
+                put("/api/mentorings/" + pid)
                 .content(requestBody)
                 .contentType(MediaType.APPLICATION_JSON)
         );
@@ -176,7 +176,7 @@ public class MentoringTest extends RestDoc {
 
         // when
         ResultActions resultActions = mvc.perform(
-                delete("/mentorings/" + pid)
+                delete("/api/mentorings/" + pid)
         );
 
         // console
@@ -207,7 +207,7 @@ public class MentoringTest extends RestDoc {
 
         // when
         ResultActions resultActions = mvc.perform(
-                patch("/mentorings/" + pid + "/done")
+                patch("/api/mentorings/" + pid + "/done")
                 .content(requestBody)
                 .contentType(MediaType.APPLICATION_JSON)
         );
@@ -244,7 +244,7 @@ public class MentoringTest extends RestDoc {
 
         // when
         ResultActions resultActions = mvc.perform(
-                put("/mentorings/" + pid)
+                put("/api/mentorings/" + pid)
                         .content(requestBody)
                         .contentType(MediaType.APPLICATION_JSON)
         );
@@ -280,7 +280,7 @@ public class MentoringTest extends RestDoc {
 
         // when
         ResultActions resultActions = mvc.perform(
-                post("/mentorings")
+                post("/api/mentorings")
                         .content(requestBody)
                         .contentType(MediaType.APPLICATION_JSON)
         );
@@ -308,7 +308,7 @@ public class MentoringTest extends RestDoc {
 
         // when
         ResultActions resultActions = mvc.perform(
-                post("/mentorings")
+                post("/api/mentorings")
                         .content(requestBody)
                         .contentType(MediaType.APPLICATION_JSON)
         );
@@ -336,7 +336,7 @@ public class MentoringTest extends RestDoc {
 
         // when
         ResultActions resultActions = mvc.perform(
-                post("/mentorings")
+                post("/api/mentorings")
                         .content(requestBody)
                         .contentType(MediaType.APPLICATION_JSON)
         );
@@ -364,7 +364,7 @@ public class MentoringTest extends RestDoc {
 
         // when
         ResultActions resultActions = mvc.perform(
-                post("/mentorings")
+                post("/api/mentorings")
                         .content(requestBody)
                         .contentType(MediaType.APPLICATION_JSON)
         );
@@ -391,7 +391,7 @@ public class MentoringTest extends RestDoc {
 
         // when
         ResultActions resultActions = mvc.perform(
-                post("/mentorings")
+                post("/api/mentorings")
                         .content(requestBody)
                         .contentType(MediaType.APPLICATION_JSON)
         );

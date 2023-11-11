@@ -23,7 +23,7 @@ public class doneTest extends RestDoc {
 
         // when
         ResultActions resultActions = mvc.perform(
-                get("/contacts/done")
+                get("/api/contacts/done")
         );
 
         // console
@@ -43,7 +43,7 @@ public class doneTest extends RestDoc {
 
         // when
         ResultActions resultActions = mvc.perform(
-                get("/contacts/done")
+                get("/api/contacts/done")
         );
 
         // console
