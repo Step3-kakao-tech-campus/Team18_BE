@@ -52,7 +52,7 @@ public class VideoTest extends RestDoc{
 
         // when
         ResultActions resultActions = mvc.perform(
-                get("/videos/main")
+                get("/api/videos/main")
                         .param("page", String.valueOf(0))
         );
 
@@ -71,7 +71,7 @@ public class VideoTest extends RestDoc{
 
         // when
         ResultActions resultActions = mvc.perform(
-                get("/videos/main")
+                get("/api/videos/main")
                         .param("page", String.valueOf(0))
                         .param("category", String.valueOf(1))
         );
@@ -92,7 +92,7 @@ public class VideoTest extends RestDoc{
 
         // when
         ResultActions resultActions = mvc.perform(
-                get("/videos/" + videoId)
+                get("/api/videos/" + videoId)
         );
 
         // console
@@ -112,7 +112,7 @@ public class VideoTest extends RestDoc{
 
         // when
         ResultActions resultActions = mvc.perform(
-                get("/videos/" + videoId)
+                get("/api/videos/" + videoId)
         );
 
         // console
@@ -131,11 +131,11 @@ public class VideoTest extends RestDoc{
         int videoId = 3;
 
         mvc.perform(
-                get("/videos/" + videoId)
+                get("/api/videos/" + videoId)
         );
 
         ResultActions resultActions = mvc.perform(
-                get("/videos/history")
+                get("/api/videos/history")
         );
 
         // console
@@ -154,11 +154,11 @@ public class VideoTest extends RestDoc{
         int videoId = 2;
 
         mvc.perform(
-                get("/videos/" + videoId)
+                get("/api/videos/" + videoId)
         );
 
         ResultActions resultActions = mvc.perform(
-                get("/videos/history")
+                get("/api/videos/history")
         );
 
         // console
@@ -176,7 +176,7 @@ public class VideoTest extends RestDoc{
         // given
 
         ResultActions resultActions = mvc.perform(
-                get("/videos/history")
+                get("/api/videos/history")
         );
 
         // console
@@ -195,7 +195,7 @@ public class VideoTest extends RestDoc{
         int videoId = 1;
 
         // when
-        mvc.perform(get("/videos/" + videoId));
+        mvc.perform(get("/api/videos/" + videoId));
 
         ResultActions resultActions = mvc.perform(
                 get("/videos/history")
@@ -216,7 +216,7 @@ public class VideoTest extends RestDoc{
         // given
 
         ResultActions resultActions = mvc.perform(
-                get("/videos/interest")
+                get("/api/videos/interest")
         );
 
         // console
@@ -316,7 +316,7 @@ public class VideoTest extends RestDoc{
 
         // when
         ResultActions resultActions = mvc.perform(
-                post("/videos")
+                post("/api/videos")
                         .content(requestBody)
                         .contentType(MediaType.APPLICATION_JSON)
         );
