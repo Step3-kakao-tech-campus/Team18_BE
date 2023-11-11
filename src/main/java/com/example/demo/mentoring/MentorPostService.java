@@ -2,7 +2,6 @@ package com.example.demo.mentoring;
 
 import com.example.demo.config.errors.exception.Exception401;
 import com.example.demo.config.errors.exception.Exception403;
-import com.example.demo.config.errors.exception.Exception500;
 import com.example.demo.config.errors.exception.Exception404;
 import com.example.demo.mentoring.contact.ContactJPARepository;
 import com.example.demo.mentoring.contact.NotConnectedRegisterUser;
@@ -95,12 +94,19 @@ public class MentorPostService {
         MentorPost mentorPost = mentorPostJPARepository.findById(id).
                 orElseThrow(() -> new Exception404("해당 글이 존재하지 않습니다."));
 
+        validateUserAccess(writer, mentorPost);
+
         mentorPost.update(createMentorPostDTO.getTitle(), createMentorPostDTO.getContent());
 
     }
 
     public void deleteMentorPost(int id, User writer) {
         isMentor(writer);
+
+        MentorPost mentorPost = mentorPostJPARepository.findById(id).
+                orElseThrow(() -> new Exception404("해당 글이 존재하지 않습니다."));
+
+        validateUserAccess(writer, mentorPost);
 
         mentorPostJPARepository.deleteById(id);
     }
@@ -112,12 +118,21 @@ public class MentorPostService {
         MentorPost mentorPost = mentorPostJPARepository.findById(id)
                 .orElseThrow(() -> new Exception404("해당 글이 존재하지 않습니다."));
 
+        validateUserAccess(writer, mentorPost);
+
         mentorPost.changeStatus(stateDTO.getMentorPostStateEnum());
     }
 
     private void isMentor(User writer) {
         if ( writer.getRole() == Role.MENTEE ) {
             throw new Exception401("권한이 없습니다");
+        }
+    }
+
+    private void validateUserAccess(User writer, MentorPost mentorPost) {
+        // 예외처리
+        if ( mentorPost.getWriter().getId() != writer.getId() ) {
+            throw new Exception401("권한이 없습니다.");
         }
     }
 }
