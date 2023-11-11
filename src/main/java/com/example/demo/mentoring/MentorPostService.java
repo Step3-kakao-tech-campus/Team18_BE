@@ -48,11 +48,7 @@ public class MentorPostService {
 
         MentorPost mentorPost = new MentorPost( writer, createMentorPostDTO.getTitle(), createMentorPostDTO.getContent());
 
-        try {
-            mentorPostJPARepository.save(mentorPost);
-        } catch (Exception e) {
-            throw new Exception500("unknown server error");
-        }
+        mentorPostJPARepository.save(mentorPost);
 
         return new MentorPostResponse.MentorPostIdDTO(mentorPost);
     }
@@ -99,21 +95,14 @@ public class MentorPostService {
         MentorPost mentorPost = mentorPostJPARepository.findById(id).
                 orElseThrow(() -> new Exception404("해당 글이 존재하지 않습니다."));
 
-        try {
-            mentorPost.update(createMentorPostDTO.getTitle(), createMentorPostDTO.getContent());
-        } catch (Exception e) {
-            throw new Exception500("unknown server error");
-        }
+        mentorPost.update(createMentorPostDTO.getTitle(), createMentorPostDTO.getContent());
+
     }
 
     public void deleteMentorPost(int id, User writer) {
         isMentor(writer);
 
-        try {
-            mentorPostJPARepository.deleteById(id);
-        } catch (Exception e) {
-            throw new Exception500("unknown server error");
-        }
+        mentorPostJPARepository.deleteById(id);
     }
 
     public void changeMentorPostStatus(MentorPostRequest.StateDTO stateDTO, int id, User writer) {
@@ -121,13 +110,9 @@ public class MentorPostService {
         isMentor(writer);
 
         MentorPost mentorPost = mentorPostJPARepository.findById(id)
-                .orElseThrow(() -> new Exception404("해당 글이 존재하지 않습니다."));;
+                .orElseThrow(() -> new Exception404("해당 글이 존재하지 않습니다."));
 
-        try {
-            mentorPost.changeStatus(stateDTO.getMentorPostStateEnum());
-        } catch (Exception e) {
-            throw new Exception500("unknown server error");
-        }
+        mentorPost.changeStatus(stateDTO.getMentorPostStateEnum());
     }
 
     private void isMentor(User writer) {
