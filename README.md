@@ -37,7 +37,7 @@
 
 ### 🎨 ERD
 
-​<img src="https://github.com/Step3-kakao-tech-campus/Team18_BE/assets/37840237/992a7c04-34b2-4b61-b4de-63e23fe8719c"/>
+​<img src="https://github.com/Step3-kakao-tech-campus/Team18_BE/assets/37840237/04fa2308-d8e8-4a8a-8d9c-172ed90925df"/>
 
 ## 📌 주요 기능
 
