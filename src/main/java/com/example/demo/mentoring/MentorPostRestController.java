@@ -21,8 +21,8 @@ public class MentorPostRestController {
     @PostMapping(value = "/mentorings")
     @Operation(summary = "mentorpost 생성")
     public ResponseEntity<?> createMentorPost(@RequestBody @Valid MentorPostRequest.CreateMentorPostDTO requestDTO, Errors errors, @AuthenticationPrincipal CustomUserDetails userDetails) {
-        mentorPostService.createMentorPost(requestDTO, userDetails.getUser());
-        return ResponseEntity.status(HttpStatus.OK).body(ApiResponseBuilder.successWithNoContent());
+        MentorPostResponse.MentorPostIdDTO responseDTO = mentorPostService.createMentorPost(requestDTO, userDetails.getUser());
+        return ResponseEntity.ok(ApiResponseBuilder.success(responseDTO));
     }
 
     @GetMapping("/mentorings")
