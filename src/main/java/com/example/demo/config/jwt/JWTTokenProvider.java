@@ -25,18 +25,17 @@ import java.util.Optional;
 @Component
 public class JWTTokenProvider {
 
-    @Value("${jwt.header}")
-    public static String Header;
+    public static final String Header = "Authorization";
 
     public static final String Token_Prefix = "Bearer ";
 
-    @Value("${jwt.secret}")
-    public static String SecretKey;
+    public static final String SecretKey = "a2FrYW8tdGVjaC1jYW1wdXMtcHJvamVjdC1nYXJkZW4tc3ByaW5nLXNlY3VyaXR5LWp3dC10b2tlbi1zZWNyZXQta2V5";
+
     public static final int AccessTokenValidTime = 1000 * 60 * 5; // 5분
     public static final int RefreshTokenValidTime = 1000 * 60 * 60 * 24 * 7; // 1주일
 
     private final CustomUserDetailService userDetailService;
-
+    
     public static TokenResponse.TokenDTO createToken(User user, List<String> userCategoryList) {
         String accessToken = createAccessToken(user, userCategoryList);
         String refreshToken = createRefreshToken(user);

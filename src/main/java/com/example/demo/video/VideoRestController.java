@@ -18,6 +18,7 @@ import java.util.List;
 @Api(tags = "Video API")
 @RequiredArgsConstructor
 @RestController
+@RequestMapping("/api")
 public class VideoRestController {
 
     private final VideoService videoService;
