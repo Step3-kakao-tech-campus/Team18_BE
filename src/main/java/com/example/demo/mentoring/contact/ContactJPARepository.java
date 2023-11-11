@@ -14,15 +14,10 @@ public interface ContactJPARepository extends JpaRepository<NotConnectedRegister
     @Query("SELECT ncru FROM NotConnectedRegisterUser ncru WHERE ncru.mentorPost.id = :mentorPostId")
     List<NotConnectedRegisterUser> findAllByMentorPostId(@Param("mentorPostId") int mentorPostId);
 
-    @Query("SELECT ncru FROM NotConnectedRegisterUser ncru WHERE ncru.mentorPost.id = :mentorPostId AND ncru.menteeUser.id = :menteeId")
-    Optional<NotConnectedRegisterUser> findByMentorPostIdAndMenteeUserId(int mentorPostId, int menteeId);
-
     @Query("SELECT count(*) FROM NotConnectedRegisterUser ncru WHERE ncru.menteeUser.id = :userId")
     int countContactByMenteeId(int userId);
 
     @Query("SELECT ncru FROM NotConnectedRegisterUser ncru WHERE ncru.menteeUser.id = :menteeId")
     List<NotConnectedRegisterUser> findAllByMenteeId(int menteeId);
 
-    @Query("SELECT ncru FROM NotConnectedRegisterUser ncru WHERE ncru.mentorPost.writer.id = :mentorId")
-    List<NotConnectedRegisterUser> findAllByMentorId(int mentorId);
 }
