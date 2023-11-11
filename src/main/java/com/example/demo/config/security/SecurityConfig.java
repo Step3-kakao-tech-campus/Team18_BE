@@ -77,7 +77,7 @@ public class SecurityConfig {
                 authorize -> authorize
                         .antMatchers("/users/passwordcheck", "/profiles", "/profiles/simple", "/videos/interest", "/videos/history", "/contacts/**").authenticated()
                         .antMatchers("/admin/**").access("hasRole('ADMIN')")
-                        .antMatchers("/videos").access("hasRole('ADMIN')")
+                       // .antMatchers("/videos").access("hasRole('ADMIN')")
                         .antMatchers(HttpMethod.POST, "/mentorings").authenticated()
                         .antMatchers(HttpMethod.PUT, "/mentorings/{id}").authenticated()
                         .antMatchers(HttpMethod.DELETE, "/mentorings/{id}").authenticated()
