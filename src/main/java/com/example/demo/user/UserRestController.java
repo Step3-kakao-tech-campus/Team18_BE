@@ -27,6 +27,7 @@ import java.net.URLEncoder;
 @Api(tags = "User API")
 @RequiredArgsConstructor
 @RestController
+@RequestMapping("/api")
 public class UserRestController {
 
     private final UserService userService;

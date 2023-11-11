@@ -18,6 +18,7 @@ import java.io.UnsupportedEncodingException;
 @Api(tags = "Token API")
 @RequiredArgsConstructor
 @RestController
+@RequestMapping("/api")
 public class TokenController {
 
     private final TokenService tokenService;
