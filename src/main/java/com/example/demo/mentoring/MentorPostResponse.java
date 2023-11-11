@@ -16,6 +16,15 @@ import java.util.stream.Collectors;
 
 public class MentorPostResponse {
 
+    @Getter @Setter
+    public static class MentorPostIdDTO {
+        private int postId;
+
+        public MentorPostIdDTO (MentorPost mentorPost) {
+            this.postId = mentorPost.getId();
+        }
+    }
+
 /*
     페이지에서 멘토post 전체를 조회
     MentorPostAllDTO
