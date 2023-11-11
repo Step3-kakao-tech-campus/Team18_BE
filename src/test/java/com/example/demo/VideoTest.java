@@ -38,18 +38,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class VideoTest extends RestDoc{
     @Autowired
     private InterestJPARepository interestJPARepository;
-    @Autowired
-    private VideoInterestJPARepository videoInterestJPARepository;
-    @Autowired
-    private VideoJPARepository videoJPARepository;
-    @Autowired
-    private SubtitleJPARepository subtitleJPARepository;
-    @Autowired
-    private UserJPARepository userJPARepository;
-    @Autowired
-    private VideoHistoryJPARepository videoHistoryJPARepository;
-    @Autowired
-    private UserInterestJPARepository userInterestJPARepository;
 
     @Autowired
     private VideoService videoService;
