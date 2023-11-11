@@ -50,7 +50,7 @@ public class ContactRestController {
 
     @PostMapping(value = "/contacts/accept")
     @Operation(summary = "멘토링 신청 수락", description = "멘토링 신청을 수락한다.")
-    public ResponseEntity<?> acceptContact(@RequestBody @Valid ContactRequest.ContactAcceptDTO contactAcceptDTO, Error errors, @AuthenticationPrincipal CustomUserDetails userDetails) {
+    public ResponseEntity<?> acceptContact(@RequestBody @Valid List<ContactRequest.ContactAcceptDTO> contactAcceptDTO, Error errors, @AuthenticationPrincipal CustomUserDetails userDetails) {
         // TO-DO : 멘토링 신청 수락 API 로직 만들기
         contactService.acceptContact(contactAcceptDTO, userDetails.getUser());
         return ResponseEntity.status(HttpStatus.OK).body(ApiResponseBuilder.successWithNoContent());
