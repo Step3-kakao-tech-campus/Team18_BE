@@ -33,8 +33,7 @@
 
 ### 🎈 인스턴스 주소
 
-- BE : https://k6306e208fe94a.user-app.krampoline.com
-- BE_Swagger : https://k6306e208fe94a.user-app.krampoline.com/swagger-ui/index.html#/
+[https://k6306e208fe94a.user-app.krampoline.com](https://ke94a9914479ca.user-app.krampoline.com/)
 
 ### 🎨 ERD
 
@@ -96,6 +95,7 @@
 
 <img src="https://github.com/Step3-kakao-tech-campus/Team18_BE/assets/37840237/f1f0ddee-2f46-4e51-b6d6-e9bc677509b2"/>
 
-### 테스트 시나리오 명세서
+### 테스트 결과 보고서 / 시나리오 명세서
 
-- BE : https://www.notion.so/BE_-d9855d96b2764e18a79ccc8b0bac5a3b
+- BE 시나리오 명세서 : [https://www.notion.so/BE_-d9855d96b2764e18a79ccc8b0bac5a3b](https://www.notion.so/18-_BE_-d9855d96b2764e18a79ccc8b0bac5a3b)
+- BE 테스트 결과 보고서 : [https://www.notion.so/18-_BE_-b63cb7010a694ae4958cbe9655b57731](https://www.notion.so/18-_BE_-b63cb7010a694ae4958cbe9655b57731)https://www.notion.so/18-_BE_-b63cb7010a694ae4958cbe9655b57731
