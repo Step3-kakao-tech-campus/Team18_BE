@@ -75,13 +75,13 @@ public class SecurityConfig {
         // 11. 인증, 권한 필터 설정
         httpSecurity.authorizeRequests(
                 authorize -> authorize
-                        .antMatchers("/users/passwordcheck", "/profiles", "/profiles/simple", "/videos/interest", "/videos/history", "/contacts/**").authenticated()
-                        .antMatchers("/admin/**").access("hasRole('ADMIN')")
-                        .antMatchers("/videos").access("hasRole('ADMIN')")
-                        .antMatchers(HttpMethod.POST, "/mentorings").authenticated()
-                        .antMatchers(HttpMethod.PUT, "/mentorings/{id}").authenticated()
-                        .antMatchers(HttpMethod.DELETE, "/mentorings/{id}").authenticated()
-                        .antMatchers(HttpMethod.PATCH, "/mentorings/{id}/done").authenticated()
+                        .antMatchers("/api/users/passwordcheck", "/api/profiles", "/api/profiles/simple", "/api/videos/interest", "/api/videos/history", "/api/contacts/**").authenticated()
+                        .antMatchers("/api/admin/**").access("hasRole('ADMIN')")
+                       // .antMatchers("/api/videos").access("hasRole('ADMIN')")
+                        .antMatchers(HttpMethod.POST, "/api/mentorings").authenticated()
+                        .antMatchers(HttpMethod.PUT, "/api/mentorings/{id}").authenticated()
+                        .antMatchers(HttpMethod.DELETE, "/api/mentorings/{id}").authenticated()
+                        .antMatchers(HttpMethod.PATCH, "/api/mentorings/{id}/done").authenticated()
                         .anyRequest().permitAll()
         );
 
