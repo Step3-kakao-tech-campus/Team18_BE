@@ -42,7 +42,7 @@ public class ContactService {
 
         List<UserInterest> mentorInterests = userInterestJPARepository.findAllById(contactUser.getMenteeUser().getId());
 
-        ContactResponse.ContactMentorDTO contactMentorDTO = new ContactResponse.ContactMentorDTO(contactUser.getMenteeUser(), mentorInterests);
+        ContactResponse.ContactMentorDTO contactMentorDTO = new ContactResponse.ContactMentorDTO(mentorPost.getWriter(), mentorInterests);
 
         return new ContactResponse.ContactDashBoardMenteeDTO(mentorPost, contactMentorDTO, contactUser);
     }
