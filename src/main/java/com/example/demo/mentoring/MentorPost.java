@@ -25,7 +25,7 @@ public class MentorPost extends BaseTime {
     @ManyToOne(fetch = FetchType.LAZY)
     private User writer;
 
-    @Column(nullable = false)
+    @Column(length = 100, nullable = false)
     private String title;
 
     @Column(length = 300)

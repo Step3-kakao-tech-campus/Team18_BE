@@ -1,12 +1,16 @@
 package com.example.demo.video;
 
+import com.example.demo.interest.Interest;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 public class VideoResponse {
+    private static int recommendVideoNum = 3;
     @Getter
     @Setter
     public static class VideoPageResponseDTO{
@@ -59,8 +63,8 @@ public class VideoResponse {
         private String startTime;
         private String endTime;
         private List<SubtitleDTO> subtitles;
-
-        public VideoResponseDTO(Video video, VideoInterest videoInterest, List<Subtitle> subtitles)
+        private List<RelatedVideoDTO> recommendVideos;
+        public VideoResponseDTO(Video video, VideoInterest videoInterest, List<Subtitle> subtitles, List<Video> recommendVideos, List<VideoInterest> recommendInterest)
         {
             this.videoID = video.getId();
             this.url = video.getVideoUrl();
@@ -71,6 +75,9 @@ public class VideoResponse {
             this.subtitles = subtitles.stream()
             .map(SubtitleDTO::new)
             .collect(Collectors.toList());
+            this.recommendVideos = IntStream.range(0, recommendVideoNum)
+                    .mapToObj(i -> new RelatedVideoDTO(recommendVideos.get(i), recommendInterest.get(i)))
+                    .collect(Collectors.toList());
         }
 
         @Getter
@@ -93,7 +100,25 @@ public class VideoResponse {
                 this.korSubtitleEndTime = subtitle.getKorEndTime();
                 this.engSubtitleContent = subtitle.getEngSubtitleContent();
                 this.engSubtitleStartTime = subtitle.getEngStartTime();
-                this.korSubtitleEndTime = subtitle.getEngEndTime();
+                this.engSubtitleEndTime = subtitle.getEngEndTime();
+            }
+        }
+
+        @Getter
+        @Setter
+        public static class RelatedVideoDTO{
+            //썸네일,url,id, 카테고리, 제목
+            private int videoID;
+            private String videoTitleKorean;
+            private String videoTitleEng;
+            private String interests;
+            private String videoThumbnailUrl;
+            public RelatedVideoDTO(Video video, VideoInterest videoInterest){
+                this.videoID = video.getId();
+                this.videoTitleKorean = video.getVideoTitleKorean();
+                this.videoTitleEng = video.getVideoTitleEng();
+                this.interests = videoInterest.getInterest().getCategory();
+                this.videoThumbnailUrl = video.getVideoThumbnailUrl();
             }
         }
     }

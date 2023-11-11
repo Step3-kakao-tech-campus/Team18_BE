@@ -11,6 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 
+import java.time.LocalDate;
+
 @SpringBootTest
 @ActiveProfiles("test")
 public class AccountTest {
@@ -28,7 +30,7 @@ public class AccountTest {
                 .firstName("Jin")
                 .lastName("Seung")
                 .country("Korea")
-                .age(21)
+                .birthDate(LocalDate.of(1990, 1, 1))
                 .role(Role.MENTOR)
                 .phone("010-0000-0000")
                 .build();
