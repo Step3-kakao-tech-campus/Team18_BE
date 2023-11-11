@@ -19,19 +19,10 @@ public class ContactRequest {
     @Getter @Setter
     public static class ContactRefuseDTO {
         private int connectionId;
-
-        public ContactRefuseDTO ( int connectionId ) {
-            this.connectionId = connectionId;
-        }
-
     }
 
     @Getter @Setter
     public static class ContactAcceptDTO {
         private int connectionId;
-
-        public ContactAcceptDTO ( int connectionId ) {
-            this.connectionId = connectionId;
-        }
     }
 }

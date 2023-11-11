@@ -124,19 +124,14 @@ public class ContactService {
     }
 
     @Transactional
-    public void refuseContact(ContactRequest.ContactRefuseDTO contactRefuseDTO, User mentor) {
+    public void refuseContact(List<ContactRequest.ContactRefuseDTO> contactRefuseDTO, User mentor) {
         // 예외 처리
         isMentor(mentor);
 
-        // dto 예외 처리
-        if ( contactRefuseDTO.getMentorId() != mentor.getId() ) {
-            throw new Exception401("올바른 사용자가 아닙니다.");
-        }
-
         // notConnectedRegisterUser 의 state 바꾸기 -> REFUSE
-        for ( ContactRequest.ContactRefuseDTO.RefuseMenteeDTO refuseMenteeDTO : contactRefuseDTO.getMentees() ) {
+        for ( ContactRequest.ContactRefuseDTO contactRefuseDTOs : contactRefuseDTO ) {
 
-            NotConnectedRegisterUser notConnectedRegisterUser = contactJPARepository.findById(refuseMenteeDTO.getConnectionId())
+            NotConnectedRegisterUser notConnectedRegisterUser = contactJPARepository.findById(contactRefuseDTOs.getConnectionId())
                     .orElseThrow(() -> new Exception404("해당 사용자를 찾을 수 없습니다."));
 
             notConnectedRegisterUser.updateStatus(ContactStateEnum.REFUSE);
