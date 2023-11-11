@@ -33,7 +33,7 @@ public class MentorPostService {
 
     //mentorPost생성
     @Transactional
-    public void createMentorPost(MentorPostRequest.CreateMentorPostDTO createMentorPostDTO, User writer) {
+    public MentorPostResponse.MentorPostIdDTO createMentorPost(MentorPostRequest.CreateMentorPostDTO createMentorPostDTO, User writer) {
         isMentor(writer);
 
         Pageable recentPostTime = PageRequest.of(0, 1);
@@ -53,6 +53,8 @@ public class MentorPostService {
         } catch (Exception e) {
             throw new Exception500("unknown server error");
         }
+
+        return new MentorPostResponse.MentorPostIdDTO(mentorPost);
     }
 
    /* 1. mentorPostList를 조회
@@ -88,9 +90,7 @@ public class MentorPostService {
                 .flatMap(mentee -> userInterestJPARepository.findAllById(mentee.getMenteeUser().getId()).stream())
                 .collect(Collectors.toList());
 
-        MentorPostResponse.MentorPostDTO mentorPostDTO = new MentorPostResponse.MentorPostDTO(mentorPost, mentorInterests, menteeList, menteeInterests);
-
-        return mentorPostDTO;
+        return new MentorPostResponse.MentorPostDTO(mentorPost, mentorInterests, menteeList, menteeInterests);
     }
     @Transactional
     public void updateMentorPost(MentorPostRequest.CreateMentorPostDTO createMentorPostDTO, int id, User writer) {

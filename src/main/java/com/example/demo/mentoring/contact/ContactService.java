@@ -42,7 +42,7 @@ public class ContactService {
 
         List<UserInterest> mentorInterests = userInterestJPARepository.findAllById(contactUser.getMenteeUser().getId());
 
-        ContactResponse.ContactMentorDTO contactMentorDTO = new ContactResponse.ContactMentorDTO(contactUser.getMenteeUser(), mentorInterests);
+        ContactResponse.ContactMentorDTO contactMentorDTO = new ContactResponse.ContactMentorDTO(mentorPost.getWriter(), mentorInterests);
 
         return new ContactResponse.ContactDashBoardMenteeDTO(mentorPost, contactMentorDTO, contactUser);
     }
@@ -101,26 +101,19 @@ public class ContactService {
     }
 
     @Transactional
-    public void acceptContact(ContactRequest.ContactAcceptDTO contactAcceptDTO, User mentor) {
+    public void acceptContact(List<ContactRequest.ContactAcceptDTO> contactAcceptDTO, User mentor) {
         isMentor(mentor);
 
-        // dto 예외 처리
-        if ( contactAcceptDTO.getMentorId() != mentor.getId() ) {
-            throw new Exception401("올바른 사용자가 아닙니다.");
-        }
-
-        int mentorPostId = contactAcceptDTO.getMentorPostId();
-
-        // 현재 멘토가 작성한 글인지 체크
-        MentorPost mentorPost = mentorPostJPARepository.findById(mentorPostId)
-                .orElseThrow(() -> new Exception404("해당 게시글을 찾을 수 없습니다."));
-
         // ConnectedUser 에 추가
-        for ( ContactRequest.ContactAcceptDTO.AcceptMenteeDTO acceptMenteeDTO : contactAcceptDTO.getMentees() ) {
+        for ( ContactRequest.ContactAcceptDTO contactAcceptDTOs : contactAcceptDTO ) {
 
             // notConnectedRegisterUser 의 state 바꾸기 -> ACCEPT
-            NotConnectedRegisterUser notConnectedRegisterUser = contactJPARepository.findById(acceptMenteeDTO.getConnectionId())
+            NotConnectedRegisterUser notConnectedRegisterUser = contactJPARepository.findById(contactAcceptDTOs.getConnectionId())
                     .orElseThrow(() -> new Exception404("해당 사용자를 찾을 수 없습니다."));
+
+            // 멘토가 작성한 글 가져오기
+            MentorPost mentorPost = mentorPostJPARepository.findById(notConnectedRegisterUser.getMentorPost().getId())
+                            .orElseThrow(() -> new Exception404("해당 게시글을 찾을 수 없습니다."));
 
             notConnectedRegisterUser.updateStatus(ContactStateEnum.ACCEPT);
 
@@ -131,19 +124,14 @@ public class ContactService {
     }
 
     @Transactional
-    public void refuseContact(ContactRequest.ContactRefuseDTO contactRefuseDTO, User mentor) {
+    public void refuseContact(List<ContactRequest.ContactRefuseDTO> contactRefuseDTO, User mentor) {
         // 예외 처리
         isMentor(mentor);
 
-        // dto 예외 처리
-        if ( contactRefuseDTO.getMentorId() != mentor.getId() ) {
-            throw new Exception401("올바른 사용자가 아닙니다.");
-        }
-
         // notConnectedRegisterUser 의 state 바꾸기 -> REFUSE
-        for ( ContactRequest.ContactRefuseDTO.RefuseMenteeDTO refuseMenteeDTO : contactRefuseDTO.getMentees() ) {
+        for ( ContactRequest.ContactRefuseDTO contactRefuseDTOs : contactRefuseDTO ) {
 
-            NotConnectedRegisterUser notConnectedRegisterUser = contactJPARepository.findById(refuseMenteeDTO.getConnectionId())
+            NotConnectedRegisterUser notConnectedRegisterUser = contactJPARepository.findById(contactRefuseDTOs.getConnectionId())
                     .orElseThrow(() -> new Exception404("해당 사용자를 찾을 수 없습니다."));
 
             notConnectedRegisterUser.updateStatus(ContactStateEnum.REFUSE);
