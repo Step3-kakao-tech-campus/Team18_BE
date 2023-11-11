@@ -37,7 +37,7 @@ public class JWTTokenProvider {
 
     private final CustomUserDetailService userDetailService;
 
-    public JwtTokenProvider(@Value("${jwt.secret}") String secretKey) {
+    public JWTTokenProvider(@Value("${jwt.secret}") String secretKey) {
         this.SecretKey = secretKey;
     }
     
