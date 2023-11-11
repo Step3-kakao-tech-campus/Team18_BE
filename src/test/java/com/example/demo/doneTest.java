@@ -16,7 +16,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @Sql("classpath:db/teardown.sql")
 public class doneTest extends RestDoc {
     @Test
-    @WithUserDetails("admin@example.com")
+    @WithUserDetails("test3@example.com")
     @DisplayName("멘티 기준 화면 조회 테스트 코드")
     void contactMenteeTest() throws Exception {
         // given
@@ -35,7 +35,7 @@ public class doneTest extends RestDoc {
     }
 
     @Test
-    @WithUserDetails("john@example.com")
+    @WithUserDetails("test1@example.com")
     @DisplayName("멘토 기준 화면 조회 테스트 코드")
     void contactMentorTest() throws Exception {
 

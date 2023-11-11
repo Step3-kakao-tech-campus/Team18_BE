@@ -2,16 +2,16 @@ package com.example.demo.config.security;
 
 import com.example.demo.config.errors.exception.Exception401;
 import com.example.demo.config.errors.exception.Exception403;
+import com.example.demo.config.jwt.JWTAuthenticationEntryPoint;
 import com.example.demo.config.jwt.JWTAuthenticationFilter;
 import com.example.demo.config.jwt.JWTTokenProvider;
-import com.example.demo.config.utils.FilterResponseUtils;
+import com.example.demo.config.jwt.FilterResponseUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.ScopeMetadataResolver;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
@@ -65,19 +65,23 @@ public class SecurityConfig {
         httpSecurity.apply(new CustomSecurityFilterManager());
 
         // 8. 인증 실패 처리
-        httpSecurity.exceptionHandling().authenticationEntryPoint((request, response, authException) -> {
-            FilterResponseUtils.unAuthorized(response, new Exception401("인증되지 않은 사용자입니다."));
-        });
+        httpSecurity.exceptionHandling().authenticationEntryPoint(new JWTAuthenticationEntryPoint());
 
         // 9. 권한 실패 처리
         httpSecurity.exceptionHandling().accessDeniedHandler((request, response, accessDeniedException) -> {
-            FilterResponseUtils.forbidden(response, new Exception403("권한이 없는 사용자입니다."));
+            FilterResponseUtils.forbidden(response, new Exception403("접근 권한이 없습니다."));
         });
 
         // 11. 인증, 권한 필터 설정
         httpSecurity.authorizeRequests(
-                authorize -> authorize.antMatchers("/profiles/**").authenticated()
+                authorize -> authorize
+                        .antMatchers("/users/passwordcheck", "/profiles", "/profiles/simple", "/videos/interest", "/videos/history", "/contacts/**").authenticated()
                         .antMatchers("/admin/**").access("hasRole('ADMIN')")
+                        .antMatchers("/videos").access("hasRole('ADMIN')")
+                        .antMatchers(HttpMethod.POST, "/mentorings").authenticated()
+                        .antMatchers(HttpMethod.PUT, "/mentorings/{id}").authenticated()
+                        .antMatchers(HttpMethod.DELETE, "/mentorings/{id}").authenticated()
+                        .antMatchers(HttpMethod.PATCH, "/mentorings/{id}/done").authenticated()
                         .anyRequest().permitAll()
         );
 
@@ -88,7 +92,7 @@ public class SecurityConfig {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.addAllowedHeader("*");
         configuration.addAllowedMethod("*"); // GET, POST, PUT, DELETE (Javascript 요청 허용)
-        configuration.addAllowedOriginPattern("http://localhost:8080"); // 모든 IP 주소 허용 (프론트 앤드 IP만 허용 react)
+        configuration.addAllowedOriginPattern("*"); // 모든 IP 주소 허용 (프론트 앤드 IP만 허용 react)
         configuration.setAllowCredentials(true); // 클라이언트에서 쿠키 요청 허용
         configuration.addExposedHeader("Authorization");
 

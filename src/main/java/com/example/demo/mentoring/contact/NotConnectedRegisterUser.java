@@ -18,14 +18,7 @@ import javax.persistence.*;
 @Entity
 @Where(clause = "deleted_at IS NULL")
 @SQLDelete(sql = "UPDATE not_connected_register_users SET deleted_at = CURRENT_TIMESTAMP, is_deleted = TRUE where id = ?")
-@Table(name = "not_connected_register_users",
-    indexes = {
-        @Index(name = "not_connected_register_users_mentor_post_id_idx", columnList = "mentor_post_id"),
-        @Index(name = "not_connected_register_users_mentee_user_id_idx", columnList = "mentee_user_id")
-    },
-    uniqueConstraints = {
-        @UniqueConstraint(name = "uk_not_connected_register_user_mentor_post_mentee_user", columnNames = {"mentor_post_id", "mentee_user_id"})
-    })
+@Table(name = "not_connected_register_users")
 public class NotConnectedRegisterUser extends BaseTime {
 
     @Id

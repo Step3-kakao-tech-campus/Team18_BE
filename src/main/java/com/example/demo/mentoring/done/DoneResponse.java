@@ -1,13 +1,13 @@
 package com.example.demo.mentoring.done;
 
 import com.example.demo.mentoring.MentorPost;
-import com.example.demo.mentoring.contact.ContactResponse;
 import com.example.demo.user.Role;
 import com.example.demo.user.User;
 import com.example.demo.user.userInterest.UserInterest;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -34,7 +34,7 @@ public class DoneResponse {
         private String profileImage;
         private String name;
         private String country;
-        private int age;
+        private LocalDate birthDate;
         private Role role;
         private List<String> favorites;
 
@@ -43,32 +43,47 @@ public class DoneResponse {
             this.profileImage = mentor.getProfileImage();
             this.name = mentor.getFirstName() + " " + mentor.getLastName();
             this.country = mentor.getCountry();
-            this.age = mentor.getAge();
+            this.birthDate = mentor.getBirthDate();
             this.role = mentor.getRole();
             this.favorites = userInterests.stream()
                     .map(userInterest -> userInterest.getInterest().getCategory())
                     .collect(Collectors.toList());
         }
     }
-    @Getter @Setter
+    @Getter
+    @Setter
     public static class DoneMenteeDTO {
-        private int menteeId;
-        private String profileImage;
-        private String name;
-        private String country;
-        private int age;
-        private Role role;
-        private List<String> favorites;
+        private int doneId; // 이 필드는 사용되지 않는 것으로 보입니다. 필요하다면 추가하십시오.
+        private MenteeDTO mentee;
+
         public DoneMenteeDTO(ConnectedUser connectedUser, List<UserInterest> userInterests) {
-            this.menteeId = connectedUser.getId();
-            this.profileImage = connectedUser.getMenteeUser().getProfileImage();
-            this.name = connectedUser.getMenteeUser().getFirstName() + " " + connectedUser.getMenteeUser().getLastName();
-            this.country = connectedUser.getMenteeUser().getCountry();
-            this.age = connectedUser.getMenteeUser().getAge();
-            this.role = connectedUser.getMenteeUser().getRole();
-            this.favorites = userInterests.stream()
-                    .map(userInterest -> userInterest.getInterest().getCategory())
-                    .collect(Collectors.toList());
+            this.doneId = connectedUser.getId();
+            this.mentee = new MenteeDTO(connectedUser, userInterests);
+        }
+
+        // MenteeDTO 클래스 내부 필드를 직접 사용하지 않고, MenteeDTO 객체를 통해 접근
+        @Getter
+        @Setter
+        public static class MenteeDTO {
+            private int menteeId;
+            private String profileImage;
+            private String name;
+            private String country;
+            private LocalDate birthDate;
+            private Role role;
+            private List<String> favorites;
+
+            public MenteeDTO(ConnectedUser connectedUser, List<UserInterest> userInterests) {
+                this.menteeId = connectedUser.getMenteeUser().getId();
+                this.profileImage = connectedUser.getMenteeUser().getProfileImage();
+                this.name = connectedUser.getMenteeUser().getFirstName() + " " + connectedUser.getMenteeUser().getLastName();
+                this.country = connectedUser.getMenteeUser().getCountry();
+                this.birthDate = connectedUser.getMenteeUser().getBirthDate();
+                this.role = connectedUser.getMenteeUser().getRole();
+                this.favorites = userInterests.stream()
+                        .map(userInterest -> userInterest.getInterest().getCategory())
+                        .collect(Collectors.toList());
+            }
         }
     }
 }

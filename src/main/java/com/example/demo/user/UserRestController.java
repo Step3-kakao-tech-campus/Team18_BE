@@ -4,17 +4,22 @@ import com.example.demo.config.auth.CustomUserDetails;
 import com.example.demo.config.jwt.JWTTokenProvider;
 import com.example.demo.config.utils.ApiResponseBuilder;
 import io.swagger.annotations.Api;
+import io.swagger.models.Response;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.net.URLEncoder;
@@ -35,7 +40,7 @@ public class UserRestController {
 
     @Operation(summary = "회원가입", description = "회원가입")
     @PostMapping(value = "/users/signup")
-    public ResponseEntity<?> signup(@RequestBody @Valid UserRequest.SignUpDTO requestDTO, Errors errors) {
+    public ResponseEntity<?> signup(@RequestBody @Valid UserRequest.SignUpDTO requestDTO, Errors errors) throws IOException {
         userService.signup(requestDTO);
         return ResponseEntity.status(HttpStatus.OK).body(ApiResponseBuilder.successWithNoContent());
     }
@@ -50,27 +55,43 @@ public class UserRestController {
         refreshToken = URLEncoder.encode(refreshToken, "utf-8");
 
         httpServletResponse.addHeader(JWTTokenProvider.Header, accessToken);
-        Cookie cookie = new Cookie("RefreshToken", refreshToken);
-        cookie.setHttpOnly(true);
-        cookie.setSecure(true);
-        cookie.setPath("/");
-        cookie.setMaxAge(60 * 5);
-        httpServletResponse.addCookie(cookie);
+        ResponseCookie cookie = ResponseCookie.from("RefreshToken", refreshToken)
+                .path("/")
+                .secure(true)
+                .sameSite("None")
+                .httpOnly(true)
+                .maxAge(60 * 60 * 24 * 7)
+                .build();
+        httpServletResponse.setHeader("Set-Cookie", cookie.toString());
 
         return ResponseEntity.status(HttpStatus.OK).body(ApiResponseBuilder.success(responseDTO.getUserDetailDTO()));
+    }
+
+    @Operation(summary = "간단한 프로필 정보", description = "간단한 프로필 정보")
+    @GetMapping(value = "/profiles/simple")
+    public ResponseEntity<?> simpleProfile(@AuthenticationPrincipal CustomUserDetails userDetails) {
+        UserResponse.SimpleProfileDTO responseDTO = userService.findSimpleProfile(userDetails);
+        return ResponseEntity.status(HttpStatus.OK).body(ApiResponseBuilder.success(responseDTO));
     }
 
     @Operation(summary = "마이 페이지 프로필 확인", description = "마이 페이지에서 프로필 확인")
     @GetMapping(value =  {"/profiles", "/profiles/{id}"})
     public ResponseEntity<?> profile(@PathVariable(required = false) Integer id, @AuthenticationPrincipal CustomUserDetails userDetails) {
-        UserResponse.ProfileDTO responseDTO = userService.findProfile(id, userDetails.getUser());
+        UserResponse.ProfileDTO responseDTO = userService.findProfile(id, userDetails);
         return ResponseEntity.status(HttpStatus.OK).body(ApiResponseBuilder.success(responseDTO));
     }
-    
+
+    @Operation(summary = "마이 페이지 프로필 수정 전 본인 확인", description = "마이 페이지 프로필 수정 전 본인 확인")
+    @PostMapping(value = "/users/passwordcheck")
+    public ResponseEntity<?> passwordCheck(@RequestBody @Valid UserRequest.PasswordCheckDTO requestDTO, Errors errors, @AuthenticationPrincipal CustomUserDetails userDetails) {
+        userService.passwordCheck(requestDTO, userDetails);
+        return ResponseEntity.status(HttpStatus.OK).body(ApiResponseBuilder.successWithNoContent());
+    }
+
     @Operation(summary = "마이 페이지 프로필 수정", description = "마이 페이지에서 프로필 수정")
-    @PutMapping(value = "/profiles")
-    public ResponseEntity<?> profileUpdate(@RequestBody @Valid UserRequest.ProfileUpdateDTO requestDTO, Errors errors, @AuthenticationPrincipal CustomUserDetails userDetails) {
-        UserResponse.ProfileDTO responseDTO = userService.updateProfile(userDetails.getUser().getId(), requestDTO);
+    @PutMapping(value = "/profiles", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
+    public ResponseEntity<?> profileUpdate(@RequestPart @Valid UserRequest.ProfileUpdateDTO requestDTO, Errors errors, @RequestPart(required = false) MultipartFile file, @AuthenticationPrincipal CustomUserDetails userDetails) throws IOException {
+        UserResponse.ProfileDTO responseDTO = userService.updateProfile(userDetails, requestDTO, file);
         return ResponseEntity.status(HttpStatus.OK).body(ApiResponseBuilder.success(responseDTO));
     }
 }
